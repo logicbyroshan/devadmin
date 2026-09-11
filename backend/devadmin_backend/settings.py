@@ -203,12 +203,28 @@ X_FRAME_OPTIONS = 'DENY'
 
 # Production HTTPS / Security Headers (enabled via env or when DEBUG=False)
 _is_production = not DEBUG
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', str(_is_production)).lower() == 'true'
+
+# IMPORTANT: Set SECURE_SSL_REDIRECT=False when Django is behind a reverse proxy (Nginx/Caddy).
+# The proxy handles SSL termination. Django receiving plain HTTP from the proxy will infinite-loop
+# if SECURE_SSL_REDIRECT=True. Default is False to be safe behind proxies.
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
 SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', str(_is_production)).lower() == 'true'
 CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', str(_is_production)).lower() == 'true'
-SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000' if _is_production else '0'))
-SECURE_HSTS_INCLUDE_SUBDOMAINS = _is_production
-SECURE_HSTS_PRELOAD = _is_production
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', str(_is_production)).lower() == 'true'
+SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', str(_is_production)).lower() == 'true'
+
+# Required when Django is behind a reverse proxy that terminates SSL.
+# Nginx must set: proxy_set_header X-Forwarded-Proto $scheme;
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF_TRUSTED_ORIGINS — required in Django 4.0+ for same-site CSRF to pass from the browser.
+# Without this, PATCH/POST/DELETE from the production frontend will return HTTP 403.
+_env_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+if _env_csrf_origins:
+    CSRF_TRUSTED_ORIGINS = [o.strip() for o in _env_csrf_origins.split(',') if o.strip()]
+elif _is_production:
+    CSRF_TRUSTED_ORIGINS = ['https://admin.logicbyroshan.in']
 
 # Logging
 LOGGING = {
