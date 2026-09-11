@@ -54,7 +54,6 @@ from apps.public_api.views import (
 admin_router = DefaultRouter()
 admin_router.register(r'projects', ProjectViewSet, basename='admin-projects')
 admin_router.register(r'blogs', BlogPostViewSet, basename='admin-blogs')
-admin_router.register(r'experience', ExperienceViewSet, basename='admin-experience')
 admin_router.register(r'experiences', ExperienceViewSet, basename='admin-experiences')
 admin_router.register(r'skills', SkillViewSet, basename='admin-skills')
 admin_router.register(r'categories', CategoryViewSet, basename='admin-categories')
@@ -67,8 +66,8 @@ admin_router.register(r'websites', WebsiteViewSet, basename='admin-websites')
 public_router = DefaultRouter()
 public_router.register(r'projects', ProjectViewSet, basename='public-projects')
 public_router.register(r'blogs', BlogPostViewSet, basename='public-blogs')
-public_router.register(r'experience', ExperienceViewSet, basename='public-experience')
 public_router.register(r'experiences', ExperienceViewSet, basename='public-experiences')
+public_router.register(r'experience', ExperienceViewSet, basename='public-experience')
 public_router.register(r'skills', SkillViewSet, basename='public-skills')
 public_router.register(r'categories', CategoryViewSet, basename='public-categories')
 public_router.register(r'achievements', AchievementViewSet, basename='public-achievements')
@@ -76,6 +75,7 @@ public_router.register(r'contacts', ContactInquiryViewSet, basename='public-cont
 public_router.register(r'faqs', FaqViewSet, basename='public-faqs')
 public_router.register(r'websites', WebsiteViewSet, basename='public-websites')
 public_router.register(r'profiles', PortfolioProfileViewSet, basename='public-profiles')
+
 
 admin_patterns = [
     # Auth

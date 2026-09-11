@@ -58,18 +58,18 @@ class Command(BaseCommand):
         # 2. Portfolio Profiles
         for slug, site in websites.items():
             profile_defaults = {
-                'name': 'Roshan Kumar',
-                'title': f'Senior Full Stack Developer & UI Architect ({site.name})',
-                'bio': f'Passionate software engineer building high-performance React web applications, scalable Node.js microservices, and elegant OLED dark glassmorphic user interfaces for {site.name}.\n\n```architecture\nFrontend:React 18 -> API Gateway:Kong -> Backend:Django REST -> DB:MySQL\n```\n\nExperienced in real-time WebRTC, distributed caching, and micro-frontend architecture.',
-                'location': 'New Delhi, India',
-                'email': f'roshan@{slug}.dev',
-                'phone': '+91 98765 43210',
-                'experience_years': '5+ Years',
-                'github': 'https://github.com/roshan-dev',
-                'linkedin': 'https://linkedin.com/in/roshan-dev',
-                'twitter': '@roshan_dev',
-                'website_url': f'https://{slug}.dev',
-                'resume_url': f'https://{slug}.dev/resume.pdf',
+                'full_name': 'Roshan Damor',
+                'title': f'Software Engineer · Full Stack AI ({site.name})',
+                'bio': f'Software Engineer specializing in scalable full-stack web applications, distributed systems, and AI workflows for {site.name}.',
+                'location': 'Bhopal, Madhya Pradesh, India',
+                'email': 'mail@logicbyroshan.in',
+                'phone': '+91 90000 00000',
+                'experience_years': '3',
+                'github': 'https://github.com/logicbyroshan',
+                'linkedin': 'https://linkedin.com/in/logicbyroshan',
+                'twitter': 'https://twitter.com/logicbyroshan',
+                'website_url': 'https://logicbyroshan.in',
+                'resume': f'/media/documents/Roshan_Damor_Resume.pdf',
                 'avatar': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80'
             }
             if force:

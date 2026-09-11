@@ -199,7 +199,16 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'DENY'
+
+# Production HTTPS / Security Headers (enabled via env or when DEBUG=False)
+_is_production = not DEBUG
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', str(_is_production)).lower() == 'true'
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', str(_is_production)).lower() == 'true'
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', str(_is_production)).lower() == 'true'
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '31536000' if _is_production else '0'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _is_production
+SECURE_HSTS_PRELOAD = _is_production
 
 # Logging
 LOGGING = {
