@@ -347,11 +347,10 @@ class PublicProjectBySlugView(APIView):
             'prev': {'slug': prev_proj.slug, 'title': prev_proj.title} if prev_proj else None,
             'next': {'slug': next_proj.slug, 'title': next_proj.title} if next_proj else None,
         }
-
-        return Response({
-            'success': True,
-            'data': data
-        }, status=status.HTTP_200_OK)
+        res_data = dict(data)
+        res_data['success'] = True
+        res_data['data'] = dict(data)
+        return Response(res_data, status=status.HTTP_200_OK)
 
 
 class PublicBlogBySlugView(APIView):
@@ -371,7 +370,7 @@ class PublicBlogBySlugView(APIView):
             return Response({'error': 'Blog article not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = PublicBlogPostDetailSerializer(blog)
-        return Response({
-            'success': True,
-            'data': serializer.data
-        }, status=status.HTTP_200_OK)
+        res_data = dict(serializer.data)
+        res_data['success'] = True
+        res_data['data'] = dict(serializer.data)
+        return Response(res_data, status=status.HTTP_200_OK)

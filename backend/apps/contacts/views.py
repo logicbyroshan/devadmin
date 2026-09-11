@@ -14,7 +14,11 @@ class ContactInquiryViewSet(MultiTenantViewSetMixin, viewsets.ModelViewSet):
     """
     queryset = ContactInquiry.objects.select_related('website').all()
     serializer_class = ContactInquirySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -59,6 +63,7 @@ class ContactInquiryViewSet(MultiTenantViewSetMixin, viewsets.ModelViewSet):
 
         return Response({
             'success': True,
+            'status': 'sent',
             'message': 'Reply recorded.',
             'inquiry': ContactInquirySerializer(inquiry).data
         }, status=status.HTTP_200_OK)
