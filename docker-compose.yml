@@ -1,0 +1,54 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: devadmin-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-8108}:8000"
+    volumes:
+      - devadmin_media:/app/media
+      - devadmin_static:/app/staticfiles
+    networks:
+      - platform-mysql
+      - devadmin-internal
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://devadmin-api.logicbyroshan.in}
+    container_name: devadmin-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-8107}:80"
+    networks:
+      - devadmin-internal
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  platform-mysql:
+    external: true
+  devadmin-internal:
+    driver: bridge
+
+volumes:
+  devadmin_media:
+    name: devadmin_media
+  devadmin_static:
+    name: devadmin_static

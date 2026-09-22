@@ -17,7 +17,15 @@ _env_hosts = os.environ.get('ALLOWED_HOSTS', '')
 if _env_hosts:
     ALLOWED_HOSTS = [h.strip() for h in _env_hosts.split(',') if h.strip()]
 else:
-    ALLOWED_HOSTS = ['*'] if DEBUG else ['127.0.0.1', 'localhost', '.localhost']
+    ALLOWED_HOSTS = ['*'] if DEBUG else [
+        'devadmin-api.logicbyroshan.in',
+        'devadmin.logicbyroshan.in',
+        '127.0.0.1',
+        'localhost',
+        '.localhost',
+        'devadmin-backend',
+        'backend',
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -89,8 +97,8 @@ if USE_MYSQL:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': os.environ.get('DB_NAME', 'devadmin_db'),
             'USER': os.environ.get('DB_USER', 'devadmin_user'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'devadmin_secure_password'),
-            'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'HOST': os.environ.get('DB_HOST', 'platform-mysql'),
             'PORT': os.environ.get('DB_PORT', '3306'),
             'OPTIONS': {
                 'charset': 'utf8mb4',
@@ -174,11 +182,15 @@ if env_cors:
     CORS_ALLOWED_ORIGINS = [orig.strip() for orig in env_cors.split(',') if orig.strip()]
 else:
     CORS_ALLOWED_ORIGINS = [
+        "https://devadmin.logicbyroshan.in",
         "http://localhost:3000",
         "http://localhost:3001",
         "http://localhost:3002",
+        "http://localhost:5173",
         "http://127.0.0.1:3000",
         "http://127.0.0.1:3001",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8107",
     ]
 
 # Email & SMTP Relay Configuration
@@ -204,12 +216,15 @@ X_FRAME_OPTIONS = 'DENY'
 # Production HTTPS / Security Headers (enabled via env or when DEBUG=False)
 _is_production = not DEBUG
 
-# IMPORTANT: Set SECURE_SSL_REDIRECT=False when Django is behind a reverse proxy (Nginx/Caddy).
+# IMPORTANT: Set SECURE_SSL_REDIRECT=False when Django is behind a reverse proxy (Nginx/Cloudflare).
 # The proxy handles SSL termination. Django receiving plain HTTP from the proxy will infinite-loop
 # if SECURE_SSL_REDIRECT=True. Default is False to be safe behind proxies.
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() == 'true'
 SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', str(_is_production)).lower() == 'true'
 CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', str(_is_production)).lower() == 'true'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0'))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', str(_is_production)).lower() == 'true'
 SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', str(_is_production)).lower() == 'true'
@@ -219,12 +234,23 @@ SECURE_HSTS_PRELOAD = os.environ.get('SECURE_HSTS_PRELOAD', str(_is_production))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # CSRF_TRUSTED_ORIGINS — required in Django 4.0+ for same-site CSRF to pass from the browser.
-# Without this, PATCH/POST/DELETE from the production frontend will return HTTP 403.
 _env_csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
 if _env_csrf_origins:
     CSRF_TRUSTED_ORIGINS = [o.strip() for o in _env_csrf_origins.split(',') if o.strip()]
 elif _is_production:
-    CSRF_TRUSTED_ORIGINS = ['https://admin.logicbyroshan.in']
+    CSRF_TRUSTED_ORIGINS = [
+        'https://devadmin.logicbyroshan.in',
+        'https://devadmin-api.logicbyroshan.in',
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:8107',
+        'http://127.0.0.1:8108',
+    ]
 
 # Logging
 LOGGING = {

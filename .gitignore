@@ -16,9 +16,13 @@ env/
 media/
 staticfiles/
 
-# Environment Variables
+# Environment & Secrets (ignore all .env files EXCEPT .env.example)
 .env
-.env.local
+.env.*
+*.env
+!.env.example
+!*.env.example
+!**/.env.example
 
 # IDE & OS
 .vscode/

@@ -180,14 +180,13 @@ npm run dev
 
 ---
 
-## 🚀 Direct Server Production Deployment (No Docker)
+## 🚀 Production Deployment (Docker Compose)
 
-DevAdmin is engineered for high-performance direct deployment on Linux VPS servers (Ubuntu 22.04 / 24.04 LTS or Debian) using **Nginx**, **Gunicorn (Systemd)**, and **MySQL**:
+DevAdmin is engineered for high-performance containerized deployment on Linux VPS servers using **Docker Compose**, **Django 5 / Gunicorn**, **React 18 / Vite / Nginx**, and **MySQL 8.0 (platform-mysql)**:
 
-1. **System Packages**: Install Python 3.11, Node.js 20, Nginx, MySQL Server, and Certbot.
-2. **Backend Daemon**: Configure `/etc/systemd/system/devadmin.service` with Gunicorn (3 workers).
-3. **Nginx Reverse Proxy**: Configure `/etc/nginx/sites-available/devadmin` to serve `frontend/dist` and proxy `/api/` upstream.
-4. **Automated Zero-Downtime Updates**: Run `bash scripts/deploy.sh` to pull changes, run migrations, and reload services.
+- **Frontend SPA**: `https://devadmin.logicbyroshan.in` (Nginx container on localhost port 8107)
+- **Backend API**: `https://devadmin-api.logicbyroshan.in` (Gunicorn container on localhost port 8108)
+- **Automated Zero-Downtime Deployment**: Run `bash scripts/deploy.sh` to pull changes, run migrations, collect static assets, and healthcheck services.
 
 👉 **See the complete step-by-step production setup guide in [DEPLOYMENT.md](DEPLOYMENT.md).**
 
@@ -196,37 +195,27 @@ DevAdmin is engineered for high-performance direct deployment on Linux VPS serve
 ## 📁 Repository Structure
 
 ```
-Dev-Admin/
+DevAdmin/
 ├── backend/
-│   ├── apps/
-│   │   ├── common/             # Reusable Service Layer (Tenant, Mail, Stats, Mixins, Health)
-│   │   ├── websites/           # Multi-tenant websites & Auth endpoints
-│   │   ├── projects/           # Projects domain models & ViewSets
-│   │   ├── blogs/              # Technical blogs with rich content models
-│   │   ├── experiences/        # Career milestone models
-│   │   ├── skills/             # Tech skills & proficiency models
-│   │   ├── contacts/           # Contact inquiries & SMTP reply relay
-│   │   ├── faqs/               # FAQs domain models
-│   │   ├── profiles/           # Portfolio profile details & bio
-│   │   └── dashboard/          # Aggregated analytics & heatmap views
-│   ├── devadmin_backend/       # Root Django settings, WSGI, and URLs
+│   ├── apps/                   # Reusable Service Layer (Tenant, Mail, Stats, Mixins, Health)
+│   ├── devadmin_backend/       # Root Django settings, WSGI, ASGI, and URLs
 │   ├── tests/                  # Automated integration test suite
+│   ├── Dockerfile              # Production Python 3.12-slim container definition
 │   ├── requirements.txt        # Frozen Python dependencies
-│   ├── API_DOCUMENTATION.md    # Complete REST API specification
+│   ├── .env.example            # Backend environment template
 │   └── manage.py
 ├── frontend/
-│   ├── src/
-│   │   ├── components/         # All UI views (Dashboard, Projects, Blogs, CustomDatePicker, etc.)
-│   │   ├── context/            # AuthContext (JWT Session & state)
-│   │   ├── services/           # Centralized API service client (api.js)
-│   │   ├── App.jsx             # Main App layout & navigation state
-│   │   └── main.jsx
+│   ├── src/                    # React views, components, and API client
+│   ├── Dockerfile              # Multi-stage build (Node 20 -> Nginx Alpine)
+│   ├── nginx.conf              # Container-level SPA Nginx configuration
 │   ├── package.json
+│   ├── .env.example            # Frontend environment template
 │   └── vite.config.js
 ├── scripts/
-│   ├── deploy.sh               # One-click zero-downtime server deployment script
-│   ├── devadmin.service        # Systemd daemon configuration
-│   └── nginx.conf              # Production Nginx reverse proxy configuration
+│   ├── deploy.sh               # One-click Docker production deployment script
+│   ├── nginx.conf              # Host Nginx reverse proxy configuration (two subdomains)
+│   └── devadmin.service        # Legacy systemd daemon configuration (Deprecated)
+├── docker-compose.yml          # Primary multi-container production configuration
 ├── DEPLOYMENT.md               # Step-by-step VPS production deployment manual
 └── README.md                   # Project documentation
 ```

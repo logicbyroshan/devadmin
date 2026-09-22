@@ -4,7 +4,19 @@
  * and Public Serving API (/api/*).
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+function getApiBaseUrl() {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (!envUrl) {
+    if (import.meta.env.DEV) {
+      return 'http://localhost:8000/api';
+    }
+    return 'https://devadmin-api.logicbyroshan.in/api';
+  }
+  const trimmed = envUrl.replace(/\/+$/, '');
+  return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Helper for HTTP requests with automatic JWT Bearer token attachment and 401 refresh
 async function request(endpoint, options = {}, isRetry = false) {

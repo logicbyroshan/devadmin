@@ -1,5 +1,15 @@
+# ==============================================================================
+# [DEPRECATED] DevAdmin Legacy Systemd Unit File
+# ==============================================================================
+# NOTE: This systemd service file is DEPRECATED and retained for historical reference only.
+# DevAdmin has migrated to a Docker Compose architecture (docker-compose.yml).
+#
+# DO NOT USE this file for new production deployments.
+# Use: bash scripts/deploy.sh (or docker compose up -d)
+# ==============================================================================
+
 [Unit]
-Description=DevAdmin Django Gunicorn Application Daemon
+Description=DevAdmin Django Gunicorn Application Daemon (DEPRECATED - Use Docker Compose)
 After=network.target mysql.service
 
 [Service]
@@ -8,10 +18,11 @@ Group=www-data
 WorkingDirectory=/var/www/devadmin/backend
 Environment="PATH=/var/www/devadmin/backend/venv/bin"
 ExecStart=/var/www/devadmin/backend/venv/bin/gunicorn \
-          --workers 3 \
+          --workers 2 \
+          --threads 2 \
           --bind 127.0.0.1:8000 \
-          --access-logfile /var/log/devadmin_access.log \
-          --error-logfile /var/log/devadmin_error.log \
+          --access-logfile - \
+          --error-logfile - \
           devadmin_backend.wsgi:application
 Restart=always
 RestartSec=5
