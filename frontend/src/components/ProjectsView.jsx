@@ -98,14 +98,19 @@ nodes:
   // Form state for unified separate Add/Edit page
   const [formData, setFormData] = useState({
     title: '',
+    projectName: '',
     status: 'LIVE',
     category: 'Web Application',
+    technologies: '',
     description: '',
+    documentation: '',
     completed: new Date().toISOString().split('T')[0],
     image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
     demoUrl: '',
+    liveUrl: '',
     githubUrl: '',
-    visible: true
+    visible: true,
+    featured: false
   });
 
   const categories = ['ALL', ...Array.from(new Set(projects.map(p => p.category)))];
@@ -440,11 +445,25 @@ data:
               />
             </div>
 
+            {/* Executive Pitch / Summary */}
+            <div>
+              <label className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
+                Executive Pitch / Summary (Card Preview)
+              </label>
+              <textarea
+                rows={2}
+                value={formData.description}
+                onChange={e => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Short summary pitch for portfolio card preview..."
+                className="w-full p-3.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 resize-none leading-relaxed transition-all"
+              />
+            </div>
+
             {/* ULTRA-RICH CONTENT BUILDER (Architecture, Benchmarks, Video, Code) */}
             <div className="pt-2">
               <RichContentBuilder
-                value={formData.description}
-                onChange={val => setFormData({ ...formData, description: val })}
+                value={formData.documentation}
+                onChange={val => setFormData({ ...formData, documentation: val })}
                 label="Project Technical Documentation & System Design"
                 placeholder="Detail key architectural decisions, microservice topology, benchmark throughput, and code patterns..."
               />

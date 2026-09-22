@@ -164,8 +164,27 @@ class BannerView(APIView):
                 "full_name": profile_data.get("full_name", "Roshan Damor"),
                 "title": profile_data.get("title", "Software Engineer · Full Stack AI"),
                 "hero_description": profile_data.get("hero_description", ""),
-                "profile_image": profile_data.get("profile_image", "/media/profile/hero.webp"),
-                "hero_image": profile_data.get("hero_image", "/media/hero/custom_hero.webp"),
+                "profile_image": profile_data.get("profile_image", "/static/images/hero.webp"),
+                "hero_image": profile_data.get("hero_image", "/static/images/hero.webp"),
+                "hero_highlights_title": profile_data.get("hero_highlights_title", "Quick Portfolio Highlights"),
+                "hero_highlights_visible": profile_data.get("hero_highlights_visible", True),
+                "hero_stats": profile_data.get("hero_stats") or [
+                    {
+                        "value": profile_data.get("hero_stat_1_value", "1,000+"),
+                        "label": profile_data.get("hero_stat_1_label", "Production Users"),
+                        "icon": profile_data.get("hero_stat_1_icon", "fas fa-users"),
+                    },
+                    {
+                        "value": profile_data.get("hero_stat_2_value", "136K+"),
+                        "label": profile_data.get("hero_stat_2_label", "ID Cards Processed"),
+                        "icon": profile_data.get("hero_stat_2_icon", "fas fa-id-card"),
+                    },
+                    {
+                        "value": profile_data.get("hero_stat_3_value", "86K+"),
+                        "label": profile_data.get("hero_stat_3_label", "Cards Downloaded"),
+                        "icon": profile_data.get("hero_stat_3_icon", "fas fa-cloud-download-alt"),
+                    },
+                ],
                 "stat_1": {
                     "value": profile_data.get("hero_stat_1_value", "1,000+"),
                     "label": profile_data.get("hero_stat_1_label", "Production Users"),

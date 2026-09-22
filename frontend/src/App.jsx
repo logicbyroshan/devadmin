@@ -38,12 +38,11 @@ export const DEVMATE_SITE = {
   }
 };
 
-export const WEBSITES = [DEVMATE_SITE];
+// Single-site admin � DevMate portfolio only
 
 export default function App() {
   const { isAuthenticated, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [activeWebsite, setActiveWebsite] = useState(DEVMATE_SITE);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [authView, setAuthView] = useState(null); // null | 'LOGIN' | 'SIGNUP'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);

@@ -24,8 +24,100 @@ import {
   ChevronRight,
   Activity,
   Box,
-  FileText
+  FileText,
+  Sigma,
+  ExternalLink
 } from 'lucide-react';
+
+/**
+ * Helper to parse inline markdown: **bold**, *italic*, `code`, [link](url), ![img](url)
+ */
+function parseInlineMarkdown(text) {
+  if (!text) return text;
+
+  const parts = [];
+  let remaining = text;
+  let keyIdx = 0;
+  const tokenRegex = /(!\[(.*?)\]\((.*?)\))|(\[(.*?)\]\((.*?)\))|(\*\*(.*?)\*\*)|(\*(.*?)\*)|(`([^`]+)`)/;
+
+  while (remaining) {
+    const match = remaining.match(tokenRegex);
+    if (!match) {
+      parts.push(remaining);
+      break;
+    }
+
+    const matchIndex = match.index;
+    if (matchIndex > 0) {
+      parts.push(remaining.substring(0, matchIndex));
+    }
+
+    const fullMatch = match[0];
+
+    // Image: ![alt](url)
+    if (match[1]) {
+      const alt = match[2];
+      const src = match[3];
+      parts.push(
+        <span key={`img-${keyIdx++}`} className="block my-3 rounded-lg overflow-hidden border border-neutral-800 bg-black/50">
+          <img src={src} alt={alt} className="w-full max-h-72 object-cover" loading="lazy" />
+          {alt && <span className="block py-1 px-2.5 text-[11px] text-neutral-400 bg-neutral-900/80 text-center font-mono">{alt}</span>}
+        </span>
+      );
+    }
+    // Link: [text](url)
+    else if (match[4]) {
+      const label = match[5];
+      const href = match[6];
+      parts.push(
+        <a
+          key={`link-${keyIdx++}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 hover:text-blue-300 underline font-semibold transition-colors inline-flex items-center gap-0.5"
+        >
+          <span>{label}</span>
+          <ExternalLink className="w-2.5 h-2.5 inline-block opacity-70" />
+        </a>
+      );
+    }
+    // Bold: **text**
+    else if (match[7]) {
+      const boldText = match[8];
+      parts.push(
+        <strong key={`bold-${keyIdx++}`} className="text-white font-bold">
+          {boldText}
+        </strong>
+      );
+    }
+    // Italic: *text*
+    else if (match[9]) {
+      const italicText = match[10];
+      parts.push(
+        <em key={`italic-${keyIdx++}`} className="text-neutral-200 italic">
+          {italicText}
+        </em>
+      );
+    }
+    // Code: `text`
+    else if (match[11]) {
+      const codeText = match[12];
+      parts.push(
+        <code
+          key={`code-${keyIdx++}`}
+          className="px-1.5 py-0.5 rounded bg-blue-950/40 text-blue-300 font-mono text-[11px] border border-blue-500/30"
+        >
+          {codeText}
+        </code>
+      );
+    }
+
+    remaining = remaining.substring(matchIndex + fullMatch.length);
+  }
+
+  return parts;
+}
 
 export default function RichContentBuilder({ 
   value = '', 
@@ -66,7 +158,7 @@ export default function RichContentBuilder({
   };
 
   // ==========================================
-  // 1-CLICK PRESET TEMPLATES (Fun & Powerful!)
+  // 1-CLICK PRESET TEMPLATES (Cosmic & Powerful!)
   // ==========================================
   const presets = [
     {
@@ -84,6 +176,45 @@ nodes:
   - [Kong Gateway] -> [Node.js Realtime Socket Cluster (Port 3001)]
   - [FastAPI Core] -> [Redis L2 Cache (In-Memory)]
   - [FastAPI Core] -> [PostgreSQL 16 High-Availability Replica]
+\`\`\`
+`
+    },
+    {
+      title: 'Mermaid ERD / Sequence Diagram',
+      icon: Box,
+      desc: 'Interactive entity-relationship schema or sequence pipeline for system design.',
+      snippet: `### 🧩 Relational Data Model & Constraints
+
+\`\`\`mermaid
+erDiagram
+  ORGANIZATION ||--o{ USER : contains
+  ORGANIZATION ||--o{ PROJECT : owns
+  PROJECT ||--o{ DEPLOYMENT : triggers
+  USER ||--o{ AUDIT_LOG : records
+
+  ORGANIZATION {
+    uuid id PK
+    string name
+    string tier
+    timestamp created_at
+  }
+  PROJECT {
+    uuid id PK
+    uuid org_id FK
+    string title
+    string status
+  }
+\`\`\`
+`
+    },
+    {
+      title: 'KaTeX Mathematical SLA Formula',
+      icon: Sigma,
+      desc: 'Mathematical formulation of throughput, p99 latency bounds, and algorithm complexity.',
+      snippet: `### 📐 Algorithmic Concurrency & Throughput Model
+
+\`\`\`katex
+\Phi_{\text{throughput}} = \frac{N_{\text{req}} \times W_{\text{workers}}}{T_{\text{render}} + T_{\text{io}}} \ge 140 \text{ req/sec}, \quad L_{p99} \le 12\text{ms}
 \`\`\`
 `
     },
@@ -138,9 +269,9 @@ points:
 `
     },
     {
-      title: 'Syntax-Highlighted React / Python Code Snippet',
+      title: 'Syntax-Highlighted Code Snippet',
       icon: Code,
-      desc: 'Multi-line code snippet with filename header and language highlighting.',
+      desc: 'Multi-line code snippet with filename header and copy button.',
       snippet: `### 💻 Implementation Code Snippet
 
 \`\`\`typescript:frontend/src/hooks/useRealtimeSync.ts
@@ -225,7 +356,6 @@ caption: Complete technical walkthrough of the platform management interface, re
       );
     }
 
-    // Split text into blocks
     const lines = markdownText.split('\n');
     const elements = [];
     let i = 0;
@@ -254,24 +384,24 @@ caption: Complete technical walkthrough of the platform management interface, re
           const nodeLines = codeLines.filter(l => l.trim().startsWith('-'));
 
           elements.push(
-            <div key={blockId} className="my-6 p-5 rounded-xl bg-[#070913] border border-blue-500/30 shadow-xl space-y-4">
+            <div key={blockId} className="my-6 p-5 rounded-xl bg-[#070913] border border-blue-500/40 shadow-xl space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
                 <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-blue-400 font-accent">
                   <GitFork className="w-4 h-4" />
                   <span>{title}</span>
                 </div>
-                <span className="text-xs font-bold px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/40">
                   SYSTEM DESIGN FLOW
                 </span>
               </div>
 
               {/* Visual Architecture Flow Nodes */}
-              <div className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-3 py-2">
+              <div className="flex flex-col gap-3 py-2">
                 {nodeLines.map((n, nIdx) => {
                   const cleaned = n.replace(/^-\s*/, '').trim();
                   const parts = cleaned.split('->').map(p => p.trim().replace(/^\[|\]$/g, ''));
                   return (
-                    <div key={nIdx} className="flex flex-wrap items-center gap-2">
+                    <div key={nIdx} className="flex flex-wrap items-center justify-center gap-2">
                       {parts.map((node, pIdx) => (
                         <React.Fragment key={pIdx}>
                           <div className="px-3.5 py-2 rounded-lg bg-neutral-900 border border-blue-500/40 text-xs font-bold text-white shadow-md flex items-center gap-2 hover:border-blue-400 transition-colors">
@@ -292,8 +422,52 @@ caption: Complete technical walkthrough of the platform management interface, re
           continue;
         }
 
+        // Mermaid Diagram Block
+        if (header.startsWith('mermaid')) {
+          elements.push(
+            <div key={blockId} className="my-6 p-5 rounded-xl bg-[#070913] border border-purple-500/40 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-purple-400 font-accent">
+                  <Box className="w-4 h-4" />
+                  <span>Mermaid Flowchart / Entity Schema</span>
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                  MERMAID DIAGRAM
+                </span>
+              </div>
+
+              <div className="p-4 rounded-lg bg-black/60 border border-neutral-800/80 font-mono text-xs text-purple-200 overflow-x-auto whitespace-pre leading-relaxed">
+                {codeContent}
+              </div>
+            </div>
+          );
+          continue;
+        }
+
+        // KaTeX / Math Formula Block
+        if (header.startsWith('katex') || header.startsWith('math')) {
+          elements.push(
+            <div key={blockId} className="my-6 p-5 rounded-xl bg-[#070913] border border-cyan-500/40 shadow-xl space-y-3">
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-extrabold text-cyan-400 font-accent">
+                  <Sigma className="w-4 h-4" />
+                  <span>Mathematical SLA / Throughput Model</span>
+                </div>
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                  KATEX FORMULATION
+                </span>
+              </div>
+
+              <div className="p-4 rounded-lg bg-black/60 border border-neutral-800/80 text-center font-mono text-sm text-cyan-300 overflow-x-auto whitespace-pre">
+                {codeContent}
+              </div>
+            </div>
+          );
+          continue;
+        }
+
         // Bar Chart Block
-        if (header.startsWith('chart:barchart')) {
+        if (header.startsWith('chart:barchart') || header.startsWith('chart:bar')) {
           const titleLine = codeLines.find(l => l.startsWith('title:'));
           const unitLine = codeLines.find(l => l.startsWith('unit:'));
           const title = titleLine ? titleLine.replace('title:', '').trim() : 'Performance Benchmark';
@@ -340,7 +514,7 @@ caption: Complete technical walkthrough of the platform management interface, re
         }
 
         // Line Graph Block
-        if (header.startsWith('chart:linegraph')) {
+        if (header.startsWith('chart:linegraph') || header.startsWith('chart:line')) {
           const titleLine = codeLines.find(l => l.startsWith('title:'));
           const title = titleLine ? titleLine.replace('title:', '').trim() : 'Latency Graph';
           const points = codeLines.filter(l => l.trim().startsWith('-')).map(l => {
@@ -407,7 +581,7 @@ caption: Complete technical walkthrough of the platform management interface, re
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400 space-y-2">
                     <Play className="w-12 h-12 text-blue-400" />
-                    <p className="text-xs">HTML5 Video Stream Player: {url || 'Demo Video'}</p>
+                    <p className="text-xs">HTML5 Video Stream: {url || 'Demo Video'}</p>
                   </div>
                 )}
               </div>
@@ -482,7 +656,7 @@ caption: Complete technical walkthrough of the platform management interface, re
               <span>{type}</span>
             </div>
             <p className="text-xs text-neutral-200 leading-relaxed font-normal">
-              {alertLines.join(' ')}
+              {parseInlineMarkdown(alertLines.join(' '))}
             </p>
           </div>
         );
@@ -516,7 +690,7 @@ caption: Complete technical walkthrough of the platform management interface, re
                     <tr key={rIdx} className="hover:bg-neutral-900/60 transition-colors">
                       {row.map((cell, cIdx) => (
                         <td key={cIdx} className="px-4 py-3 leading-relaxed font-mono text-xs">
-                          {cell}
+                          {parseInlineMarkdown(cell)}
                         </td>
                       ))}
                     </tr>
@@ -533,7 +707,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       if (line.startsWith('# ')) {
         elements.push(
           <h1 key={`h1-${elements.length}`} className="text-xl sm:text-2xl font-black text-white font-accent my-4 pb-2 border-b border-neutral-800">
-            {line.replace('# ', '')}
+            {parseInlineMarkdown(line.replace('# ', ''))}
           </h1>
         );
         i++;
@@ -542,7 +716,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       if (line.startsWith('## ')) {
         elements.push(
           <h2 key={`h2-${elements.length}`} className="text-lg sm:text-xl font-bold text-white font-accent my-3.5 pb-1.5 border-b border-neutral-800/60">
-            {line.replace('## ', '')}
+            {parseInlineMarkdown(line.replace('## ', ''))}
           </h2>
         );
         i++;
@@ -551,7 +725,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       if (line.startsWith('### ')) {
         elements.push(
           <h3 key={`h3-${elements.length}`} className="text-sm sm:text-base font-bold text-blue-300 font-accent my-3">
-            {line.replace('### ', '')}
+            {parseInlineMarkdown(line.replace('### ', ''))}
           </h3>
         );
         i++;
@@ -562,7 +736,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       if (line.startsWith('> ')) {
         elements.push(
           <blockquote key={`quote-${elements.length}`} className="my-3 pl-4 border-l-2 border-blue-500 text-xs italic text-neutral-300 leading-relaxed font-normal">
-            {line.replace('> ', '')}
+            {parseInlineMarkdown(line.replace('> ', ''))}
           </blockquote>
         );
         i++;
@@ -570,11 +744,11 @@ caption: Complete technical walkthrough of the platform management interface, re
       }
 
       // 6. Bullet Lists & Download Badges
-      if (line.startsWith('- ')) {
+      if (line.startsWith('- ') || line.startsWith('* ')) {
         elements.push(
           <div key={`li-${elements.length}`} className="my-1.5 flex items-start gap-2 text-xs text-neutral-300 leading-relaxed font-normal">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></span>
-            <span>{line.replace('- ', '')}</span>
+            <span>{parseInlineMarkdown(line.replace(/^[-*]\s*/, ''))}</span>
           </div>
         );
         i++;
@@ -585,7 +759,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       if (line.trim() !== '') {
         elements.push(
           <p key={`p-${elements.length}`} className="my-2.5 text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal">
-            {line}
+            {parseInlineMarkdown(line)}
           </p>
         );
       }
@@ -693,6 +867,14 @@ caption: Complete technical walkthrough of the platform management interface, re
             <GitFork className="w-3.5 h-3.5 text-purple-400" />
             <span>Diagram</span>
           </button>
+          <button type="button" onClick={() => insertSnippet('```mermaid\nflowchart TD\n  A[Client Request] --> B[API Gateway]\n  B --> C[Microservice Hub]\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-purple-300 flex items-center gap-1 text-[11px]" title="Mermaid Flowchart">
+            <Box className="w-3.5 h-3.5 text-purple-300" />
+            <span>Mermaid</span>
+          </button>
+          <button type="button" onClick={() => insertSnippet('```katex\n\\Phi = \\frac{N \\times W}{T_{\\text{render}} + T_{\\text{io}}} \\ge 120 \\text{ req/sec}\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-cyan-300 flex items-center gap-1 text-[11px]" title="KaTeX Math Formula">
+            <Sigma className="w-3.5 h-3.5 text-cyan-300" />
+            <span>Math</span>
+          </button>
           <button type="button" onClick={() => insertSnippet('```chart:barchart\ntitle: Benchmark Comparison\nunit: req/s\ndata:\n  - Optimized Engine: 120000\n  - Legacy Engine: 45000\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-cyan-400 flex items-center gap-1 text-[11px]" title="Benchmark Chart">
             <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
             <span>Chart</span>
@@ -785,7 +967,7 @@ caption: Complete technical walkthrough of the platform management interface, re
             </div>
 
             <p className="text-xs text-neutral-400">
-              Select any free interactive block below to insert formatted charts, architecture diagrams, video embeds, and tables into your document.
+              Select any interactive block below to insert formatted charts, architecture diagrams, video embeds, and tables into your document.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto pr-1">
