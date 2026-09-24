@@ -31,6 +31,7 @@ https://devadmin.logicbyroshan.in         https://devadmin-api.logicbyroshan.in
 │    devadmin-frontend    │               │    devadmin-backend     │
 │   (Nginx Alpine SPA)    │               │  (Django 5.0 Gunicorn)  │
 │  React 18 + Vite static │               │  Python 3.12-slim WSGI  │
+│  Non-root / Lightweight │               │  Non-root appuser (1000)│
 └────────────┬────────────┘               └────────────┬────────────┘
              │                                         │
              └─────────── devadmin-internal ───────────┘
@@ -73,7 +74,7 @@ Connect to MySQL on the host:
 docker exec -it platform-mysql mysql -u root -p
 ```
 
-Create the database and grant permissions:
+Create the database and grant least-privilege permissions:
 ```sql
 CREATE DATABASE IF NOT EXISTS devadmin_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'devadmin_user'@'%' IDENTIFIED BY 'YOUR_STRONG_PASSWORD_HERE';
@@ -83,7 +84,7 @@ EXIT;
 ```
 
 > [!IMPORTANT]
-> The database host is `platform-mysql` (the container name on the shared Docker bridge network `platform-mysql`).
+> The database host is `platform-mysql` (the container name on the shared Docker bridge network `platform-mysql`). DevAdmin's database user only has privileges on `devadmin_db.*`, ensuring complete tenant isolation from DevMeet, DevMitra, and DevMate.
 
 ---
 
@@ -102,20 +103,30 @@ cd /var/www/devadmin
 
 ## 🔐 Step 3: Environment Configuration
 
-Create `backend/.env` from the template:
+Create `backend/.env` from the production template:
 
 ```bash
-cp backend/.env.example backend/.env
+cp .env.production.example backend/.env
 nano backend/.env
+```
+
+Generate a secure secret key:
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 ```
 
 Fill in your production secrets:
 
 ```env
+# Host Port Configuration
+FRONTEND_PORT=8107
+BACKEND_PORT=8108
+VITE_API_BASE_URL=https://devadmin-api.logicbyroshan.in
+
 # Core Django Settings
 DEBUG=False
-SECRET_KEY=generate_a_random_50_character_secret_key_here
-ALLOWED_HOSTS=devadmin-api.logicbyroshan.in,devadmin.logicbyroshan.in,localhost,127.0.0.1,devadmin-backend
+SECRET_KEY=paste_your_generated_50_character_secret_key_here
+ALLOWED_HOSTS=devadmin-api.logicbyroshan.in,devadmin.logicbyroshan.in,localhost,127.0.0.1,devadmin-backend,backend
 
 # Database Settings (Connected to platform-mysql container)
 USE_MYSQL=True
@@ -124,6 +135,7 @@ DB_NAME=devadmin_db
 DB_USER=devadmin_user
 DB_PASSWORD=YOUR_STRONG_PASSWORD_HERE
 DB_PORT=3306
+DB_CONN_MAX_AGE=60
 
 # CORS & CSRF Settings
 CORS_ALLOWED_ORIGINS=https://devadmin.logicbyroshan.in
@@ -137,7 +149,7 @@ SECURE_HSTS_SECONDS=31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS=True
 SECURE_HSTS_PRELOAD=True
 
-# Concurrency (Lightweight VPS: 2 workers)
+# Concurrency (Lightweight VPS: 2 workers recommended)
 WEB_CONCURRENCY=2
 
 # SMTP (Optional)
@@ -176,13 +188,15 @@ bash scripts/deploy.sh
 
 The script automatically:
 1. Validates Git branch and pulls latest code.
-2. Checks that `backend/.env` exists.
+2. Performs strict preflight checks on `backend/.env` (ensures `SECRET_KEY` is not default).
 3. Ensures Docker and the external `platform-mysql` network exist.
-4. Builds the container images (`docker compose build`).
-5. Runs Django database migrations (`python manage.py migrate --noinput`).
-6. Collects static assets (`python manage.py collectstatic --noinput`).
-7. Starts the containers in detached mode (`docker compose up -d`).
-8. Executes health probes against backend and frontend.
+4. Backs up running images to `:rollback-backup` for zero-loss recovery.
+5. Builds optimized multi-stage container images (`docker compose build --pull`).
+6. Runs non-destructive Django migrations (`python manage.py migrate --noinput`).
+7. Collects and hashes static assets for WhiteNoise (`python manage.py collectstatic --noinput`).
+8. Starts services (`docker compose up -d --remove-orphans`).
+9. Executes multi-attempt health checks against backend (`/health/`) and frontend (`/healthz`).
+10. Automatically triggers `scripts/rollback.sh` if any health check fails.
 
 ---
 
@@ -200,14 +214,14 @@ Enter your admin username, email, and password.
 
 ## 🔄 Routine Update Procedure
 
-Whenever new features or bug fixes are committed to `main`:
+Whenever new features or bug fixes are committed:
 
 ```bash
 cd /var/www/devadmin
 bash scripts/deploy.sh
 ```
 
-Zero downtime update with automated migration and static asset handling.
+Zero downtime update with automated migration, static asset hashing, and health verification.
 
 ---
 
@@ -224,7 +238,7 @@ Zero downtime update with automated migration and static asset handling.
 
 ---
 
-## 🪵 Viewing Logs
+## 🪵 Viewing Logs & Resource Monitoring
 
 ```bash
 # Stream all logs
@@ -235,6 +249,9 @@ docker compose logs -f backend
 
 # Stream frontend Nginx access logs only
 docker compose logs -f frontend
+
+# Check container resource utilization
+docker stats devadmin-backend devadmin-frontend
 ```
 
 ---
@@ -246,21 +263,23 @@ docker compose logs -f frontend
 docker exec platform-mysql mysqldump -u root -p devadmin_db > /backup/devadmin_db_$(date +%Y%m%d_%H%M%S).sql
 ```
 
-### 2. Fast Rollback Procedure
-If a deployment fails or contains regressions:
+### 2. Manual Rollback Procedure
+If a deployment fails or unexpected errors occur in production:
 ```bash
-# 1. Roll back Git commit
-git checkout <PREVIOUS_STABLE_COMMIT_HASH>
-
-# 2. Re-run deployment pipeline
-bash scripts/deploy.sh
+bash scripts/rollback.sh
 ```
+
+The rollback script will:
+- Restore previously tagged backup images (`devadmin-backend:rollback-backup` / `:stable`).
+- Restart container services.
+- Verify health checks on restored containers.
+- Safely preserve database state without dropping tables or resetting migrations.
 
 ---
 
-## 🔧 Troubleshooting
+## 🔧 Troubleshooting & Common Issues
 
-### Backend Cannot Connect to MySQL
+### 1. Backend Cannot Connect to MySQL
 1. Verify `platform-mysql` network exists:
    ```bash
    docker network ls | grep platform-mysql
@@ -274,6 +293,13 @@ bash scripts/deploy.sh
    docker compose run --rm backend python -c "import django; django.setup(); from django.db import connection; connection.cursor(); print('DB Connected!')"
    ```
 
-### 403 CSRF Verification Failed
+### 2. 403 CSRF Verification Failed
 Ensure `CSRF_TRUSTED_ORIGINS` in `backend/.env` contains `https://devadmin.logicbyroshan.in` and `https://devadmin-api.logicbyroshan.in`.
 Ensure Host Nginx sets `proxy_set_header X-Forwarded-Proto $scheme;`.
+
+### 3. Coexistence With Other Projects
+DevAdmin is isolated on `devadmin-internal` and connects to `platform-mysql` via external bridge.
+Deploying DevAdmin will not restart, rebuild, or affect:
+- DevMeet
+- DevMitra
+- DevMate

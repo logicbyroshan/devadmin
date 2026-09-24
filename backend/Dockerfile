@@ -23,10 +23,17 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Copy backend application source
 COPY . .
 
-# Ensure static and media directories exist
-RUN mkdir -p /app/staticfiles /app/media
+# Create non-root system user and prepare directories
+RUN useradd -u 1000 -r -s /bin/false appuser \
+    && mkdir -p /app/staticfiles /app/media \
+    && chown -R appuser:appuser /app
+
+USER appuser
 
 EXPOSE 8000
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD curl -f http://127.0.0.1:8000/health/ || exit 1
+
 # Run Gunicorn with stdout/stderr logging and configurable worker concurrency
-CMD ["sh", "-c", "gunicorn --workers ${WEB_CONCURRENCY:-2} --threads 2 --bind 0.0.0.0:8000 --access-logfile - --error-logfile - devadmin_backend.wsgi:application"]
+CMD ["sh", "-c", "gunicorn --workers ${WEB_CONCURRENCY:-2} --threads 2 --bind 0.0.0.0:8000 --timeout 60 --access-logfile - --error-logfile - devadmin_backend.wsgi:application"]

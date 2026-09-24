@@ -8,6 +8,8 @@ from apps.common.mixins import MultiTenantViewSetMixin
 from .models import Project, ProjectScreenshot
 from .serializers import ProjectSerializer, ProjectScreenshotSerializer
 
+from django.conf import settings
+
 class ProjectViewSet(MultiTenantViewSetMixin, viewsets.ModelViewSet):
     """
     Comprehensive Projects Management & Serving API.
@@ -72,8 +74,8 @@ class ProjectViewSet(MultiTenantViewSetMixin, viewsets.ModelViewSet):
         if files:
             for idx, f in enumerate(files):
                 filename = f"projects/screenshots/{project.id}_{f.name}"
-                os.makedirs(os.path.join('media', 'projects', 'screenshots'), exist_ok=True)
-                file_path = os.path.join('media', filename)
+                os.makedirs(os.path.join(settings.MEDIA_ROOT, 'projects', 'screenshots'), exist_ok=True)
+                file_path = os.path.join(settings.MEDIA_ROOT, filename)
                 with open(file_path, 'wb+') as destination:
                     for chunk in f.chunks():
                         destination.write(chunk)

@@ -23,6 +23,8 @@ staticfiles/
 !.env.example
 !*.env.example
 !**/.env.example
+!.env.production.example
+!*.production.example
 
 # IDE & OS
 .vscode/

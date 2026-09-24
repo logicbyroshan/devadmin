@@ -15,6 +15,11 @@ services:
     networks:
       - platform-mysql
       - devadmin-internal
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
       interval: 30s
@@ -34,8 +39,13 @@ services:
       - "127.0.0.1:${FRONTEND_PORT:-8107}:80"
     networks:
       - devadmin-internal
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/healthz || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
