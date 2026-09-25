@@ -50,18 +50,18 @@ export default function Sidebar({
       )}
 
       {/* Sidebar docked below top-16 header (w-48) */}
-      <aside className={`fixed left-0 top-16 bottom-0 h-[calc(100vh-4rem)] w-48 bg-[#030406]/98 backdrop-blur-2xl border-r border-neutral-800/90 z-30 flex flex-col justify-between select-none transition-transform duration-300 ${
+      <aside className={`fixed left-0 top-16 bottom-0 h-[calc(100vh-4rem)] w-48 bg-[#0c0e15]/98 backdrop-blur-2xl border-r border-[#222738] z-30 flex flex-col justify-between select-none transition-transform duration-300 ${
         isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       }`}>
 
         {/* Top Section: Dashboard Nav Button */}
-        <div className="p-2.5 pb-2.5 border-b border-neutral-800/80">
+        <div className="p-2.5 pb-2.5 border-b border-[#222738]">
           <button
             onClick={() => handleNavClick('dashboard')}
             className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
               currentPage === 'dashboard'
                 ? `bg-gradient-to-r ${gradient} text-white shadow-md ${glow}`
-                : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60'
+                : 'text-neutral-300 hover:text-white hover:bg-[#161a28]'
             }`}
           >
             <LayoutDashboard className={`w-4 h-4 ${currentPage === 'dashboard' ? 'text-white' : accentText}`} />
@@ -81,7 +81,7 @@ export default function Sidebar({
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-150 border ${
                   isActive
                     ? `${accentBg} ${accentText} ${accentBorder} font-bold shadow-sm`
-                    : 'text-neutral-300 hover:text-white hover:bg-neutral-900/60 border-transparent'
+                    : 'text-neutral-300 hover:text-white hover:bg-[#161a28] border-transparent'
                 }`}
               >
                 <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? accentText : 'text-neutral-400'}`} />
@@ -92,7 +92,7 @@ export default function Sidebar({
         </div>
 
         {/* Bottom Section: Logout Button */}
-        <div className="p-2.5 border-t border-neutral-800/80">
+        <div className="p-2.5 border-t border-[#222738]">
           <button
             onClick={() => handleNavClick('manage-logout')}
             className="w-full py-2.5 px-3 rounded-lg bg-rose-950/20 hover:bg-rose-950/40 border border-rose-900/30 hover:border-rose-700/50 text-rose-400 text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-sm group"

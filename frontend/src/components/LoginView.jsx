@@ -24,8 +24,8 @@ export default function LoginView({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-black text-slate-100 selection:bg-violet-500/30 selection:text-violet-200">
-      <div className="w-full max-w-md p-8 rounded-2xl bg-[#06070b]/95 border border-neutral-800/90 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200 backdrop-blur-2xl">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#07080c] text-slate-100 selection:bg-violet-500/30 selection:text-violet-200">
+      <div className="w-full max-w-md p-8 rounded-2xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-200 backdrop-blur-2xl">
         <div className="text-center space-y-3">
           <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/25 border border-violet-400/20">
             <ShieldCheck className="w-8 h-8 text-white" />
@@ -56,7 +56,7 @@ export default function LoginView({ onLoginSuccess }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. admin"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#030406] border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -70,7 +70,7 @@ export default function LoginView({ onLoginSuccess }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-[#030406] border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -90,8 +90,8 @@ export default function LoginView({ onLoginSuccess }) {
           </button>
         </form>
 
-        <div className="text-center pt-3 border-t border-neutral-800/80">
-          <p className="text-[11px] text-neutral-500">
+        <div className="text-center pt-3 border-t border-[#222738]">
+          <p className="text-[11px] text-neutral-400">
             Protected endpoint with JWT Bearer authentication & role-based validation.
           </p>
         </div>
@@ -99,4 +99,3 @@ export default function LoginView({ onLoginSuccess }) {
     </div>
   );
 }
-

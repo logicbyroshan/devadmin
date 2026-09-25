@@ -110,11 +110,11 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
   };
 
   return (
-    <div className="space-y-5 w-full max-w-full overflow-x-hidden">
+    <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className={`p-3 rounded-lg ${activeWebsite?.accentBg || 'bg-blue-500/10'} ${activeWebsite?.accentText || 'text-blue-400'} border ${activeWebsite?.accentBorder || 'border-blue-500/30'}`}>
+          <div className={`p-3 rounded-lg ${activeWebsite?.accentBg || 'bg-blue-500/15'} ${activeWebsite?.accentText || 'text-blue-400'} border ${activeWebsite?.accentBorder || 'border-blue-500/30'}`}>
             <Settings className="w-5 h-5" />
           </div>
           <div>
@@ -130,8 +130,8 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
       </div>
 
       {/* Section 1: General Site Settings */}
-      <div className="p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+      <div className="p-5 sm:p-6 rounded-xl bg-[#12151f] border border-[#222738] space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#222738]">
           <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
             <Settings className={`w-4 h-4 ${activeWebsite?.accentText || 'text-blue-400'}`} />
             <span>General Site Settings ({activeWebsite?.name})</span>
@@ -152,7 +152,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                 required
                 value={siteTitle}
                 onChange={e => setSiteTitle(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
               />
             </div>
 
@@ -164,7 +164,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                 className={`w-full px-3.5 py-2 rounded-lg flex items-center justify-between font-bold transition-all border ${
                   maintenanceMode
                     ? 'bg-rose-950/20 text-rose-300 border-rose-900/40'
-                    : 'bg-[#050609] text-neutral-400 border-neutral-800 hover:text-white'
+                    : 'bg-[#0d1018] text-neutral-400 border-[#222738] hover:text-white hover:bg-[#161a28]'
                 }`}
               >
                 <span>{maintenanceMode ? 'ENABLED (Site Hidden)' : 'DISABLED (Live Operational)'}</span>
@@ -179,7 +179,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
               rows="2"
               value={seoDescription}
               onChange={e => setSeoDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all resize-none"
             ></textarea>
           </div>
 
@@ -189,14 +189,14 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
               type="text"
               value={seoKeywords}
               onChange={e => setSeoKeywords(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
             />
           </div>
 
           <div className="flex justify-end pt-2">
             <button
               type="submit"
-              className={`px-5 py-2.5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110 transition-all`}
+              className={`h-9 px-5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110 transition-all`}
             >
               <Save className="w-4 h-4" /> Save General Settings
             </button>
@@ -205,23 +205,23 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
       </div>
 
       {/* Section 2: User Management */}
-      <div className="p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+      <div className="p-5 sm:p-6 rounded-xl bg-[#12151f] border border-[#222738] space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#222738]">
           <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
             <Shield className={`w-4 h-4 ${activeWebsite?.accentText || 'text-blue-400'}`} />
             <span>Authorized Admin Users</span>
           </h3>
           <button
             onClick={() => setShowAddUserModal(true)}
-            className={`px-3 py-1.5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-md ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110`}
+            className={`h-9 px-3.5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-md ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110`}
           >
             <UserPlus className="w-3.5 h-3.5" /> Add New User
           </button>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg border border-[#222738]">
           <table className="w-full text-left text-xs sm:text-sm text-neutral-300">
-            <thead className="bg-[#050609] text-neutral-400 uppercase tracking-wider font-extrabold text-xs border-b border-neutral-800">
+            <thead className="bg-[#0d1018] text-neutral-400 uppercase tracking-wider font-extrabold text-xs border-b border-[#222738]">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Email</th>
@@ -230,15 +230,15 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-800/60 bg-[#07080d]/60">
+            <tbody className="divide-y divide-[#222738]/60 bg-[#12151f]">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-neutral-900/60 transition-colors">
+                <tr key={u.id} className="hover:bg-[#171c2b] transition-colors">
                   <td className="px-4 py-3.5 font-bold text-white">{u.name}</td>
                   <td className="px-4 py-3.5 text-neutral-400">{u.email}</td>
                   <td className={`px-4 py-3.5 font-semibold ${activeWebsite?.accentText || 'text-blue-400'}`}>{u.role}</td>
                   <td className="px-4 py-3.5">
                     <span className={`px-2.5 py-1 rounded-md text-xs font-bold border ${
-                      u.status === 'Active' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-neutral-800 text-neutral-400 border-neutral-700'
+                      u.status === 'Active' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-[#0d1018] text-neutral-400 border-[#222738]'
                     }`}>
                       {u.status}
                     </span>
@@ -247,7 +247,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                     {u.id !== 1 && (
                       <button
                         onClick={() => handleDeleteUser(u.id)}
-                        className="p-1.5 rounded-md bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 border border-rose-900/30 transition-all"
+                        className="h-8 w-8 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all inline-flex items-center justify-center"
                         title="Remove User"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -262,8 +262,8 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
       </div>
 
       {/* Section 3: Password Security */}
-      <div className="p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 space-y-4 shadow-xl">
-        <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+      <div className="p-5 sm:p-6 rounded-xl bg-[#12151f] border border-[#222738] space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#222738]">
           <h3 className="text-sm font-extrabold text-white flex items-center gap-2">
             <Lock className={`w-4 h-4 ${activeWebsite?.accentText || 'text-blue-400'}`} />
             <span>Account Security & Password</span>
@@ -288,7 +288,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
               required
               value={passwords.current}
               onChange={e => setPasswords({ ...passwords, current: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -299,7 +299,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
               required
               value={passwords.new}
               onChange={e => setPasswords({ ...passwords, new: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -310,14 +310,14 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
               required
               value={passwords.confirm}
               onChange={e => setPasswords({ ...passwords, confirm: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={isChangingPass}
-            className="px-5 py-2.5 rounded-lg bg-[#050609] hover:bg-neutral-800 text-neutral-200 hover:text-white border border-neutral-800 font-extrabold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-md disabled:opacity-50"
+            className="h-9 px-5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white border border-[#222738] font-extrabold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-md disabled:opacity-50"
           >
             <Lock className={`w-3.5 h-3.5 ${activeWebsite?.accentText || 'text-blue-400'}`} />
             <span>{isChangingPass ? 'Updating...' : 'Update Password'}</span>
@@ -328,8 +328,8 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
       {/* Add User Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-70 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#07080d] border border-neutral-800 rounded-xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+          <div className="w-full max-w-md bg-[#12151f] border border-[#222738] rounded-xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-[#222738]">
               <h3 className="text-base font-extrabold text-white flex items-center gap-2">
                 <UserPlus className={`w-4 h-4 ${activeWebsite?.accentText || 'text-blue-400'}`} />
                 <span>Add Admin User</span>
@@ -348,7 +348,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                   value={newUser.name}
                   onChange={e => setNewUser({ ...newUser, name: e.target.value })}
                   placeholder="e.g. Alex Morgan"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -360,7 +360,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                   value={newUser.email}
                   onChange={e => setNewUser({ ...newUser, email: e.target.value })}
                   placeholder="alex@example.com"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -369,24 +369,24 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
                 <select
                   value={newUser.role}
                   onChange={e => setNewUser({ ...newUser, role: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 >
                   <option value="Normal User">Normal User</option>
                   <option value="Super User">Super User</option>
                 </select>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#222738]">
                 <button
                   type="button"
                   onClick={() => setShowAddUserModal(false)}
-                  className="px-4 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 font-semibold text-xs sm:text-sm border border-neutral-800 transition-colors"
+                  className="h-9 px-4 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white font-semibold text-xs sm:text-sm border border-[#222738] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={`px-5 py-2.5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs sm:text-sm shadow-md ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110 transition-all`}
+                  className={`h-9 px-5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} text-white font-extrabold text-xs sm:text-sm shadow-md ${activeWebsite?.glow || 'shadow-blue-500/20'} hover:brightness-110 transition-all`}
                 >
                   Create User
                 </button>

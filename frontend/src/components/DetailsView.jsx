@@ -221,9 +221,9 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-3 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30">
             <User className="w-5 h-5" />
           </div>
           <div>
@@ -251,8 +251,8 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
 
       <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left Column: Avatar & Quick Info Card */}
-        <div className="p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 text-center space-y-4 h-fit shadow-xl">
-          <div className="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden ring-2 ring-blue-500/40 bg-[#030406] shadow-xl flex items-center justify-center">
+        <div className="p-5 sm:p-6 rounded-xl bg-[#12151f] border border-[#222738] text-center space-y-4 h-fit shadow-xl">
+          <div className="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden ring-2 ring-blue-500/40 bg-[#0d1018] shadow-xl flex items-center justify-center">
             {details.avatar ? (
               <img
                 src={details.avatar}
@@ -263,7 +263,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                 }}
               />
             ) : (
-              <User className="w-12 h-12 text-neutral-600" />
+              <User className="w-12 h-12 text-neutral-500" />
             )}
           </div>
 
@@ -271,18 +271,18 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
             <h3 className="text-base font-extrabold text-white font-accent">{details.name}</h3>
             <p className={`text-xs font-bold ${activeWebsite?.accentText || 'text-blue-400'} mt-0.5`}>{details.title}</p>
             <p className="text-[11px] text-neutral-400 mt-1 flex items-center justify-center gap-1">
-              <MapPin className="w-3 h-3 text-neutral-500" />
+              <MapPin className="w-3 h-3 text-neutral-400" />
               <span>{details.location}</span>
             </p>
           </div>
 
-          <label className="w-full py-2.5 px-3 rounded-lg bg-[#050609] hover:bg-neutral-800 text-neutral-200 font-semibold text-xs cursor-pointer flex items-center justify-center gap-2 border border-neutral-800 transition-all">
+          <label className="w-full py-2.5 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 font-semibold text-xs cursor-pointer flex items-center justify-center gap-2 border border-[#222738] transition-all">
             <Upload className={`w-3.5 h-3.5 ${activeWebsite?.accentText || 'text-blue-400'}`} />
             <span>Change Profile Picture</span>
             <input type="file" onChange={handleAvatarChange} className="hidden" accept="image/*" />
           </label>
 
-          <div className="pt-3 border-t border-neutral-800 text-left space-y-2 text-xs">
+          <div className="pt-3 border-t border-[#222738] text-left space-y-2 text-xs">
             <div className="flex items-center justify-between text-neutral-400">
               <span>Experience:</span>
               <span className="font-bold text-white">{details.experienceYears}</span>
@@ -299,10 +299,10 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
         </div>
 
         {/* Right Columns: Main Details Form */}
-        <div className="lg:col-span-2 p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 space-y-6 shadow-xl">
+        <div className="lg:col-span-2 p-5 sm:p-6 rounded-xl bg-[#12151f] border border-[#222738] space-y-6 shadow-xl">
           {/* General Information */}
           <div className="space-y-4">
-            <h3 className="text-sm font-extrabold text-white pb-2.5 border-b border-neutral-800 flex items-center gap-2">
+            <h3 className="text-sm font-extrabold text-white pb-2.5 border-b border-[#222738] flex items-center gap-2">
               <span className={`w-2 h-2 rounded-full ${activeWebsite?.dotColor || 'bg-blue-400'}`}></span>
               <span>General Information</span>
             </h3>
@@ -315,7 +315,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   required
                   value={details.name}
                   onChange={e => setDetails({ ...details, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white font-accent focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white font-accent focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -326,7 +326,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   required
                   value={details.title}
                   onChange={e => setDetails({ ...details, title: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -337,7 +337,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   required
                   value={details.email}
                   onChange={e => setDetails({ ...details, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -347,7 +347,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="text"
                   value={details.phone}
                   onChange={e => setDetails({ ...details, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -357,7 +357,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="text"
                   value={details.location}
                   onChange={e => setDetails({ ...details, location: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -367,14 +367,14 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="text"
                   value={details.resumeUrl}
                   onChange={e => setDetails({ ...details, resumeUrl: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 font-mono text-xs transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] font-mono text-xs transition-all"
                 />
               </div>
             </div>
 
             {/* DYNAMIC QUICK PORTFOLIO HIGHLIGHTS (1, 2, or Max 3 Stats) */}
-            <div className="p-4 sm:p-5 rounded-xl bg-[#050609] border border-neutral-800 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-neutral-800">
+            <div className="p-4 sm:p-5 rounded-xl bg-[#0d1018] border border-[#222738] space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 border-b border-[#222738]">
                 <div>
                   <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-blue-400" />
@@ -387,10 +387,10 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   <button
                     type="button"
                     onClick={() => setDetails({ ...details, heroHighlightsVisible: !details.heroHighlightsVisible })}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 border transition-all ${
+                    className={`h-9 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 border transition-all ${
                       details.heroHighlightsVisible 
-                        ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' 
-                        : 'bg-neutral-800 text-neutral-400 border-neutral-700'
+                        ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/25' 
+                        : 'bg-[#1a1f2e] text-neutral-400 border border-[#222738] hover:bg-[#222738]'
                     }`}
                   >
                     {details.heroHighlightsVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
@@ -401,7 +401,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                     <button
                       type="button"
                       onClick={handleAddStat}
-                      className="px-3 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/40 text-blue-300 text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
+                      className="h-9 px-3 py-1.5 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/40 text-blue-300 text-xs font-bold flex items-center gap-1 shadow-sm transition-all"
                     >
                       <Plus className="w-3.5 h-3.5 text-blue-400" />
                       <span>Add Stat ({details.heroStats.length}/3)</span>
@@ -418,14 +418,14 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   value={details.heroHighlightsTitle}
                   onChange={e => setDetails({ ...details, heroHighlightsTitle: e.target.value })}
                   placeholder="Quick Portfolio Highlights"
-                  className="w-full px-3.5 py-2 rounded-lg bg-black/60 border border-neutral-800 text-xs text-white focus:outline-none focus:border-blue-500/80 transition-all font-semibold"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[#12151f] border border-[#222738] text-xs text-white focus:outline-none focus:border-blue-500/80 focus:bg-[#161a28] transition-all font-semibold"
                 />
               </div>
 
               {/* Stat Cards Editor List */}
               <div className="space-y-3 pt-1">
                 {details.heroStats.map((stat, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-black/50 border border-neutral-800/90 space-y-3">
+                  <div key={idx} className="p-3.5 rounded-xl bg-[#12151f] border border-[#222738] space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-300 text-[11px] font-bold flex items-center justify-center">
@@ -456,7 +456,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                           value={stat.value}
                           onChange={e => handleStatChange(idx, 'value', e.target.value)}
                           placeholder="e.g. 1,000+ or 136K+"
-                          className="w-full px-3 py-1.5 rounded-lg bg-[#07080d] border border-neutral-800 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
+                          className="w-full px-3 py-1.5 rounded-lg bg-[#0d1018] border border-[#222738] text-xs text-white focus:outline-none focus:border-blue-500 focus:bg-[#161a28] font-mono"
                         />
                       </div>
 
@@ -468,7 +468,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                           value={stat.label}
                           onChange={e => handleStatChange(idx, 'label', e.target.value)}
                           placeholder="e.g. Production Users"
-                          className="w-full px-3 py-1.5 rounded-lg bg-[#07080d] border border-neutral-800 text-xs text-white focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-1.5 rounded-lg bg-[#0d1018] border border-[#222738] text-xs text-white focus:outline-none focus:border-blue-500 focus:bg-[#161a28]"
                         />
                       </div>
 
@@ -478,7 +478,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                         <select
                           value={stat.icon}
                           onChange={e => handleStatChange(idx, 'icon', e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#07080d] border border-neutral-800 text-xs text-white focus:outline-none focus:border-blue-500"
+                          className="w-full px-2.5 py-1.5 rounded-lg bg-[#0d1018] border border-[#222738] text-xs text-white focus:outline-none focus:border-blue-500"
                         >
                           {POPULAR_ICONS.map((ico, icoIdx) => (
                             <option key={icoIdx} value={ico.iconClass}>{ico.label} ({ico.iconClass})</option>
@@ -491,13 +491,13 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
               </div>
 
               {/* Realtime Live Preview Box */}
-              <div className="pt-2 border-t border-neutral-800/80">
+              <div className="pt-2 border-t border-[#222738]">
                 <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                   <Eye className="w-3 h-3 text-emerald-400" />
                   <span>Live Preview: Quick Portfolio Highlights ({details.heroStats.length} Stats)</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-[#090d28]/90 border border-purple-500/40 shadow-xl space-y-3">
+                <div className="p-4 rounded-xl bg-[#141828] border border-purple-500/40 shadow-xl space-y-3">
                   <div className="text-xs font-bold text-white font-accent flex items-center justify-between">
                     <span>{details.heroHighlightsTitle || 'Quick Portfolio Highlights'}</span>
                     <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">
@@ -507,7 +507,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
 
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                     {details.heroStats.map((st, sIdx) => (
-                      <div key={sIdx} className="flex-1 min-w-[100px] text-center space-y-1 p-2 rounded-lg bg-black/40 border border-neutral-800/60">
+                      <div key={sIdx} className="flex-1 min-w-[100px] text-center space-y-1 p-2 rounded-lg bg-[#0d1018] border border-[#222738]">
                         <div className="flex items-center justify-center gap-2">
                           <i className={`${st.icon || 'fas fa-chart-line'} text-blue-400 text-xs`}></i>
                           <span className="text-sm font-extrabold text-white font-mono">{st.value || '0'}</span>
@@ -533,7 +533,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
 
           {/* Social Media & Online Profiles */}
           <div className="space-y-4 pt-2">
-            <h3 className="text-sm font-extrabold text-white pb-2.5 border-b border-neutral-800 flex items-center gap-2">
+            <h3 className="text-sm font-extrabold text-white pb-2.5 border-b border-[#222738] flex items-center gap-2">
               <Globe className={`w-4 h-4 ${activeWebsite?.accentText || 'text-blue-400'}`} />
               <span>Social Profiles & Online Links</span>
             </h3>
@@ -547,7 +547,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="url"
                   value={details.github}
                   onChange={e => setDetails({ ...details, github: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 font-mono text-xs transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] font-mono text-xs transition-all"
                 />
               </div>
 
@@ -559,7 +559,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="url"
                   value={details.linkedin}
                   onChange={e => setDetails({ ...details, linkedin: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 font-mono text-xs transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] font-mono text-xs transition-all"
                 />
               </div>
 
@@ -571,7 +571,7 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="text"
                   value={details.twitter}
                   onChange={e => setDetails({ ...details, twitter: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -583,13 +583,13 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
                   type="url"
                   value={details.website}
                   onChange={e => setDetails({ ...details, website: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 font-mono text-xs transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] font-mono text-xs transition-all"
                 />
               </div>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-neutral-800 flex justify-end">
+          <div className="pt-4 border-t border-[#222738] flex justify-end">
             <button
               type="submit"
               className={`h-9 px-5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all`}

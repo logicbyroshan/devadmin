@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, X, Sparkles } from 'lucide-react';
 
 /**
- * Custom OLED Dark Glassmorphic DatePicker
+ * Custom 90-95% Black Depth Glassmorphic DatePicker
  * Supports Month/Year navigation, Today quick-pick, clear action, and dynamic theme accents.
  */
 export default function CustomDatePicker({
@@ -154,7 +154,7 @@ export default function CustomDatePicker({
             <button
               type="button"
               onClick={handleClear}
-              className="text-[11px] text-neutral-500 hover:text-neutral-300 transition-colors flex items-center gap-0.5"
+              className="text-[11px] text-neutral-400 hover:text-neutral-200 transition-colors flex items-center gap-0.5"
             >
               <X className="w-3 h-3" /> Clear
             </button>
@@ -166,27 +166,27 @@ export default function CustomDatePicker({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full h-[42px] px-3.5 py-2 rounded-lg bg-[#050609] border ${
-          isOpen ? `${accentBorder} shadow-lg shadow-blue-500/10` : 'border-neutral-800 hover:border-neutral-700'
+        className={`w-full h-[42px] px-3.5 py-2 rounded-lg bg-[#0d1018] border ${
+          isOpen ? `${accentBorder} shadow-lg shadow-blue-500/10 bg-[#161a28]` : 'border-[#222738] hover:border-neutral-600'
         } text-sm text-left flex items-center justify-between transition-all duration-150 focus:outline-none`}
       >
         <span className={value ? 'text-neutral-100 font-mono text-xs font-medium' : 'text-neutral-500 text-xs'}>
           {value || placeholder}
         </span>
         <div className="flex items-center gap-1.5 text-neutral-400">
-          <CalendarIcon className={`w-4 h-4 ${value ? accentText : 'text-neutral-500'}`} />
+          <CalendarIcon className={`w-4 h-4 ${value ? accentText : 'text-neutral-400'}`} />
         </div>
       </button>
 
       {/* Calendar Popover */}
       {isOpen && (
-        <div className="absolute left-0 mt-2 w-72 sm:w-80 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
+        <div className="absolute left-0 mt-2 w-72 sm:w-80 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
           {/* Header: Month & Year Navigator */}
-          <div className="flex items-center justify-between pb-3 border-b border-neutral-800/80 mb-3">
+          <div className="flex items-center justify-between pb-3 border-b border-[#222738] mb-3">
             <button
               type="button"
               onClick={handlePrevMonth}
-              className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition-colors"
+              className="p-1.5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-400 hover:text-white border border-[#222738] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -199,7 +199,7 @@ export default function CustomDatePicker({
             <button
               type="button"
               onClick={handleNextMonth}
-              className="p-1.5 rounded-lg bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-neutral-800 transition-colors"
+              className="p-1.5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-400 hover:text-white border border-[#222738] transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -208,7 +208,7 @@ export default function CustomDatePicker({
           {/* Weekday Names Header */}
           <div className="grid grid-cols-7 gap-1 text-center mb-1">
             {dayLabels.map((d, i) => (
-              <span key={i} className="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider py-1">
+              <span key={i} className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider py-1">
                 {d}
               </span>
             ))}
@@ -222,7 +222,7 @@ export default function CustomDatePicker({
                 key={`prev-${d}`}
                 type="button"
                 onClick={() => handleSelectDay(d, -1)}
-                className="h-8 rounded-md text-neutral-600 hover:bg-neutral-900/60 hover:text-neutral-400 text-xs transition-colors"
+                className="h-8 rounded-md text-neutral-500 hover:bg-[#0d1018] hover:text-neutral-300 text-xs transition-colors"
               >
                 {d}
               </button>
@@ -245,8 +245,8 @@ export default function CustomDatePicker({
                     isSelected
                       ? `bg-gradient-to-r ${gradient} text-white shadow-md shadow-blue-500/30 scale-105 font-bold z-10`
                       : isToday
-                      ? 'bg-neutral-900 text-blue-400 border border-blue-500/40 hover:bg-neutral-800'
-                      : 'text-neutral-200 hover:bg-neutral-800/80 hover:text-white'
+                      ? 'bg-[#0d1018] text-blue-400 border border-blue-500/40 hover:bg-[#161a28]'
+                      : 'text-neutral-200 hover:bg-[#161a28] hover:text-white'
                   }`}
                 >
                   <span>{d}</span>
@@ -263,7 +263,7 @@ export default function CustomDatePicker({
                 key={`next-${d}`}
                 type="button"
                 onClick={() => handleSelectDay(d, 1)}
-                className="h-8 rounded-md text-neutral-600 hover:bg-neutral-900/60 hover:text-neutral-400 text-xs transition-colors"
+                className="h-8 rounded-md text-neutral-500 hover:bg-[#0d1018] hover:text-neutral-300 text-xs transition-colors"
               >
                 {d}
               </button>
@@ -271,7 +271,7 @@ export default function CustomDatePicker({
           </div>
 
           {/* Footer Actions: Today & Clear */}
-          <div className="flex items-center justify-between pt-3 mt-2 border-t border-neutral-800/80 text-xs">
+          <div className="flex items-center justify-between pt-3 mt-2 border-t border-[#222738] text-xs">
             <button
               type="button"
               onClick={handlePickToday}

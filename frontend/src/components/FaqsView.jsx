@@ -161,9 +161,9 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
     return (
       <div className="space-y-6 w-full max-w-full overflow-x-hidden font-sans animate-in fade-in duration-150">
         {/* Top Header */}
-        <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            <div className="p-3 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30">
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
@@ -180,16 +180,15 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
             <button
               type="button"
               onClick={handleBackToList}
-              className="px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-800 transition-colors"
+              className="h-9 px-4 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white text-xs font-semibold border border-[#222738] transition-colors"
             >
               Cancel
             </button>
 
-
             <button
               type="button"
               onClick={handleSaveForm}
-              className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+              className="h-9 px-5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>{isEditing ? 'Save Changes' : 'Save & Publish FAQ'}</span>
@@ -198,7 +197,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
         </div>
 
         {/* Dedicated Separate Form Container */}
-        <div className="p-6 sm:p-8 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl space-y-6">
+        <div className="p-6 sm:p-8 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6">
           <form onSubmit={handleSaveForm} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
@@ -212,7 +211,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
                   value={formData.question}
                   onChange={e => setFormData({ ...formData, question: e.target.value })}
                   placeholder="e.g. What is your typical turnaround time for full-stack builds?"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-accent"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all font-accent"
                 />
               </div>
 
@@ -225,7 +224,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
                   placeholder="e.g. Services, Timeline, Technical"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all"
                 />
               </div>
             </div>
@@ -240,12 +239,12 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
                 value={formData.answer}
                 onChange={e => setFormData({ ...formData, answer: e.target.value })}
                 placeholder="Provide a comprehensive and helpful response for your clients..."
-                className="w-full p-4 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 resize-none leading-relaxed transition-all"
+                className="w-full p-4 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] resize-none leading-relaxed transition-all"
               />
             </div>
 
             {/* Visibility Toggle */}
-            <div className="p-4 rounded-lg bg-black/50 border border-neutral-800/80 flex items-center justify-between">
+            <div className="p-4 rounded-lg bg-[#0d1018] border border-[#222738] flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-white">Live Portfolio Visibility</div>
                 <p className="text-xs text-neutral-400 mt-0.5">Show or hide this question from your public FAQ section.</p>
@@ -254,10 +253,10 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, visible: !formData.visible })}
-                className={`px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
+                className={`h-9 px-3.5 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
                   formData.visible
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
+                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                    : 'bg-[#1a1f2e] text-neutral-400 border border-[#222738] hover:bg-[#222738]'
                 }`}
               >
                 {formData.visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
@@ -266,18 +265,18 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
             </div>
 
             {/* Form Actions Footer */}
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-neutral-800">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#222738]">
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="px-5 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs sm:text-sm font-semibold border border-neutral-800 transition-colors"
+                className="h-9 px-5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white text-xs sm:text-sm font-semibold border border-[#222738] transition-colors"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                className="h-9 px-6 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
               >
                 <Save className="w-4 h-4" />
                 <span>{isEditing ? 'Save Changes' : 'Save & Publish FAQ'}</span>
@@ -295,9 +294,9 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner with Category Dropdown & Add Button */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-3 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30">
             <HelpCircle className="w-5 h-5" />
           </div>
           <div>
@@ -313,7 +312,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="h-9 pl-3.5 pr-8 rounded-lg bg-neutral-900/60 border border-neutral-800 text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"
+              className="h-9 pl-3.5 pr-8 rounded-lg bg-[#0d1018] border border-[#222738] text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"
             >
               <option value="ALL">All Categories ({faqs.length})</option>
               {categories.filter(c => c !== 'ALL').map(cat => (
@@ -335,8 +334,8 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
 
       {/* 3-Card Format Grid or Empty State */}
       {filteredFaqs.length === 0 ? (
-        <div className="p-12 text-center rounded-xl bg-[#07080d] border border-neutral-800 text-neutral-400 space-y-4 shadow-xl">
-          <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto">
+        <div className="p-12 text-center rounded-xl bg-[#12151f] border border-[#222738] text-neutral-400 space-y-4 shadow-xl">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/15 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto">
             <HelpCircle className="w-6 h-6" />
           </div>
           <div>
@@ -347,7 +346,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
           </div>
           <button
             onClick={handleOpenAddPage}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
+            className="h-9 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Add First FAQ</span>
@@ -356,14 +355,14 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredFaqs.map((faq) => (
-            <div key={faq.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+            <div key={faq.id} className="p-5 rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600/70 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
                     <Tag className="w-3.5 h-3.5" />
                     <span>{faq.category}</span>
                   </span>
-                  <span className="text-xs font-bold text-neutral-500">FAQ #{faq.id}</span>
+                  <span className="text-xs font-bold text-neutral-400">FAQ #{faq.id}</span>
                 </div>
 
                 <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-2 font-accent leading-snug">
@@ -376,14 +375,14 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
               </div>
 
               {/* Action Buttons — consistent h-9 (36px) */}
-              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
+              <div className="flex items-center justify-between pt-3 border-t border-[#222738] gap-2">
                 <button
                   type="button"
                   onClick={() => handleToggleVisible(faq.id)}
                   className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
                     faq.visible
                       ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                      : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
+                      : 'bg-[#0d1018] text-neutral-400 border border-[#222738] hover:bg-[#161a28]'
                   }`}
                   title="Toggle Live Visibility"
                 >
@@ -395,7 +394,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
                   <button
                     type="button"
                     onClick={() => handleOpenEditPage(faq)}
-                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                    className="h-9 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-[#222738] transition-all"
                   >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>

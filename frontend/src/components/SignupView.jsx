@@ -44,8 +44,8 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-black text-slate-100 selection:bg-blue-500/30 selection:text-blue-200">
-      <div className="w-full max-w-md p-8 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-150">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#07080c] text-slate-100 selection:bg-blue-500/30 selection:text-blue-200">
+      <div className="w-full max-w-md p-8 rounded-2xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
         <div className="text-center space-y-2">
           <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
             <UserPlus className="w-7 h-7 text-white" />
@@ -72,7 +72,7 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. roshan_dev"
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800 text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -86,7 +86,7 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Roshan Kumar"
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800 text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -100,7 +100,7 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="admin@example.com"
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800 text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -114,7 +114,7 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800 text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -128,14 +128,14 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-lg glass-input bg-[#050609] border-neutral-800 text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white placeholder:text-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading ? (
               <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
@@ -148,7 +148,7 @@ export default function SignupView({ onSignupSuccess, onSwitchToLogin }) {
           </button>
         </form>
 
-        <div className="text-center pt-2 border-t border-neutral-800">
+        <div className="text-center pt-2 border-t border-[#222738]">
           <p className="text-xs text-neutral-400">
             Already have an account?{' '}
             <button 

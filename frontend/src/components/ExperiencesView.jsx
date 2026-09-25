@@ -186,9 +186,9 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
     return (
       <div className="space-y-6 w-full max-w-full overflow-x-hidden font-sans animate-in fade-in duration-150">
         {/* Top Header */}
-        <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
@@ -205,16 +205,15 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
             <button
               type="button"
               onClick={handleBackToList}
-              className="px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-800 transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs font-semibold border border-[#222738] transition-colors"
             >
               Cancel
             </button>
 
-
             <button
               type="button"
               onClick={handleSaveForm}
-              className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+              className="px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>{isEditing ? 'Save Changes' : 'Save & Publish Experience'}</span>
@@ -223,12 +222,12 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
         </div>
 
         {/* Dedicated Form Card */}
-        <div className="p-6 sm:p-8 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl space-y-6">
+        <div className="p-6 sm:p-8 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6">
           <form onSubmit={handleSaveForm} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
-                  Role Title <span className="text-blue-400">*</span>
+                  Role Title <span className="text-violet-400">*</span>
                 </label>
                 <input
                   type="text"
@@ -237,13 +236,13 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   value={formData.role}
                   onChange={e => setFormData({ ...formData, role: e.target.value })}
                   placeholder="e.g. Lead Platform Architect"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-accent"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all font-accent"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
-                  Company / Organization <span className={activeWebsite?.accentText || "text-blue-400"}>*</span>
+                  Company / Organization <span className={activeWebsite?.accentText || "text-violet-400"}>*</span>
                 </label>
                 <input
                   type="text"
@@ -251,7 +250,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   value={formData.company}
                   onChange={e => setFormData({ ...formData, company: e.target.value })}
                   placeholder="e.g. DevAdmin Cloud Labs"
-                  className={`w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-accent ${activeWebsite?.accentText || 'text-blue-400'}`}
+                  className={`w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all font-accent ${activeWebsite?.accentText || 'text-violet-400'}`}
                 />
               </div>
             </div>
@@ -266,7 +265,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
                   placeholder="e.g. Full-Stack Engineering, Frontend Architecture"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
 
@@ -281,7 +280,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                     status: e.target.value, 
                     left: e.target.value === 'CURRENT' ? 'Present' : (formData.left === 'Present' ? '' : formData.left) 
                   })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 >
                   <option value="CURRENT">CURRENT (Active Position)</option>
                   <option value="PAST">PAST (Former Position)</option>
@@ -309,7 +308,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   value={formData.left}
                   onChange={e => setFormData({ ...formData, left: e.target.value })}
                   placeholder="e.g. Present or 2024-12-31"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
             </div>
@@ -323,12 +322,12 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                 value={formData.description}
                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Detail your responsibilities, architecture decisions, and tech stack utilized..."
-                className="w-full p-4 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 resize-none leading-relaxed transition-all"
+                className="w-full p-4 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 resize-none leading-relaxed transition-all"
               />
             </div>
 
             {/* Visibility Toggle */}
-            <div className="p-4 rounded-lg bg-black/50 border border-neutral-800/80 flex items-center justify-between">
+            <div className="p-4 rounded-lg bg-[#0d1018] border border-[#1f2436] flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-white">Portfolio Visibility</div>
                 <p className="text-xs text-neutral-400 mt-0.5">Control whether this experience record appears publicly on your live portfolio.</p>
@@ -348,18 +347,18 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
               </button>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-neutral-800">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#222738]">
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="px-5 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs sm:text-sm font-semibold border border-neutral-800 transition-colors"
+                className="px-5 py-2.5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs sm:text-sm font-semibold border border-[#222738] transition-colors"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
               >
                 <Save className="w-4 h-4" />
                 <span>{isEditing ? 'Save Changes' : 'Save & Publish Experience'}</span>
@@ -377,9 +376,9 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner with Category Dropdown & Add Button */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
             <Briefcase className="w-5 h-5" />
           </div>
           <div>
@@ -395,7 +394,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="h-9 pl-3.5 pr-8 rounded-lg bg-neutral-900/60 border border-neutral-800 text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"
+              className="h-9 pl-3.5 pr-8 rounded-lg bg-[#0d1018] border border-[#222738] text-sm font-semibold text-neutral-200 focus:outline-none focus:border-violet-500 transition-colors cursor-pointer appearance-none"
             >
               <option value="ALL">All Categories ({experiences.length})</option>
               {categories.filter(c => c !== 'ALL').map(cat => (
@@ -407,7 +406,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
 
           <button
             onClick={handleOpenAddPage}
-            className="h-9 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0"
+            className="h-9 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Add New Experience</span>
@@ -417,7 +416,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
 
       {/* Experiences Grid or Empty State */}
       {filteredExperiences.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-[#07080d] border border-neutral-800/80 space-y-3">
+        <div className="p-12 text-center rounded-2xl bg-[#12151f] border border-[#222738] space-y-3 shadow-xl">
           <Briefcase className="w-10 h-10 mx-auto text-neutral-600" />
           <h3 className="text-base font-bold text-white">No Experiences Found</h3>
           <p className="text-xs text-neutral-400 max-w-sm mx-auto">
@@ -429,18 +428,18 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredExperiences.map(exp => (
-            <div key={exp.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+            <div key={exp.id} className="p-5 rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between shadow-xl space-y-4 group">
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-1 font-accent">
                       {exp.role}
                     </h3>
-                    <div className="text-xs font-bold text-blue-400 truncate mt-0.5 font-accent">
+                    <div className="text-xs font-bold text-violet-400 truncate mt-0.5 font-accent">
                       @ {exp.company}
                     </div>
                     <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 mt-1.5">
-                      <Tag className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                      <Tag className="w-3 h-3 text-violet-400 flex-shrink-0" />
                       <span className="truncate">{exp.category}</span>
                     </div>
                   </div>
@@ -458,14 +457,14 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   {exp.description}
                 </p>
 
-                <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 pt-3 border-t border-neutral-800">
-                  <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 pt-3 border-t border-[#222738]">
+                  <Calendar className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
                   <span className="truncate">Tenure: {exp.joined} — {exp.left}</span>
                 </div>
               </div>
 
-              {/* Action Buttons — consistent h-9 (36px) */}
-              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
+              {/* Action Buttons */}
+              <div className="flex items-center justify-between pt-3 border-t border-[#222738] gap-2">
                 <button
                   type="button"
                   onClick={() => handleToggleVisible(exp.id)}
@@ -484,7 +483,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
                   <button
                     type="button"
                     onClick={() => handleOpenEditPage(exp)}
-                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                    className="h-9 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-[#222738] transition-all"
                   >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
