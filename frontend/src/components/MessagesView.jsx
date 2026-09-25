@@ -151,9 +151,9 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
   return (
     <div className="flex flex-col h-[calc(100vh-6.5rem)] space-y-4 w-full max-w-full overflow-hidden font-sans">
       {/* Header Banner */}
-      <div className="flex-shrink-0 p-4 sm:p-4.5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xl">
+      <div className="flex-shrink-0 p-4 sm:p-4.5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-2.5 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30">
             <Mail className="w-5 h-5" />
           </div>
           <div>
@@ -173,17 +173,17 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
       {/* 2-Column Split: Message Inbox Feed (Left) & Full Conversation & Reply Console (Right) */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0 overflow-hidden">
         {/* LEFT COLUMN: Messages Feed & Search */}
-        <div className="lg:col-span-5 rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col h-full min-h-0">
+        <div className="lg:col-span-5 rounded-xl bg-[#12151f] border border-[#222738] shadow-xl overflow-hidden flex flex-col h-full min-h-0">
           {/* Top Filter & Search Bar */}
-          <div className="flex-shrink-0 p-3.5 border-b border-neutral-800 space-y-2.5 bg-[#050609]">
+          <div className="flex-shrink-0 p-3.5 border-b border-[#222738] space-y-2.5 bg-[#0d1018]">
             <div className="relative">
-              <Search className="w-4 h-4 text-neutral-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search messages by sender, email or text..."
-                className="w-full pl-9 pr-3 py-2 rounded-lg bg-black/80 border border-neutral-800 text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-blue-500/60"
+                className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#12151f] border border-[#222738] text-xs text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-blue-500/60 focus:bg-[#161a28] transition-all"
               />
             </div>
 
@@ -203,7 +203,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                   className={`px-2.5 py-1 rounded-md whitespace-nowrap transition-all ${
                     filter === tab.id
                       ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40 font-bold'
-                      : 'hover:bg-neutral-800 hover:text-white bg-neutral-900/60 border border-neutral-800/80'
+                      : 'hover:bg-[#1f2436] hover:text-white bg-[#0d1018] border border-[#222738]'
                   }`}
                 >
                   {tab.label}
@@ -213,9 +213,9 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
           </div>
 
           {/* Scrollable Message Items List */}
-          <div className="p-3 space-y-2 flex-1 overflow-y-auto min-h-0">
+          <div className="p-3 space-y-2 flex-1 overflow-y-auto min-h-0 bg-[#0d1018]/50">
             {filteredMessages.length === 0 ? (
-              <div className="p-8 text-center text-neutral-500 text-xs">
+              <div className="p-8 text-center text-neutral-400 text-xs">
                 {messages.length === 0 ? 'No contact inquiries received yet.' : 'No messages match the current filter.'}
               </div>
             ) : (
@@ -233,13 +233,13 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                     }}
                     className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-200 space-y-2 ${
                       isSelected
-                        ? 'bg-[#0d1222] border-blue-500/80 shadow-lg shadow-blue-500/15'
-                        : 'bg-[#050609] hover:bg-neutral-900/80 border-neutral-800/80'
+                        ? 'bg-[#151b2d] border-blue-500/80 shadow-lg shadow-blue-500/15'
+                        : 'bg-[#12151f] hover:bg-[#181c2b] border-[#222738]'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className={`w-8 h-8 rounded-lg ${isSelected ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white' : 'bg-neutral-800 text-neutral-300'} font-bold text-xs flex items-center justify-center flex-shrink-0 font-accent shadow-sm`}>
+                        <div className={`w-8 h-8 rounded-lg ${isSelected ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white' : 'bg-[#1e2333] text-neutral-300'} font-bold text-xs flex items-center justify-center flex-shrink-0 font-accent shadow-sm`}>
                           {msg.sender.charAt(0)}
                         </div>
                         <div className="min-w-0">
@@ -261,7 +261,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                           type="button"
                           onClick={(e) => toggleStar(msg.id, e)}
                           className={`p-1 rounded transition-colors ${
-                            msg.starred ? 'text-amber-400' : 'text-neutral-600 hover:text-neutral-400'
+                            msg.starred ? 'text-amber-400' : 'text-neutral-500 hover:text-neutral-300'
                           }`}
                         >
                           <Star className={`w-4 h-4 ${msg.starred ? 'fill-current' : ''}`} />
@@ -277,7 +277,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                       {msg.body}
                     </p>
 
-                    <div className="flex items-center justify-between text-xs text-neutral-500 pt-1.5 border-t border-neutral-800/60">
+                    <div className="flex items-center justify-between text-xs text-neutral-400 pt-1.5 border-t border-[#222738]/60">
                       <span>{msg.date}</span>
                       <span>{msg.time}</span>
                     </div>
@@ -289,11 +289,11 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
         </div>
 
         {/* RIGHT COLUMN: Full Conversation Reader & Quick Email Reply Composer */}
-        <div className="lg:col-span-7 rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col h-full min-h-0">
+        <div className="lg:col-span-7 rounded-xl bg-[#12151f] border border-[#222738] shadow-xl overflow-hidden flex flex-col h-full min-h-0">
           {selectedMessage ? (
             <div className="flex-1 flex flex-col h-full min-h-0">
               {/* Message Header */}
-              <div className="flex-shrink-0 bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] p-4 border-b border-neutral-800 flex items-start justify-between gap-3">
+              <div className="flex-shrink-0 bg-gradient-to-r from-[#171c2b] via-[#141825] to-[#10131f] p-4 border-b border-[#222738] flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-base flex items-center justify-center flex-shrink-0 shadow-md font-accent">
                     {selectedMessage.sender.charAt(0)}
@@ -305,7 +305,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                         {selectedMessage.tag}
                       </span>
                     </div>
-                    <p className="text-xs text-neutral-400 mt-0.5">{selectedMessage.email} • <span className="text-neutral-500">{selectedMessage.date}</span></p>
+                    <p className="text-xs text-neutral-400 mt-0.5">{selectedMessage.email} • <span className="text-neutral-400">{selectedMessage.date}</span></p>
                   </div>
                 </div>
 
@@ -314,14 +314,14 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                   <button
                     type="button"
                     onClick={() => toggleReadStatus(selectedMessage.id)}
-                    className="px-2.5 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-xs font-semibold text-neutral-300 transition-colors"
+                    className="h-9 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] border border-[#222738] text-xs font-semibold text-neutral-200 hover:text-white transition-colors"
                   >
                     {selectedMessage.read ? 'Mark Unread' : 'Mark Read'}
                   </button>
                   <button
                     type="button"
                     onClick={() => handleDelete(selectedMessage.id)}
-                    className="p-1.5 rounded-lg bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 border border-rose-900/30 text-xs transition-colors"
+                    className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-colors flex items-center justify-center"
                     title="Delete Message"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -330,18 +330,18 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
               </div>
 
               {/* Message Content View Card */}
-              <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-3.5 bg-[#050609]/60">
+              <div className="flex-1 overflow-y-auto min-h-0 p-5 space-y-3.5 bg-[#0d1018]/60">
                 <div className="text-sm sm:text-base font-bold text-neutral-100">
                   {selectedMessage.subject}
                 </div>
 
-                <div className="p-4 rounded-xl bg-black/60 border border-neutral-800/80 text-xs sm:text-sm text-neutral-200 leading-relaxed whitespace-pre-line font-normal">
+                <div className="p-4 rounded-xl bg-[#12151f] border border-[#222738] text-xs sm:text-sm text-neutral-200 leading-relaxed whitespace-pre-line font-normal">
                   {selectedMessage.body}
                 </div>
               </div>
 
               {/* Direct Email Reply Composer */}
-              <div className="flex-shrink-0 p-4 sm:p-5 space-y-3 bg-[#07080d] border-t border-neutral-800">
+              <div className="flex-shrink-0 p-4 sm:p-5 space-y-3 bg-[#12151f] border-t border-[#222738]">
                 {/* Sent Success Toast Banner */}
                 {isSentToast && (
                   <div className="flex items-center gap-2.5 p-3 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold animate-in fade-in duration-200">
@@ -366,7 +366,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                 </div>
 
                 {/* Subject Input */}
-                <div className="flex items-center gap-2 bg-[#050609] border border-neutral-800 rounded-lg px-3 py-2 text-xs">
+                <div className="flex items-center gap-2 bg-[#0d1018] border border-[#222738] rounded-lg px-3 py-2 text-xs">
                   <span className="text-neutral-400 font-bold text-[11px] uppercase tracking-wider">Subject:</span>
                   <input
                     type="text"
@@ -382,7 +382,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                   value={replyText}
                   onChange={e => setReplyText(e.target.value)}
                   placeholder={`Hi ${selectedMessage.sender},\n\nThank you for reaching out! I would be delighted to assist you with...`}
-                  className="w-full p-3 rounded-lg bg-[#050609] border border-neutral-800 text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all resize-none leading-relaxed font-normal"
+                  className="w-full p-3 rounded-lg bg-[#0d1018] border border-[#222738] text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 focus:bg-[#161a28] transition-all resize-none leading-relaxed font-normal"
                 />
 
                 {/* Canned suggestions + Send Button */}
@@ -391,21 +391,21 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                     <button
                       type="button"
                       onClick={() => setReplyText(`Hi ${selectedMessage.sender}, thank you for reaching out! I am currently available for new contract work and architecture consultation.`)}
-                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white border border-[#222738] transition-colors"
                     >
                       Available for work
                     </button>
                     <button
                       type="button"
                       onClick={() => setReplyText(`Hi ${selectedMessage.sender}, let's schedule a 15-minute discovery call this week to discuss details.`)}
-                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white border border-[#222738] transition-colors"
                     >
                       Schedule Call
                     </button>
                     <button
                       type="button"
                       onClick={() => setReplyText(`Hi ${selectedMessage.sender}, thank you for the wonderful feedback! Really appreciate you taking the time to share.`)}
-                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
+                      className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white border border-[#222738] transition-colors"
                     >
                       Thanks for feedback
                     </button>
@@ -414,7 +414,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
                   <button
                     type="button"
                     onClick={handleSendReply}
-                    className={`px-5 py-2 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0`}
+                    className={`h-9 px-5 rounded-lg bg-gradient-to-r ${activeWebsite?.gradient || 'from-blue-600 to-indigo-600'} hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0`}
                   >
                     <Send className="w-4 h-4" />
                     <span>Send Email Reply</span>
@@ -423,8 +423,8 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
               </div>
             </div>
           ) : (
-            <div className="p-12 text-center text-neutral-500 text-sm flex flex-col items-center justify-center space-y-2 h-full">
-              <Inbox className="w-10 h-10 text-neutral-600" />
+            <div className="p-12 text-center text-neutral-400 text-sm flex flex-col items-center justify-center space-y-2 h-full">
+              <Inbox className="w-10 h-10 text-neutral-500" />
               <p>Select a message from the left to read and reply.</p>
             </div>
           )}

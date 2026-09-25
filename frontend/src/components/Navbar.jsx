@@ -41,20 +41,20 @@ export default function Navbar({
   return (
     <header 
       ref={navRef} 
-      className="fixed top-0 left-0 right-0 z-40 h-16 flex items-center justify-between border-b border-neutral-800/80 bg-[#030407]/95 px-4 sm:px-6 backdrop-blur-2xl transition-all duration-200"
+      className="fixed top-0 left-0 right-0 z-40 h-16 flex items-center justify-between border-b border-[#222738] bg-[#0c0e15]/95 px-4 sm:px-6 backdrop-blur-2xl transition-all duration-200"
     >
       {/* Left: Mobile Toggle & Dedicated DevMate Suite Badge */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMobileSidebar}
           aria-label="Toggle Navigation Menu"
-          className="md:hidden p-2 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-300 hover:text-white transition-colors"
+          className="md:hidden p-2 rounded-lg bg-[#12151f] border border-[#222738] text-neutral-300 hover:text-white transition-colors"
         >
           {isMobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
         {/* Dedicated DevMate Target Project Badge (Static - No Dropdown) */}
-        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#07080d]/90 border border-violet-500/30 shadow-lg shadow-violet-500/5 backdrop-blur-xl select-none group">
+        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#12151f] border border-violet-500/40 shadow-lg shadow-violet-500/10 backdrop-blur-xl select-none group">
           <div className="flex items-center gap-2">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
@@ -76,7 +76,7 @@ export default function Navbar({
       {/* Right: Date, Notifications & User Session */}
       <div className="flex items-center gap-2.5 sm:gap-3">
         {/* Date Widget (Desktop) */}
-        <div className="hidden lg:flex items-center gap-2 px-3 h-9 rounded-lg bg-[#07080d] border border-neutral-800/80 text-xs font-semibold text-neutral-300 select-none">
+        <div className="hidden lg:flex items-center gap-2 px-3 h-9 rounded-lg bg-[#12151f] border border-[#222738] text-xs font-semibold text-neutral-300 select-none">
           <Calendar className={`w-3.5 h-3.5 ${accentText}`} />
           <span>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
         </div>
@@ -89,7 +89,7 @@ export default function Navbar({
               setShowProfileMenu(false);
             }}
             aria-label="Notifications"
-            className="relative h-9 w-9 flex items-center justify-center rounded-lg bg-[#07080d] border border-neutral-800 text-neutral-400 hover:text-white hover:border-neutral-700 transition-all duration-200"
+            className="relative h-9 w-9 flex items-center justify-center rounded-lg bg-[#12151f] border border-[#222738] text-neutral-400 hover:text-white hover:border-neutral-600 transition-all duration-200"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
@@ -100,8 +100,8 @@ export default function Navbar({
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-xl bg-[#07080c] border border-neutral-800 shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
-              <div className="flex items-center justify-between pb-2 border-b border-neutral-800 mb-2">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
+              <div className="flex items-center justify-between pb-2 border-b border-[#222738] mb-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-neutral-300 flex items-center gap-1.5">
                   <Sparkles className={`w-3.5 h-3.5 ${accentText}`} /> Notifications
                 </h4>
@@ -116,7 +116,7 @@ export default function Navbar({
               </div>
               <div className="space-y-1.5 max-h-60 overflow-y-auto">
                 {notifications.length === 0 ? (
-                  <div className="text-center py-4 text-neutral-500 text-xs">
+                  <div className="text-center py-4 text-neutral-400 text-xs">
                     No new notifications
                   </div>
                 ) : (
@@ -124,11 +124,11 @@ export default function Navbar({
                     <div
                       key={n.id}
                       className={`p-2.5 rounded-lg text-xs transition-colors ${
-                        n.read ? 'bg-black/60 text-neutral-400 border border-neutral-900' : `${activeWebsite?.accentBg || 'bg-violet-500/15'} text-neutral-200 border ${activeWebsite?.accentBorder || 'border-violet-500/30'}`
+                        n.read ? 'bg-[#0d1018] text-neutral-400 border border-[#222738]' : `${activeWebsite?.accentBg || 'bg-violet-500/15'} text-neutral-200 border ${activeWebsite?.accentBorder || 'border-violet-500/30'}`
                       }`}
                     >
                       <p className="line-clamp-2">{n.text}</p>
-                      <span className="text-[11px] text-neutral-500 mt-1 block">{n.time}</span>
+                      <span className="text-[11px] text-neutral-400 mt-1 block">{n.time}</span>
                     </div>
                   ))
                 )}
@@ -145,7 +145,7 @@ export default function Navbar({
                 setShowProfileMenu(!showProfileMenu);
                 setShowNotifications(false);
               }}
-              className="h-9 flex items-center gap-2.5 px-2.5 rounded-lg bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 select-none"
+              className="h-9 flex items-center gap-2.5 px-2.5 rounded-lg bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 select-none"
             >
               <div className="w-6 h-6 rounded-md bg-gradient-to-br from-violet-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center ring-1 ring-neutral-700">
                 {user?.username?.charAt(0).toUpperCase() || 'A'}
@@ -159,8 +159,8 @@ export default function Navbar({
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#07080c] border border-neutral-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
-                <div className="px-3 py-2 border-b border-neutral-800/80 mb-1">
+              <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
+                <div className="px-3 py-2 border-b border-[#222738] mb-1">
                   <div className="text-xs font-bold text-white font-accent">
                     {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user?.name || user?.username || 'Superadmin')}
                   </div>
@@ -176,7 +176,7 @@ export default function Navbar({
                       onNavigate('manage-portfolio');
                       setShowProfileMenu(false);
                     }}
-                    className="w-full px-3 py-2 rounded-lg text-neutral-300 hover:bg-neutral-900 hover:text-white flex items-center gap-2 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg text-neutral-300 hover:bg-[#1f2436] hover:text-white flex items-center gap-2 transition-colors"
                   >
                     <User className="w-4 h-4 text-neutral-400" />
                     <span>Edit Profile Details</span>
@@ -187,13 +187,13 @@ export default function Navbar({
                       onNavigate('manage-settings');
                       setShowProfileMenu(false);
                     }}
-                    className="w-full px-3 py-2 rounded-lg text-neutral-300 hover:bg-neutral-900 hover:text-white flex items-center gap-2 transition-colors"
+                    className="w-full px-3 py-2 rounded-lg text-neutral-300 hover:bg-[#1f2436] hover:text-white flex items-center gap-2 transition-colors"
                   >
                     <KeyRound className="w-4 h-4 text-neutral-400" />
                     <span>Security & Password</span>
                   </button>
 
-                  <div className="border-t border-neutral-800/80 my-1"></div>
+                  <div className="border-t border-[#222738] my-1"></div>
 
                   <button
                     onClick={() => {

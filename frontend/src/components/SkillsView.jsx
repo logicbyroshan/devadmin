@@ -186,9 +186,9 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
     return (
       <div className="space-y-6 w-full max-w-full overflow-x-hidden font-sans animate-in fade-in duration-150">
         {/* Top Header */}
-        <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
               <Cpu className="w-5 h-5" />
             </div>
             <div>
@@ -205,16 +205,15 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
             <button
               type="button"
               onClick={handleBackToList}
-              className="px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-800 transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs font-semibold border border-[#222738] transition-colors"
             >
               Cancel
             </button>
 
-
             <button
               type="button"
               onClick={handleSaveForm}
-              className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+              className="px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>{isEditing ? 'Save Changes' : 'Save & Publish Skill'}</span>
@@ -223,13 +222,13 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
         </div>
 
         {/* Dedicated Separate Form Container */}
-        <div className="p-6 sm:p-8 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl space-y-6">
+        <div className="p-6 sm:p-8 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6">
           <form onSubmit={handleSaveForm} className="space-y-6">
             {/* Name & Category */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
-                  Skill / Technology Name <span className={activeWebsite?.accentText || "text-blue-400"}>*</span>
+                  Skill / Technology Name <span className={activeWebsite?.accentText || "text-violet-400"}>*</span>
                 </label>
                 <input
                   type="text"
@@ -238,7 +237,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. React 18, PostgreSQL, Kubernetes"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-bold"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all font-bold"
                 />
               </div>
 
@@ -249,7 +248,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                 <select
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 >
                   <option value="Frontend">Frontend Development</option>
                   <option value="Backend">Backend & APIs</option>
@@ -266,7 +265,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                   <label className="text-xs font-bold text-neutral-300 uppercase tracking-wider">
                     Proficiency Level ({formData.level}%)
                   </label>
-                  <span className={`text-sm font-bold ${activeWebsite?.accentText || 'text-blue-400'}`}>{formData.level}%</span>
+                  <span className={`text-sm font-bold ${activeWebsite?.accentText || 'text-violet-400'}`}>{formData.level}%</span>
                 </div>
                 <input
                   type="range"
@@ -274,7 +273,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                   max="100"
                   value={formData.level}
                   onChange={e => setFormData({ ...formData, level: parseInt(e.target.value) })}
-                  className="w-full h-2 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                  className="w-full h-2 bg-[#080a10] rounded-lg appearance-none cursor-pointer accent-violet-500"
                 />
               </div>
 
@@ -287,13 +286,13 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                   value={formData.years}
                   onChange={e => setFormData({ ...formData, years: e.target.value })}
                   placeholder="e.g. 4+ Years"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
             </div>
 
             {/* Visibility Toggle */}
-            <div className="p-4 rounded-lg bg-black/50 border border-neutral-800/80 flex items-center justify-between">
+            <div className="p-4 rounded-lg bg-[#0d1018] border border-[#1f2436] flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-white">Live Portfolio Visibility</div>
                 <p className="text-xs text-neutral-400 mt-0.5">Control whether this skill tag is shown on your public portfolio tech stack.</p>
@@ -314,18 +313,18 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
             </div>
 
             {/* Form Actions Footer */}
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-neutral-800">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#222738]">
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="px-5 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs sm:text-sm font-semibold border border-neutral-800 transition-colors"
+                className="px-5 py-2.5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs sm:text-sm font-semibold border border-[#222738] transition-colors"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
               >
                 <Save className="w-4 h-4" />
                 <span>{isEditing ? 'Save Changes' : 'Save & Publish Skill'}</span>
@@ -343,9 +342,9 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner with Category Dropdown & Add Button */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
             <Cpu className="w-5 h-5" />
           </div>
           <div>
@@ -361,7 +360,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="h-9 pl-3.5 pr-8 rounded-lg bg-neutral-900/60 border border-neutral-800 text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"
+              className="h-9 pl-3.5 pr-8 rounded-lg bg-[#0d1018] border border-[#222738] text-sm font-semibold text-neutral-200 focus:outline-none focus:border-violet-500 transition-colors cursor-pointer appearance-none"
             >
               <option value="ALL">All Categories ({skills.length})</option>
               {categories.filter(c => c !== 'ALL').map(cat => (
@@ -373,7 +372,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
 
           <button
             onClick={handleOpenAddPage}
-            className="h-9 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0"
+            className="h-9 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Add Skill</span>
@@ -383,8 +382,8 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
 
       {/* 3-Card Format Grid or Empty State */}
       {filteredSkills.length === 0 ? (
-        <div className="p-12 text-center rounded-xl bg-[#07080d] border border-neutral-800 text-neutral-400 space-y-4 shadow-xl">
-          <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto">
+        <div className="p-12 text-center rounded-xl bg-[#12151f] border border-[#222738] text-neutral-400 space-y-4 shadow-xl">
+          <div className="w-12 h-12 rounded-xl bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center justify-center mx-auto">
             <Cpu className="w-6 h-6" />
           </div>
           <div>
@@ -395,7 +394,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
           </div>
           <button
             onClick={handleOpenAddPage}
-            className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-violet-500/20 hover:brightness-110 transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>Add First Skill</span>
@@ -406,17 +405,17 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
           {filteredSkills.map((skill) => {
             const Icon = getSkillIcon(skill.icon);
             return (
-              <div key={skill.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+              <div key={skill.id} className="p-5 rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 flex flex-col justify-between shadow-xl space-y-4 group">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="p-2.5 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 flex-shrink-0">
+                      <div className="p-2.5 rounded-lg bg-violet-500/15 text-violet-400 border border-violet-500/30 flex-shrink-0">
                         <Icon className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-sm sm:text-base font-extrabold text-white truncate font-accent">{skill.name}</h3>
                         <div className="flex items-center gap-2 text-[11px] text-neutral-400 mt-0.5">
-                          <Tag className="w-3 h-3 text-blue-400" />
+                          <Tag className="w-3 h-3 text-violet-400" />
                           <span>{skill.category}</span>
                           <span>•</span>
                           <span className="text-neutral-300 font-semibold">{skill.years}</span>
@@ -424,22 +423,22 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                       </div>
                     </div>
 
-                    <div className="text-sm font-bold text-blue-400 font-accent flex-shrink-0">
+                    <div className="text-sm font-bold text-violet-400 font-accent flex-shrink-0">
                       {skill.level}%
                     </div>
                   </div>
 
                   {/* Progress Bar Track */}
-                  <div className="w-full bg-neutral-900 rounded-sm h-2.5 overflow-hidden border border-neutral-800/80 mt-2">
+                  <div className="w-full bg-[#080a10] rounded-sm h-2.5 overflow-hidden border border-[#1f2436] mt-2">
                     <div 
-                      className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-sm shadow-sm shadow-blue-500/30"
+                      className="h-full bg-gradient-to-r from-violet-600 to-indigo-600 rounded-sm shadow-sm shadow-violet-500/30"
                       style={{ width: `${skill.level}%` }}
                     ></div>
                   </div>
                 </div>
 
-                {/* Action Buttons — consistent h-9 (36px) */}
-                <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between pt-3 border-t border-[#222738] gap-2">
                   <button
                     type="button"
                     onClick={() => handleToggleVisible(skill.id)}
@@ -458,7 +457,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
                     <button
                       type="button"
                       onClick={() => handleOpenEditPage(skill)}
-                      className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                      className="h-9 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-[#222738] transition-all"
                     >
                       <Edit2 className="w-4 h-4" /> Edit
                     </button>
