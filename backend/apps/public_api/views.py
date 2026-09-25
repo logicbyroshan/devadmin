@@ -294,7 +294,7 @@ class AdminAnalyticsDashboardView(APIView):
     GET /api/v1/admin/analytics/dashboard/
     Real-time aggregate counters and telemetry matching Section 4 of API.md.
     """
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         website = get_target_website()

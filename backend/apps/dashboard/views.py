@@ -8,7 +8,7 @@ class DashboardStatsView(APIView):
     Returns single-pass aggregated counts and status metrics for projects, blogs,
     experiences, skills, messages, and FAQs.
     """
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         website_slug = request.query_params.get('website', None)
@@ -20,7 +20,7 @@ class DashboardActivitiesView(APIView):
     """
     Returns live recent activity feeds for deployed projects and published articles.
     """
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         website_slug = request.query_params.get('website', None)
@@ -32,7 +32,7 @@ class DashboardHeatmapView(APIView):
     """
     Returns full 12-month annual contribution activity matrix.
     """
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         heatmap = AnalyticsService.generate_contribution_heatmap(year=2025)
