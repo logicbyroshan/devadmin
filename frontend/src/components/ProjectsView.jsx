@@ -508,7 +508,7 @@ data:
           {filteredProjects.map((proj) => (
           <div 
             key={proj.id} 
-            className="rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-xl group hover:-translate-y-1"
+            className="rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-xl group"
           >
             <div>
               {/* Card Image Banner */}
@@ -517,7 +517,7 @@ data:
                   <img
                     src={proj.image}
                     alt={proj.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.style.display = 'none';
                     }}

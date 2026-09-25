@@ -97,7 +97,7 @@ export default function Sidebar({
             onClick={() => handleNavClick('manage-logout')}
             className="w-full py-2.5 px-3 rounded-lg bg-rose-950/20 hover:bg-rose-950/40 border border-rose-900/30 hover:border-rose-700/50 text-rose-400 text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 shadow-sm group"
           >
-            <LogOut className="w-4 h-4 text-rose-400 group-hover:-translate-x-0.5 transition-transform flex-shrink-0" />
+            <LogOut className="w-4 h-4 text-rose-400 flex-shrink-0" />
             <span>Logout</span>
           </button>
         </div>
