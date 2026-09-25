@@ -338,6 +338,46 @@ class DevAdminApiTestSuite(TestCase):
         self.assertEqual(len(heatmap['months']), 12)
         self.assertGreater(heatmap['total_annual_contributions'], 0)
 
+    def test_dashboard_endpoints_unauthenticated_forbidden(self):
+        """Test unauthenticated GET requests to all dashboard analytics endpoints return 401 Unauthorized."""
+        endpoints = [
+            '/api/dashboard/stats/',
+            '/api/dashboard/activities/',
+            '/api/dashboard/heatmap/',
+            '/api/v1/admin/analytics/dashboard/',
+            '/api/admin/analytics/dashboard/',
+        ]
+        for url in endpoints:
+            response = self.client.get(url)
+            self.assertEqual(
+                response.status_code,
+                status.HTTP_401_UNAUTHORIZED,
+                f"Endpoint {url} should be protected but returned {response.status_code}"
+            )
+
+    def test_dashboard_endpoints_authenticated_success(self):
+        """Test authenticated GET requests to all dashboard analytics endpoints return 200 OK."""
+        # 1. /api/dashboard/stats/
+        res_stats = self.auth_client.get('/api/dashboard/stats/?website=dev-meet')
+        self.assertEqual(res_stats.status_code, status.HTTP_200_OK)
+        self.assertIn('projects', res_stats.data)
+        self.assertIn('blogs', res_stats.data)
+
+        # 2. /api/dashboard/activities/
+        res_activities = self.auth_client.get('/api/dashboard/activities/?website=dev-meet')
+        self.assertEqual(res_activities.status_code, status.HTTP_200_OK)
+
+        # 3. /api/dashboard/heatmap/
+        res_heatmap = self.auth_client.get('/api/dashboard/heatmap/')
+        self.assertEqual(res_heatmap.status_code, status.HTTP_200_OK)
+        self.assertIn('months', res_heatmap.data)
+
+        # 4. /api/v1/admin/analytics/dashboard/
+        res_admin_dash = self.auth_client.get('/api/v1/admin/analytics/dashboard/')
+        self.assertEqual(res_admin_dash.status_code, status.HTTP_200_OK)
+        self.assertTrue(res_admin_dash.data['success'])
+        self.assertIn('projects', res_admin_dash.data['data'])
+
     def test_production_security_settings(self):
         """Test critical production security configuration attributes."""
         self.assertEqual(settings.SECURE_PROXY_SSL_HEADER, ('HTTP_X_FORWARDED_PROTO', 'https'))
