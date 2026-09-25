@@ -16,7 +16,6 @@ from apps.websites.models import Website
 from apps.profiles.models import PortfolioProfile
 from apps.categories.models import Category
 from apps.projects.models import Project, ProjectScreenshot
-from apps.blogs.models import BlogPost
 from apps.experiences.models import Experience, ExperienceImage
 from apps.skills.models import Skill
 from apps.achievements.models import Achievement
@@ -207,79 +206,7 @@ for pdata in projects_data:
 
 print("Projects and screenshots seeded.")
 
-# 5. Blogs with Article Structure Contract matching API.md
-blogs_data = [
-    {
-        "title": "Understanding Microservices Architecture: A Developer's Guide",
-        "subtitle": "A practical, engineering-first guide to designing decoupled, fault-tolerant distributed systems.",
-        "slug": "understanding-microservices-architecture",
-        "category": "Architecture & Distributed Systems",
-        "date": "November 15, 2024",
-        "read_time": "7 min read",
-        "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&h=675&fit=crop",
-        "tags": ["Microservices", "System Design", "Docker", "Python", "Celery"],
-        "author_name": "Roshan Damor",
-        "author_role": "Software Engineer · Full Stack AI",
-        "author_avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80",
-        "author_bio": "Software Engineer specializing in scalable full-stack web applications and AI workflows.",
-        "summary": "Learn how to design, orchestrate, and decouple high-throughput microservices using asynchronous task queues and robust API contracts.",
-        "tldr": "Microservices solve scaling bottlenecks when decoupled via asynchronous message brokers and strict interface contracts.",
-        "toc": [
-            {"id": "sec-1", "title": "1. Why Decouple Services?"},
-            {"id": "sec-2", "title": "2. Asynchronous Queue Architecture"},
-            {"id": "sec-3", "title": "3. Python Celery Worker Pattern"},
-            {"id": "sec-4", "title": "4. Failure Recovery & Idempotency"}
-        ],
-        "sections": [
-            {
-                "id": "sec-1",
-                "heading": "1. Why Decouple Services?",
-                "content": "Monolithic architectures often suffer from tight coupling where a bottleneck in one component degrades the entire application. By breaking core domains into independent services, teams can deploy, scale, and isolate workloads efficiently.",
-                "codeSnippet": {
-                    "language": "python",
-                    "filename": "services/order_service.py",
-                    "description": "Standard service dispatcher with event dispatching",
-                    "code": "def process_order(order_id: int):\n    # Dispatch async event\n    event_bus.publish('ORDER_CREATED', {'order_id': order_id})\n    return {'status': 'QUEUED'}"
-                }
-            },
-            {
-                "id": "sec-2",
-                "heading": "2. Asynchronous Queue Architecture",
-                "content": "Using Redis or RabbitMQ as an intermediary message broker allows services to communicate without blocking HTTP request threads.",
-                "codeSnippet": {
-                    "language": "python",
-                    "filename": "tasks/worker.py",
-                    "description": "Celery asynchronous task definition",
-                    "code": "from celery import shared_task\n\n@shared_task(bind=True, max_retries=3)\ndef generate_invoice_pdf(self, order_id):\n    try:\n        return render_pdf(order_id)\n    except Exception as exc:\n        raise self.retry(exc=exc, countdown=5)"
-                }
-            }
-        ],
-        "content": """# Understanding Microservices Architecture: A Developer's Guide
-
-A practical, engineering-first guide to designing decoupled, fault-tolerant distributed systems.
-
-## 1. Why Decouple Services?
-Monolithic architectures often suffer from tight coupling where a bottleneck in one component degrades the entire application.
-
-## 2. Asynchronous Queue Architecture
-Using Redis or RabbitMQ as an intermediary message broker allows services to communicate without blocking HTTP request threads.
-""",
-        "status": "PUBLISHED",
-        "visible": True,
-        "is_active": True,
-        "views_count": 1420
-    }
-]
-
-for bdata in blogs_data:
-    BlogPost.objects.update_or_create(
-        slug=bdata['slug'],
-        website=devmate,
-        defaults=bdata
-    )
-print("Blogs seeded.")
-
-# 6. Work Experience
+# 5. Work Experience
 experiences_data = [
     {
         "role": "Software Engineer",

@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from apps.websites.models import Website
 from apps.projects.models import Project
-from apps.blogs.models import BlogPost
 from apps.experiences.models import Experience
 from apps.skills.models import Skill
 from apps.contacts.models import ContactInquiry
@@ -126,56 +125,7 @@ class Command(BaseCommand):
             else:
                 Project.objects.get_or_create(slug=p['slug'], defaults=p)
 
-        # 4. Blogs
-        blogs_data = [
-            {
-                'website': websites['dev-meet'],
-                'title': 'Optimizing Node.js APIs for High Scale Throughput',
-                'slug': 'optimizing-nodejs-apis-for-high-scale',
-                'category': 'Backend Architecture',
-                'status': 'PUBLISHED',
-                'date': '2025-06-18',
-                'read_time': '6 min read',
-                'views_count': 1420,
-                'summary': 'Deep dive into event loop lag, cluster worker pooling, and Redis pipeline caching for 100k req/sec microservices.',
-                'content': '## Architecture Overview\n\nScaling Node.js requires understanding the event loop.\n\n```architecture\nLoad Balancer:Nginx -> Node Cluster:4 Cores -> Redis:Cache -> Postgres:DB\n```',
-                'visible': True
-            },
-            {
-                'website': websites['dev-mitra'],
-                'title': 'Vector Search & Embedding Similarity for Mentorship',
-                'slug': 'vector-search-embedding-similarity',
-                'category': 'Machine Learning',
-                'status': 'PUBLISHED',
-                'date': '2025-06-12',
-                'read_time': '8 min read',
-                'views_count': 980,
-                'summary': 'How we built real-time developer mentor matching using pgvector and OpenAI text-embedding-3-small.',
-                'content': '## Vector Matching Pipeline\n\nComparing developer skill vectors in multidimensional space.',
-                'visible': True
-            },
-            {
-                'website': websites['dev-mate'],
-                'title': 'Running Python & Rust in the Browser via WebAssembly',
-                'slug': 'running-python-rust-in-browser-wasm',
-                'category': 'WebAssembly',
-                'status': 'DRAFT',
-                'date': '2025-06-25',
-                'read_time': '5 min read',
-                'views_count': 0,
-                'summary': 'Compiling language runtimes to WASM for client-side zero-latency code execution.',
-                'content': 'Draft article for next week.',
-                'visible': False
-            }
-        ]
-
-        for b in blogs_data:
-            if force:
-                BlogPost.objects.update_or_create(slug=b['slug'], defaults=b)
-            else:
-                BlogPost.objects.get_or_create(slug=b['slug'], defaults=b)
-
-        # 5. Experiences
+        # 4. Experiences
         experiences_data = [
             {
                 'website': websites['dev-meet'],
@@ -238,15 +188,15 @@ class Command(BaseCommand):
             {
                 'website': websites['dev-meet'],
                 'question': 'How does multi-site portfolio management work?',
-                'answer': 'All modules (Projects, Blogs, Skills, Experiences, Messages, FAQs) are partitioned by the active website slug (e.g. dev-meet, dev-mitra, dev-mate) with composite database indexes for blazing query performance.',
+                'answer': 'All modules (Projects, Skills, Experiences, Messages, FAQs) are partitioned by the active website slug (e.g. dev-meet, dev-mitra, dev-mate) with composite database indexes for blazing query performance.',
                 'category': 'Multi-Site',
                 'order': 2,
                 'visible': True
             },
             {
                 'website': websites['dev-meet'],
-                'question': 'Are architecture diagrams and charts supported in blogs?',
-                'answer': 'Yes! The custom RichContentBuilder component allows rendering live visual node topologies, latency graphs, and benchmark bars directly in your articles.',
+                'question': 'Are architecture diagrams and charts supported in project docs?',
+                'answer': 'Yes! The custom RichContentBuilder component allows rendering live visual node topologies, latency graphs, and benchmark bars directly in your project documentation.',
                 'category': 'Features',
                 'order': 3,
                 'visible': True

@@ -75,7 +75,6 @@ class ApiRootView(APIView):
                 },
                 "websites": "/api/websites/",
                 "projects": "/api/projects/",
-                "blogs": "/api/blogs/",
                 "experiences": "/api/experiences/",
                 "skills": "/api/skills/",
                 "contacts": "/api/contacts/",
