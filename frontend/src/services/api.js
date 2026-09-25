@@ -157,23 +157,7 @@ export const projectsApi = {
   view: (idOrSlug) => request(`/projects/${idOrSlug}/view/`, { method: 'POST' }),
 };
 
-// 4. Blogs API (/api/v1/admin/blogs/* & /api/blogs/*)
-export const blogsApi = {
-  getAll: (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return request(`/v1/admin/blogs/${query ? `?${query}` : ''}`);
-  },
-  getById: (id) => request(`/v1/admin/blogs/${id}/`),
-  getBySlug: (slug) => request(`/blogs/${slug}/`),
-  create: (data) => request('/v1/admin/blogs/', { method: 'POST', body: JSON.stringify(data) }),
-  update: (id, data) => request(`/v1/admin/blogs/${id}/`, { method: 'PUT', body: JSON.stringify(data) }),
-  patch: (id, data) => request(`/v1/admin/blogs/${id}/`, { method: 'PATCH', body: JSON.stringify(data) }),
-  delete: (id) => request(`/v1/admin/blogs/${id}/`, { method: 'DELETE' }),
-  toggleActive: (id) => request(`/v1/admin/blogs/${id}/toggle-active/`, { method: 'POST' }),
-  toggleVisibility: (id) => request(`/v1/admin/blogs/${id}/toggle-active/`, { method: 'POST' }),
-};
-
-// 5. Experiences API (/api/v1/admin/experience/*)
+// 4. Experiences API (/api/v1/admin/experience/*)
 export const experiencesApi = {
   getAll: (params = {}) => {
     const query = new URLSearchParams(params).toString();
@@ -308,7 +292,6 @@ export default {
   auth: authApi,
   profiles: profilesApi,
   projects: projectsApi,
-  blogs: blogsApi,
   experiences: experiencesApi,
   skills: skillsApi,
   categories: categoriesApi,

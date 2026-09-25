@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.db.models import Count, Q
 from apps.websites.models import Website
 from apps.projects.models import Project
-from apps.blogs.models import BlogPost
 from apps.experiences.models import Experience
 from apps.skills.models import Skill
 from apps.contacts.models import ContactInquiry
@@ -31,12 +30,6 @@ class AnalyticsService:
 
         return {
             'website': website_slug or 'all',
-            'blogs': {
-                'total': BlogPost.objects.filter(**site_filter).count(),
-                'live': BlogPost.objects.filter(status='PUBLISHED', **site_filter).count(),
-                'scheduled': BlogPost.objects.filter(status='SCHEDULED', **site_filter).count(),
-                'draft': BlogPost.objects.filter(status='DRAFT', **site_filter).count(),
-            },
             'projects': {
                 'total': Project.objects.filter(**site_filter).count(),
                 'live': Project.objects.filter(status='LIVE', **site_filter).count(),
@@ -61,7 +54,7 @@ class AnalyticsService:
 
     @staticmethod
     def get_recent_activities(website_slug: str = None, limit: int = 4) -> Dict[str, List[Dict[str, Any]]]:
-        """Retrieve recent project deployments and blog publications."""
+        """Retrieve recent project deployments and updates."""
         site_filter = {}
         if website_slug:
             if website_slug.isdigit():
@@ -69,17 +62,9 @@ class AnalyticsService:
             else:
                 site_filter = {'website__slug': website_slug}
 
-        recent_blogs = BlogPost.objects.filter(**site_filter).select_related('website').order_by('-created_at')[:limit]
         recent_projects = Project.objects.filter(**site_filter).select_related('website').order_by('-created_at')[:limit]
 
         return {
-            'blogs': [{
-                'id': b.id,
-                'title': f'Published article: "{b.title}"' if b.status == 'PUBLISHED' else f'Draft article: "{b.title}"',
-                'time': b.date or 'Recently',
-                'status': b.status,
-                'category': b.category
-            } for b in recent_blogs],
             'projects': [{
                 'id': p.id,
                 'title': f'Deployed: "{p.title}"' if p.status == 'LIVE' else f'Updated project: "{p.title}"',

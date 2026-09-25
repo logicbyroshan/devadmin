@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     # DevAdmin Domain Apps
     'apps.common',
     'apps.websites',
-    'apps.blogs',
     'apps.projects',
     'apps.experiences',
     'apps.skills',
@@ -170,7 +169,7 @@ REST_FRAMEWORK = {
 # Spectacular OpenAPI Documentation Settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'DevAdmin Multi-Site Management REST API',
-    'DESCRIPTION': 'High-performance multi-tenant API for managing developer portfolios (DevMeet, DevMitra, DevMate), projects, technical blogs, career experiences, skills, FAQs, contact inquiries, and analytics.',
+    'DESCRIPTION': 'High-performance multi-tenant API for managing developer portfolios (DevMeet, DevMitra, DevMate), projects, career experiences, skills, FAQs, contact inquiries, and analytics.',
     'VERSION': '2.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,

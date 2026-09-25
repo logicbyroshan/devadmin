@@ -5,7 +5,6 @@ import DashboardView from './components/DashboardView';
 import ExperiencesView from './components/ExperiencesView';
 import SkillsView from './components/SkillsView';
 import ProjectsView from './components/ProjectsView';
-import BlogsView from './components/BlogsView';
 import MessagesView from './components/MessagesView';
 import DetailsView from './components/DetailsView';
 import FaqsView from './components/FaqsView';
@@ -129,12 +128,6 @@ export default function App() {
             )}
             {currentPage === 'manage-projects' && (
               <ProjectsView 
-                onNavigate={handleNavigate} 
-                activeWebsite={selectedSite} 
-              />
-            )}
-            {currentPage === 'manage-blogs' && (
-              <BlogsView 
                 onNavigate={handleNavigate} 
                 activeWebsite={selectedSite} 
               />

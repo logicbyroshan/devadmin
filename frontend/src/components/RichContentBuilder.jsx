@@ -264,7 +264,7 @@ points:
 | :--- | :--- | :--- | :--- | :--- |
 | \`GET\` | \`/api/v1/projects\` | List public portfolio projects with filters | No | \`200 OK\` |
 | \`POST\` | \`/api/v1/inquiries\` | Dispatch incoming contact message & SMTP relay | No | \`201 Created\` |
-| \`PUT\` | \`/api/v1/blogs/:id\` | Update article markdown content & metadata | Bearer JWT | \`200 OK\` |
+| \`PUT\` | \`/api/v1/skills/:id\` | Update skill level, category & metadata | Bearer JWT | \`200 OK\` |
 | \`DELETE\` | \`/api/v1/media/:id\` | Invalidate CDN cache & delete asset | Bearer JWT | \`204 No Content\` |
 `
     },

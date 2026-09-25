@@ -9,12 +9,6 @@ from apps.profiles.models import PortfolioProfile
 from apps.profiles.serializers import PortfolioProfileSerializer
 from apps.projects.models import Project
 from apps.projects.serializers import ProjectSerializer
-from apps.blogs.models import BlogPost
-from apps.blogs.serializers import (
-    BlogPostSerializer,
-    PublicBlogPostListSerializer,
-    PublicBlogPostDetailSerializer
-)
 from apps.experiences.models import Experience
 from apps.experiences.serializers import ExperienceSerializer
 from apps.skills.models import Skill
@@ -47,9 +41,6 @@ class BootstrapView(APIView):
 
         projects = Project.objects.filter(Q(visible=True) | Q(is_active=True), **site_filter).prefetch_related('screenshots')
         projects_data = ProjectSerializer(projects, many=True).data
-
-        blogs = BlogPost.objects.filter(Q(visible=True) | Q(is_active=True), status='PUBLISHED', **site_filter)
-        blogs_data = PublicBlogPostListSerializer(blogs, many=True).data
 
         experiences = Experience.objects.filter(Q(visible=True) | Q(is_active=True), **site_filter).prefetch_related('images')
         experiences_data = ExperienceSerializer(experiences, many=True).data
@@ -94,7 +85,6 @@ class BootstrapView(APIView):
             "total_skills": skills.count(),
             "total_experiences": experiences.count(),
             "total_achievements": achievements.count(),
-            "total_blogs": blogs.count(),
             "total_project_views": projects.aggregate(total=Sum('views'))['total'] or 0,
             "total_project_likes": projects.aggregate(total=Sum('likes'))['total'] or 0,
         }
@@ -104,7 +94,6 @@ class BootstrapView(APIView):
             "profile": profile_data,
             "banner": banner_data,
             "projects": projects_data,
-            "blogs": blogs_data,
             "experience": experiences_data,
             "skills": skills_data,
             "achievements": achievements_data,
@@ -128,7 +117,6 @@ class SummaryView(APIView):
         skills = Skill.objects.filter(Q(visible=True) | Q(is_active=True), **site_filter)
         experiences = Experience.objects.filter(Q(visible=True) | Q(is_active=True), **site_filter)
         achievements = Achievement.objects.filter(is_active=True, **site_filter)
-        blogs = BlogPost.objects.filter(Q(visible=True) | Q(is_active=True), status='PUBLISHED', **site_filter)
 
         return Response({
             "success": True,
@@ -137,7 +125,6 @@ class SummaryView(APIView):
                 "skills_count": skills.count(),
                 "experience_count": experiences.count(),
                 "achievements_count": achievements.count(),
-                "blogs_count": blogs.count(),
                 "total_views": projects.aggregate(total=Sum('views'))['total'] or 0,
                 "total_likes": projects.aggregate(total=Sum('likes'))['total'] or 0,
             }
@@ -305,7 +292,6 @@ class AdminAnalyticsDashboardView(APIView):
         experiences = Experience.objects.filter(**site_filter)
         achievements = Achievement.objects.filter(**site_filter)
         messages = ContactInquiry.objects.filter(**site_filter)
-        blogs = BlogPost.objects.filter(**site_filter)
 
         categories_count = Category.objects.count()
 
@@ -331,11 +317,6 @@ class AdminAnalyticsDashboardView(APIView):
                 "messages": {
                     "total": messages.count(),
                     "unread": messages.filter(is_read=False).count(),
-                },
-                "blogs": {
-                    "total": blogs.count(),
-                    "live": blogs.filter(status='PUBLISHED').count(),
-                    "draft": blogs.filter(status='DRAFT').count(),
                 }
             }
         }, status=status.HTTP_200_OK)
@@ -369,27 +350,4 @@ class PublicProjectBySlugView(APIView):
         res_data = dict(data)
         res_data['success'] = True
         res_data['data'] = dict(data)
-        return Response(res_data, status=status.HTTP_200_OK)
-
-
-class PublicBlogBySlugView(APIView):
-    """
-    GET /api/blogs/{slug}/ & /api/v1/blogs/{slug}/
-    Public single blog article detail matching Section 12.2 of API.md.
-    """
-    permission_classes = [permissions.AllowAny]
-
-    def get(self, request, slug):
-        try:
-            if slug.isdigit():
-                blog = BlogPost.objects.select_related('website').get(id=int(slug))
-            else:
-                blog = BlogPost.objects.select_related('website').get(slug=slug)
-        except BlogPost.DoesNotExist:
-            return Response({'error': 'Blog article not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-        serializer = PublicBlogPostDetailSerializer(blog)
-        res_data = dict(serializer.data)
-        res_data['success'] = True
-        res_data['data'] = dict(serializer.data)
         return Response(res_data, status=status.HTTP_200_OK)

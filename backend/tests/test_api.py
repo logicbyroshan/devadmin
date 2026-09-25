@@ -13,7 +13,6 @@ from rest_framework import status
 
 from apps.websites.models import Website
 from apps.projects.models import Project
-from apps.blogs.models import BlogPost
 from apps.experiences.models import Experience
 from apps.skills.models import Skill
 from apps.categories.models import Category
@@ -229,34 +228,6 @@ class DevAdminApiTestSuite(TestCase):
         self.assertEqual(res_toggle.status_code, status.HTTP_200_OK)
         self.assertFalse(res_toggle.data['visible'])
 
-    def test_blog_crud_and_scoping(self):
-        """Test blog creation and website multi-tenant scoping."""
-        BlogPost.objects.create(
-            website=self.site_meet,
-            title='WebRTC Guide',
-            slug='webrtc-guide',
-            content='Markdown content',
-            status='PUBLISHED'
-        )
-        BlogPost.objects.create(
-            website=self.site_mitra,
-            title='AI Mentorship',
-            slug='ai-mentorship',
-            content='AI content',
-            status='PUBLISHED'
-        )
-
-        res_meet = self.client.get('/api/blogs/?website=dev-meet')
-        self.assertEqual(res_meet.status_code, status.HTTP_200_OK)
-        titles = [b['title'] for b in res_meet.data['results']]
-        self.assertIn('WebRTC Guide', titles)
-        self.assertNotIn('AI Mentorship', titles)
-
-        # Public lookup by slug
-        res_slug = self.client.get('/api/blogs/webrtc-guide/')
-        self.assertEqual(res_slug.status_code, status.HTTP_200_OK)
-        self.assertEqual(res_slug.data['title'], 'WebRTC Guide')
-
     def test_skills_and_experiences_crud(self):
         """Test skills and experience endpoints with multi-tenant filtering."""
         # Skill
@@ -356,7 +327,6 @@ class DevAdminApiTestSuite(TestCase):
     def test_dashboard_analytics_service(self):
         """Test analytics metrics and dynamic contribution heatmap."""
         metrics = AnalyticsService.get_dashboard_metrics(website_slug='dev-meet')
-        self.assertIn('blogs', metrics)
         self.assertIn('projects', metrics)
         self.assertIn('messages', metrics)
 
@@ -388,7 +358,6 @@ class DevAdminApiTestSuite(TestCase):
         res_stats = self.auth_client.get('/api/dashboard/stats/?website=dev-meet')
         self.assertEqual(res_stats.status_code, status.HTTP_200_OK)
         self.assertIn('projects', res_stats.data)
-        self.assertIn('blogs', res_stats.data)
 
         # 2. /api/dashboard/activities/
         res_activities = self.auth_client.get('/api/dashboard/activities/?website=dev-meet')

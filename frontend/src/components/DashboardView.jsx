@@ -34,7 +34,6 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
   const [messages, setMessages] = useState([]);
 
   const [stats, setStats] = useState({
-    blogs: { total: 0, live: 0, scheduled: 0, draft: 0 },
     projects: { total: 0, live: 0, offline: 0 },
     experiences: { total: 0, current: 0 },
     skills: { total: 0 },
@@ -46,7 +45,6 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
   const [replySubject, setReplySubject] = useState('');
   const [replyText, setReplyText] = useState('');
   const [sentToast, setSentToast] = useState(false);
-  const [blogsActivities, setBlogsActivities] = useState([]);
   const [projectActivities, setProjectActivities] = useState([]);
 
   // Fetch live stats, activities & messages from backend API
@@ -62,16 +60,6 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
 
         const activitiesData = await dashboardApi.getActivities(siteSlug).catch(() => null);
         if (isMounted && activitiesData) {
-          if (activitiesData.blogs && Array.isArray(activitiesData.blogs)) {
-            setBlogsActivities(activitiesData.blogs.map(b => ({
-              id: b.id,
-              title: b.title,
-              time: b.time || 'Recently',
-              icon: b.status === 'PUBLISHED' ? FileText : (b.status === 'SCHEDULED' ? CalendarDays : FileEdit),
-              color: b.status === 'PUBLISHED' ? 'text-blue-400' : (b.status === 'SCHEDULED' ? 'text-indigo-400' : 'text-cyan-400'),
-              bg: b.status === 'PUBLISHED' ? 'bg-blue-500/10' : (b.status === 'SCHEDULED' ? 'bg-indigo-500/10' : 'bg-cyan-500/10')
-            })));
-          }
           if (activitiesData.projects && Array.isArray(activitiesData.projects)) {
             setProjectActivities(activitiesData.projects.map(p => ({
               id: p.id,
@@ -173,24 +161,24 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* 1. TOP STAT BOXES (Color-Coded Cards with Right-Aligned Icons & Accent Numbers) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        {/* Total Live Blogs */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Total Projects */}
         <div 
-          onClick={() => onNavigate('manage-blogs')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-blue-950/50 via-[#070b16] to-[#04060c] border border-blue-500/30 hover:border-blue-400/80 shadow-lg shadow-blue-950/40 hover:shadow-blue-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
+          onClick={() => onNavigate('manage-projects')}
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-purple-950/50 via-[#10071c] to-[#04060c] border border-purple-500/30 hover:border-purple-400/80 shadow-lg shadow-purple-950/40 hover:shadow-purple-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-blue-200 transition-colors font-accent">
-              {stats.blogs?.live ?? stats.blogs?.total ?? 0}
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-purple-200 transition-colors font-accent">
+              {stats.projects?.total ?? 0}
             </div>
-            <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Live Blogs</div>
-            <div className="text-xs font-semibold text-blue-400 mt-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-              <span>Active Articles</span>
+            <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Projects</div>
+            <div className="text-xs font-semibold text-purple-400 mt-1 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              <span>{stats.projects?.live ?? 0} Live Online</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 shadow-md shadow-blue-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-blue-500/25 group-hover:border-blue-400 transition-all duration-200">
-            <FileText className="w-5 h-5" />
+          <div className="p-3 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-500/25 group-hover:border-purple-400 transition-all duration-200">
+            <FolderKanban className="w-5 h-5" />
           </div>
         </div>
 
@@ -211,26 +199,6 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           </div>
           <div className="p-3 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-md shadow-amber-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-amber-500/25 group-hover:border-amber-400 transition-all duration-200">
             <Briefcase className="w-5 h-5" />
-          </div>
-        </div>
-
-        {/* Total Projects */}
-        <div 
-          onClick={() => onNavigate('manage-projects')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-purple-950/50 via-[#10071c] to-[#04060c] border border-purple-500/30 hover:border-purple-400/80 shadow-lg shadow-purple-950/40 hover:shadow-purple-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
-        >
-          <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-purple-200 transition-colors font-accent">
-              {stats.projects?.total ?? 0}
-            </div>
-            <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Projects</div>
-            <div className="text-xs font-semibold text-purple-400 mt-1 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-              <span>{stats.projects?.live ?? 0} Live Online</span>
-            </div>
-          </div>
-          <div className="p-3 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-500/25 group-hover:border-purple-400 transition-all duration-200">
-            <FolderKanban className="w-5 h-5" />
           </div>
         </div>
 
@@ -257,7 +225,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Received Messages */}
         <div 
           onClick={() => onNavigate('manage-contacts')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-sky-950/50 via-[#07131e] to-[#04060c] border border-sky-500/30 hover:border-sky-400/80 shadow-lg shadow-sky-950/40 hover:shadow-sky-500/20 transition-all duration-200 flex items-center justify-between gap-3 col-span-2 sm:col-span-1 lg:col-span-2 xl:col-span-1 group hover:-translate-y-0.5"
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-sky-950/50 via-[#07131e] to-[#04060c] border border-sky-500/30 hover:border-sky-400/80 shadow-lg shadow-sky-950/40 hover:shadow-sky-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
             <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-sky-200 transition-colors font-accent">
@@ -390,122 +358,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         </div>
       </div>
 
-      {/* 3. BLOGS SECTION */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
-        {/* Blogs Pipeline Card */}
-        <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
-          {/* Edge-to-Edge Special Header Bar */}
-          <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-b border-neutral-800 flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                <FileText className="w-4 h-4" />
-              </div>
-              <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide">
-                Blogs Pipeline Status
-              </h3>
-            </div>
-
-            <button 
-              onClick={() => onNavigate('manage-blogs')}
-              className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 transition-colors"
-            >
-              <span>Manage All ({stats.blogs?.total ?? 0})</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* 3 Pipeline Items */}
-          <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-            {/* Drafts */}
-            <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
-              <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <FileEdit className="w-4 h-4 text-indigo-400" /> Draft Articles
-                </span>
-                <span className="font-bold text-indigo-400">{stats.blogs?.draft ?? 0} Drafts</span>
-              </div>
-              <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-400 rounded-sm shadow-sm shadow-indigo-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.draft || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
-              </div>
-            </div>
-
-            {/* Scheduled */}
-            <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
-              <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-sky-400" /> Scheduled Publications
-                </span>
-                <span className="font-bold text-sky-400">{stats.blogs?.scheduled ?? 0} Scheduled</span>
-              </div>
-              <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500 rounded-sm shadow-sm shadow-sky-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.scheduled || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
-              </div>
-            </div>
-
-            {/* Published Articles */}
-            <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
-              <div className="flex items-center justify-between text-xs sm:text-sm">
-                <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" /> Published Articles
-                </span>
-                <span className="font-bold text-emerald-400">{stats.blogs?.live ?? 0} Published</span>
-              </div>
-              <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-green-400 rounded-sm shadow-sm shadow-emerald-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.live || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Blogs Activity Card */}
-        <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
-          {/* Edge-to-Edge Special Header Bar */}
-          <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-b border-neutral-800 flex items-center justify-between flex-shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                <Activity className="w-4 h-4" />
-              </div>
-              <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide">
-                Blogs Activity
-              </h3>
-            </div>
-
-            <button 
-              onClick={() => onNavigate('manage-blogs')}
-              className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 transition-colors"
-            >
-              <span>All Blogs</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Activity Items or Empty State */}
-          <div className="p-4 space-y-3 flex-1 flex flex-col justify-center">
-            {blogsActivities.length === 0 ? (
-              <div className="text-center py-6 text-neutral-500 text-xs">
-                No recent blog activity records found.
-              </div>
-            ) : (
-              blogsActivities.slice(0, 3).map((act) => {
-                const Icon = act.icon || FileText;
-                return (
-                  <div key={act.id} className="h-[68px] p-3 rounded-lg bg-[#050609] hover:bg-neutral-900/80 border border-neutral-800/80 flex items-center gap-3 transition-colors">
-                    <div className={`p-2 rounded-md ${act.bg || 'bg-blue-500/10'} ${act.color || 'text-blue-400'} flex-shrink-0`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs sm:text-sm flex-1 min-w-0">
-                      <p className="font-medium text-neutral-200 line-clamp-1 leading-snug">{act.title}</p>
-                      <span className="text-[11px] text-neutral-500 mt-0.5 block font-normal">{act.time}</span>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Middle Section: Quick Actions & Resume (Full Height Upload Area) */}
+      {/* 3. Middle Section: Quick Actions & Resume (Full Height Upload Area) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
         {/* Quick Actions */}
         <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
@@ -524,16 +377,6 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           </div>
 
           <div className="p-4 grid grid-cols-2 gap-2.5 flex-1 items-center">
-            <button 
-              onClick={() => onNavigate('manage-blogs')}
-              className="p-3 rounded-lg bg-[#050609] hover:bg-neutral-900 border border-neutral-800/80 text-left text-xs sm:text-sm font-semibold text-neutral-200 hover:text-white transition-all flex items-center gap-2.5 group"
-            >
-              <span className="p-1.5 rounded-md bg-blue-500/10 text-blue-400 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-colors">
-                <Plus className="w-4 h-4" />
-              </span>
-              <span>Add Blog</span>
-            </button>
-
             <button 
               onClick={() => onNavigate('manage-projects')}
               className="p-3 rounded-lg bg-[#050609] hover:bg-neutral-900 border border-neutral-800/80 text-left text-xs sm:text-sm font-semibold text-neutral-200 hover:text-white transition-all flex items-center gap-2.5 group"
@@ -562,6 +405,16 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
                 <Plus className="w-4 h-4" />
               </span>
               <span>Add Skill</span>
+            </button>
+
+            <button 
+              onClick={() => onNavigate('manage-faq')}
+              className="p-3 rounded-lg bg-[#050609] hover:bg-neutral-900 border border-neutral-800/80 text-left text-xs sm:text-sm font-semibold text-neutral-200 hover:text-white transition-all flex items-center gap-2.5 group"
+            >
+              <span className="p-1.5 rounded-md bg-blue-500/10 text-blue-400 group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-indigo-600 group-hover:text-white transition-colors">
+                <Plus className="w-4 h-4" />
+              </span>
+              <span>Add FAQ</span>
             </button>
           </div>
         </div>
