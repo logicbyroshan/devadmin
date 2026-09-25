@@ -17,50 +17,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [editingId, setEditingId] = useState(null);
 
-  const [faqs, setFaqs] = useState([
-    {
-      id: 1,
-      question: `What services and software solutions do you build?`,
-      answer: `I specialize in full-stack web application development using React 18, Next.js, Django REST Framework, and custom UI design systems with modern dark OLED aesthetic architecture.`,
-      category: 'Services',
-      visible: true
-    },
-    {
-      id: 2,
-      question: 'How do you handle remote contract and async team collaboration?',
-      answer: 'I work with async communication via GitHub, Slack, Linear, and weekly sprint reviews to ensure full transparency, fast iteration cycles, and timely delivery.',
-      category: 'Workflow',
-      visible: true
-    },
-    {
-      id: 3,
-      question: 'What is your typical project delivery roadmap and timeline?',
-      answer: 'Small focused web tools take 1-2 weeks, while full enterprise multi-tenant web applications typically take 4-6 weeks depending on feature scope.',
-      category: 'Timeline',
-      visible: true
-    },
-    {
-      id: 4,
-      question: 'Do you provide post-launch maintenance and DevOps support?',
-      answer: 'Yes! All client projects include 30 days of post-launch bug fixing, CI/CD pipeline setup, and production server monitoring.',
-      category: 'Support',
-      visible: true
-    },
-    {
-      id: 5,
-      question: 'Can you integrate existing REST and GraphQL backend services?',
-      answer: 'Absolutely. I integrate third-party APIs, authentication systems (OAuth, JWT), payment gateways (Stripe), and real-time WebSockets.',
-      category: 'Technical',
-      visible: false
-    },
-    {
-      id: 6,
-      question: 'Are codebases delivered with complete documentation?',
-      answer: 'Every project is delivered with modular code structure, TypeScript/JSDoc annotations, environment configuration templates, and comprehensive README guides.',
-      category: 'Quality',
-      visible: true
-    }
-  ]);
+  const [faqs, setFaqs] = useState([]);
 
   // Form state for separate Add/Edit page
   const [formData, setFormData] = useState({
@@ -85,7 +42,7 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
         const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
         const data = await faqsApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           setFaqs(list.map(f => ({
             id: f.id,
             question: f.question,
@@ -94,8 +51,9 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
             visible: f.visible !== false
           })));
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to fetch FAQs:', err);
+        if (isMounted) setFaqs([]);
       }
     };
     fetchFaqs();
@@ -375,65 +333,86 @@ export default function FaqsView({ onNavigate, activeWebsite }) {
         </div>
       </div>
 
-      {/* 3-Card Format Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredFaqs.map((faq) => (
-          <div key={faq.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
-                  <Tag className="w-3.5 h-3.5" />
-                  <span>{faq.category}</span>
-                </span>
-                <span className="text-xs font-bold text-neutral-500">FAQ #{faq.id}</span>
-              </div>
-
-              <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-2 font-accent leading-snug">
-                {faq.question}
-              </h3>
-
-              <p className="text-xs text-neutral-300 line-clamp-4 leading-relaxed font-normal">
-                {faq.answer}
-              </p>
-            </div>
-
-            {/* Action Buttons — consistent h-9 (36px) */}
-            <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
-              <button
-                type="button"
-                onClick={() => handleToggleVisible(faq.id)}
-                className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
-                  faq.visible
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                    : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
-                }`}
-                title="Toggle Live Visibility"
-              >
-                {faq.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
-                <span>{faq.visible ? 'Visible' : 'Hidden'}</span>
-              </button>
-
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => handleOpenEditPage(faq)}
-                  className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
-                >
-                  <Edit2 className="w-4 h-4" /> Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(faq.id)}
-                  className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
-                  title="Delete FAQ"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+      {/* 3-Card Format Grid or Empty State */}
+      {filteredFaqs.length === 0 ? (
+        <div className="p-12 text-center rounded-xl bg-[#07080d] border border-neutral-800 text-neutral-400 space-y-4 shadow-xl">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto">
+            <HelpCircle className="w-6 h-6" />
           </div>
-        ))}
-      </div>
+          <div>
+            <h3 className="text-base font-bold text-white">No FAQs Created</h3>
+            <p className="text-xs text-neutral-400 mt-1 max-w-sm mx-auto">
+              You haven't created any FAQ entries yet. Click below to add your first question and answer.
+            </p>
+          </div>
+          <button
+            onClick={handleOpenAddPage}
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add First FAQ</span>
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredFaqs.map((faq) => (
+            <div key={faq.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                    <Tag className="w-3.5 h-3.5" />
+                    <span>{faq.category}</span>
+                  </span>
+                  <span className="text-xs font-bold text-neutral-500">FAQ #{faq.id}</span>
+                </div>
+
+                <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-2 font-accent leading-snug">
+                  {faq.question}
+                </h3>
+
+                <p className="text-xs text-neutral-300 line-clamp-4 leading-relaxed font-normal">
+                  {faq.answer}
+                </p>
+              </div>
+
+              {/* Action Buttons — consistent h-9 (36px) */}
+              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleToggleVisible(faq.id)}
+                  className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
+                    faq.visible
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                      : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
+                  }`}
+                  title="Toggle Live Visibility"
+                >
+                  {faq.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
+                  <span>{faq.visible ? 'Visible' : 'Hidden'}</span>
+                </button>
+
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditPage(faq)}
+                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                  >
+                    <Edit2 className="w-4 h-4" /> Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(faq.id)}
+                    className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
+                    title="Delete FAQ"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

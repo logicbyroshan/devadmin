@@ -13,7 +13,12 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
-from apps.websites.views_auth import RegisterView, CurrentUserView, ChangePasswordView
+from apps.websites.views_auth import (
+    SuperAdminTokenObtainPairView,
+    RegisterView,
+    CurrentUserView,
+    ChangePasswordView
+)
 from apps.common.views_health import HealthCheckView, ApiRootView
 
 # ViewSets
@@ -79,7 +84,7 @@ public_router.register(r'profiles', PortfolioProfileViewSet, basename='public-pr
 
 admin_patterns = [
     # Auth
-    path('auth/login/', TokenObtainPairView.as_view(), name='admin_login'),
+    path('auth/login/', SuperAdminTokenObtainPairView.as_view(), name='admin_login'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='admin_token_refresh'),
     path('auth/me/', CurrentUserView.as_view(), name='admin_me'),
     path('auth/change-password/', ChangePasswordView.as_view(), name='admin_change_password'),
@@ -110,7 +115,7 @@ urlpatterns = [
     
     # OpenAPI Schema & Docs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='swagger-ui'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
     # Health Diagnostics
@@ -143,7 +148,7 @@ urlpatterns = [
     path('api/v1/blogs/<str:slug>/', PublicBlogBySlugView.as_view(), name='public_blog_slug_v1'),
 
     # Standard Auth Endpoints for backwards compatibility
-    path('api/auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/auth/token/', SuperAdminTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/register/', RegisterView.as_view(), name='auth_register'),
     path('api/auth/me/', CurrentUserView.as_view(), name='auth_current_user'),

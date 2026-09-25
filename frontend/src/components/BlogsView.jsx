@@ -21,141 +21,8 @@ export default function BlogsView({ onNavigate, activeWebsite }) {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [editingId, setEditingId] = useState(null);
 
-  const [blogs, setBlogs] = useState([
-    {
-      id: 1,
-      title: 'Building Modern Glassmorphism UIs with Tailwind CSS and React',
-      slug: 'glassmorphism-tailwind-react-2025',
-      category: 'Design Systems',
-      status: 'PUBLISHED',
-      date: '2025-06-15',
-      readTime: '5 min read',
-      views: 1420,
-      summary: 'A comprehensive deep dive into creating deep obsidian glass interfaces with frosted backdrop blur, responsive borders, and unified color tokens.',
-      content: `## 🌟 Deep Obsidian Glassmorphism Architecture
-
-In this comprehensive guide, we construct highly responsive, glassmorphic dashboards using TailwindCSS utilities, frosted backdrop filters, and custom CSS design tokens.
-
-### 🏛️ UI Token & Rendering Pipeline
-
-\`\`\`architecture:microservices
-title: Glassmorphic Component Composition Pipeline
-nodes:
-  - [Design Tokens (CSS Variables)] -> [Tailwind Config Theme]
-  - [Tailwind Config Theme] -> [Obsidian Glass Card Primitive]
-  - [Obsidian Glass Card Primitive] -> [Interactive Chart & Form Widgets]
-\`\`\`
-
-### ⚡ Performance Benchmarks of CSS Blur vs SVG Filters
-
-\`\`\`chart:barchart
-title: GPU Compositing Frame Rate (FPS - 60 FPS Target)
-unit: FPS
-data:
-  - Backdrop Filter Blur (Hardware Accelerated): 60
-  - Pure SVG Filter Matrix: 44
-  - Canvas Repaint Layer: 38
-\`\`\`
-
-### 💻 Glassmorphic Card Implementation
-
-\`\`\`typescript:frontend/src/components/GlassCard.tsx
-import React from 'react';
-
-export function GlassCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={\`p-5 rounded-xl bg-[#07080d]/90 backdrop-blur-xl border border-neutral-800/90 shadow-2xl hover:border-neutral-700 transition-all \${className}\`}>
-      {children}
-    </div>
-  );
-}
-\`\`\`
-
-> [!TIP]
-> Always pair \`backdrop-blur-xl\` with an explicit subtle border (e.g. \`border-neutral-800/90\`) so cards maintain high visual contrast over dark backgrounds.
-`,
-      visible: true
-    },
-    {
-      id: 2,
-      title: 'State Management in 2025: From Zustand to Redux Toolkit',
-      slug: 'state-management-modern-react',
-      category: 'React & Frontend',
-      status: 'SCHEDULED',
-      date: '2025-06-25',
-      readTime: '8 min read',
-      views: 0,
-      summary: 'Comparing ergonomic micro-stores like Zustand with full-featured Redux Toolkit architectures for enterprise React multi-tenant apps.',
-      content: `## ⚖️ State Management in 2025: Architectural Comparison
-
-State management has evolved significantly over the past decade. While Zustand provides unmatched simplicity, RTK Query continues to dominate complex multi-tenant API caching layers.
-
-### 📊 Feature & Performance Comparison
-
-| Criteria | Zustand 4.5 | Redux Toolkit 2.x | Jotai 2.x |
-| :--- | :--- | :--- | :--- |
-| **Bundle Footprint** | \`1.2 kB\` | \`12.4 kB\` | \`2.8 kB\` |
-| **Boilerplate Ratio** | Minimal | Medium | Minimal |
-| **Built-in Cache Sync** | No (External) | Yes (RTK Query) | No |
-| **DevTools Support** | Redux DevTools | Redux DevTools | Custom Plugin |
-
-### ⚡ Memory Footprint Benchmark
-
-\`\`\`chart:barchart
-title: Memory Usage with 10,000 Reactive Atomic Stores (MB - Lower is Better)
-unit: MB
-data:
-  - Zustand Microstore: 4.2
-  - Jotai Atoms: 5.8
-  - Redux Slice Root: 11.4
-\`\`\`
-
-> [!NOTE]
-> For micro-frontends with independent lifecycle trees, Zustand provides the lowest cognitive overhead and zero provider wrappers.
-`,
-      visible: true
-    },
-    {
-      id: 3,
-      title: 'Optimizing Node.js APIs for High Throughput Microservices',
-      slug: 'optimizing-nodejs-apis-throughput',
-      category: 'Backend Engineering',
-      status: 'DRAFT',
-      date: '2025-07-01',
-      readTime: '12 min read',
-      views: 0,
-      summary: 'Practical caching techniques, connection pooling with Postgres, and cluster module configurations to maximize API throughput.',
-      content: `## 🚀 High-Throughput Node.js Microservice Optimization
-
-Scaling Node.js requires mastering event loop dynamics, libuv threadpools, and multi-core cluster utilization.
-
-### 🏛️ Microservice Deployment Topology
-
-\`\`\`architecture:microservices
-title: High-Throughput API Gateway & Cluster Deployment
-nodes:
-  - [Client Ingress] -> [Envoy Proxy / Load Balancer]
-  - [Envoy Proxy] -> [Node.js Cluster Workers (x8 Cores)]
-  - [Node.js Cluster Workers] -> [DragonflyDB Redis Cache]
-  - [Node.js Cluster Workers] -> [PostgreSQL PgBouncer Pool]
-\`\`\`
-
-### 📈 Latency Under Concurrent Traffic (p99)
-
-\`\`\`chart:linegraph
-title: p99 Latency vs Concurrent Connections (Lower is Better)
-unit: ms
-points:
-  - 500 Conns: 6ms
-  - 2,000 Conns: 12ms
-  - 5,000 Conns: 24ms
-  - 10,000 Conns: 39ms
-  - 25,000 Conns: 58ms
-\`\`\`
-`,
-      visible: false
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [blogs, setBlogs] = useState([]);
 
   // Form state for unified separate Add/Edit page
   const [formData, setFormData] = useState({
@@ -171,7 +38,7 @@ points:
     visible: true
   });
 
-  const categories = ['ALL', ...Array.from(new Set(blogs.map(b => b.category)))];
+  const categories = ['ALL', ...Array.from(new Set(blogs.map(b => b.category).filter(Boolean)))];
 
   const filteredBlogs = blogs.filter(b => {
     if (selectedCategory === 'ALL') return true;
@@ -183,16 +50,18 @@ points:
     let isMounted = true;
     const fetchBlogs = async () => {
       try {
-        const data = await blogsApi.getAll({ website: 'dev-mate' });
+        setIsLoading(true);
+        const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
+        const data = await blogsApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           setBlogs(list.map(b => ({
             id: b.id,
             title: b.title,
             subtitle: b.subtitle || '',
             slug: b.slug || '',
             category: b.category || 'Architecture & Distributed Systems',
-            status: b.status,
+            status: b.status || 'PUBLISHED',
             date: b.date || (b.created_at ? b.created_at.split('T')[0] : 'Recently'),
             readTime: b.read_time || b.readTime || '5 min read',
             views: b.views_count || b.views || 0,
@@ -204,8 +73,11 @@ points:
             visible: b.visible !== false && b.is_active !== false
           })));
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to load blogs:', err);
+        if (isMounted) setBlogs([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
     fetchBlogs();
@@ -605,95 +477,107 @@ data:
         </div>
       </div>
 
-      {/* Blogs 3-Card Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredBlogs.map(blog => (
-          <div key={blog.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
-            <div className="space-y-3">
-              {/* Header: Category & Status */}
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
-                  <Tag className="w-3.5 h-3.5" />
-                  <span>{blog.category}</span>
-                </span>
+      {/* Blogs Grid or Empty State */}
+      {filteredBlogs.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl bg-[#07080d] border border-neutral-800/80 space-y-3">
+          <FileText className="w-10 h-10 mx-auto text-neutral-600" />
+          <h3 className="text-base font-bold text-white">No Blog Articles Found</h3>
+          <p className="text-xs text-neutral-400 max-w-sm mx-auto">
+            {selectedCategory === 'ALL' 
+              ? 'There are no blog articles created yet. Click "+ Create Blog Post" to draft or publish your first article.' 
+              : `No articles found in category "${selectedCategory}".`}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredBlogs.map(blog => (
+            <div key={blog.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+              <div className="space-y-3">
+                {/* Header: Category & Status */}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                    <Tag className="w-3.5 h-3.5" />
+                    <span>{blog.category}</span>
+                  </span>
 
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-extrabold uppercase tracking-wide ${
-                  blog.status === 'PUBLISHED'
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                    : blog.status === 'SCHEDULED'
-                    ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
-                    : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
-                }`}>
-                  {blog.status}
-                </span>
-              </div>
-
-              {/* Title with Courgette font accent */}
-              <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-2 group-hover:text-blue-200 transition-colors leading-snug font-accent">
-                {blog.title}
-              </h3>
-
-              {/* Excerpt */}
-              <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed font-normal">
-                {blog.summary}
-              </p>
-
-              {/* Metadata Row */}
-              <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-3 border-t border-neutral-800">
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
-                  <span>{blog.date}</span>
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-extrabold uppercase tracking-wide ${
+                    blog.status === 'PUBLISHED'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : blog.status === 'SCHEDULED'
+                      ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+                      : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                  }`}>
+                    {blog.status}
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-neutral-500" />
-                    <span>{blog.readTime}</span>
-                  </span>
-                  <span className="text-blue-400 font-bold">
-                    {blog.views > 0 ? `${blog.views.toLocaleString()} views` : 'Draft'}
-                  </span>
+                {/* Title with Courgette font accent */}
+                <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-2 group-hover:text-blue-200 transition-colors leading-snug font-accent">
+                  {blog.title}
+                </h3>
+
+                {/* Excerpt */}
+                <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed font-normal">
+                  {blog.summary}
+                </p>
+
+                {/* Metadata Row */}
+                <div className="flex items-center justify-between text-[11px] text-neutral-400 pt-3 border-t border-neutral-800">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                    <span>{blog.date}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-neutral-500" />
+                      <span>{blog.readTime}</span>
+                    </span>
+                    <span className="text-blue-400 font-bold">
+                      {blog.views > 0 ? `${blog.views.toLocaleString()} views` : 'Draft'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons — consistent h-9 (36px) */}
+              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleToggleVisible(blog.id)}
+                  className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
+                    blog.visible
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                      : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
+                  }`}
+                  title="Toggle Live Visibility"
+                >
+                  {blog.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
+                  <span>{blog.visible ? 'Visible' : 'Hidden'}</span>
+                </button>
+
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditPage(blog)}
+                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                  >
+                    <Edit2 className="w-4 h-4" /> Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(blog.id)}
+                    className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
+                    title="Delete Blog"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
-
-            {/* Action Buttons — consistent h-9 (36px) */}
-            <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
-              <button
-                type="button"
-                onClick={() => handleToggleVisible(blog.id)}
-                className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
-                  blog.visible
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                    : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
-                }`}
-                title="Toggle Live Visibility"
-              >
-                {blog.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
-                <span>{blog.visible ? 'Visible' : 'Hidden'}</span>
-              </button>
-
-              <div className="flex items-center gap-1.5 flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => handleOpenEditPage(blog)}
-                  className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
-                >
-                  <Edit2 className="w-4 h-4" /> Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(blog.id)}
-                  className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
-                  title="Delete Blog"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

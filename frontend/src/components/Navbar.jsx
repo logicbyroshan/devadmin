@@ -26,11 +26,7 @@ export default function Navbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
   
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: 'DevMate Staff Admin synchronized with REST API backend', time: 'Just now', read: false },
-    { id: 2, text: 'Project "CardFlow" received 4 new likes from public portfolio', time: '25m ago', read: false },
-    { id: 3, text: 'New contact inquiry received from Sarah Jenkins', time: '1h ago', read: false }
-  ]);
+  const [notifications, setNotifications] = useState([]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
@@ -119,17 +115,23 @@ export default function Navbar({
                 )}
               </div>
               <div className="space-y-1.5 max-h-60 overflow-y-auto">
-                {notifications.map((n) => (
-                  <div
-                    key={n.id}
-                    className={`p-2.5 rounded-lg text-xs transition-colors ${
-                      n.read ? 'bg-black/60 text-neutral-400 border border-neutral-900' : `${activeWebsite?.accentBg || 'bg-violet-500/15'} text-neutral-200 border ${activeWebsite?.accentBorder || 'border-violet-500/30'}`
-                    }`}
-                  >
-                    <p className="line-clamp-2">{n.text}</p>
-                    <span className="text-[11px] text-neutral-500 mt-1 block">{n.time}</span>
+                {notifications.length === 0 ? (
+                  <div className="text-center py-4 text-neutral-500 text-xs">
+                    No new notifications
                   </div>
-                ))}
+                ) : (
+                  notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      className={`p-2.5 rounded-lg text-xs transition-colors ${
+                        n.read ? 'bg-black/60 text-neutral-400 border border-neutral-900' : `${activeWebsite?.accentBg || 'bg-violet-500/15'} text-neutral-200 border ${activeWebsite?.accentBorder || 'border-violet-500/30'}`
+                      }`}
+                    >
+                      <p className="line-clamp-2">{n.text}</p>
+                      <span className="text-[11px] text-neutral-500 mt-1 block">{n.time}</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -145,17 +147,12 @@ export default function Navbar({
               }}
               className="h-9 flex items-center gap-2.5 px-2.5 rounded-lg bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 select-none"
             >
-              <img
-                src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
-                alt="Profile"
-                className="w-6 h-6 rounded-md object-cover ring-1 ring-neutral-700"
-                onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80';
-                }}
-              />
+              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-violet-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center ring-1 ring-neutral-700">
+                {user?.username?.charAt(0).toUpperCase() || 'A'}
+              </div>
               <div className="hidden sm:block text-left">
                 <div className="text-xs font-extrabold text-neutral-200 leading-tight font-accent">
-                  {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : (user?.name || user?.username || 'Roshan Damor')}
+                  {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user?.name || user?.username || 'Superadmin')}
                 </div>
               </div>
               <ChevronDown className="w-3.5 h-3.5 text-neutral-400" />
@@ -165,11 +162,11 @@ export default function Navbar({
               <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#07080c] border border-neutral-800 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl">
                 <div className="px-3 py-2 border-b border-neutral-800/80 mb-1">
                   <div className="text-xs font-bold text-white font-accent">
-                    {user?.first_name ? `${user.first_name} ${user.last_name || ''}` : (user?.name || user?.username || 'Roshan Damor')}
+                    {user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user?.name || user?.username || 'Superadmin')}
                   </div>
-                  <div className="text-[11px] text-neutral-400 truncate">{user?.email || 'mail@logicbyroshan.in'}</div>
+                  <div className="text-[11px] text-neutral-400 truncate">{user?.email || 'admin@localhost'}</div>
                   <span className={`mt-1 inline-block text-[10px] px-2 py-0.5 rounded-full ${badgeStyle} font-semibold`}>
-                    {user?.is_staff ? 'Staff Administrator' : 'Staff User'}
+                    {user?.is_superuser ? 'Super Administrator' : 'Staff Admin'}
                   </span>
                 </div>
 

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { websitesApi } from '../services/api';
 
 export default function SettingsView({ onNavigate, activeWebsite }) {
-  const { changePassword } = useAuth();
+  const { user, changePassword } = useAuth();
   const [siteTitle, setSiteTitle] = useState(`${activeWebsite?.name || 'DevMate'} Admin Workspace`);
   const [seoDescription, setSeoDescription] = useState(`Official administrative control center for ${activeWebsite?.name || 'DevMate'} developer platform.`);
   const [seoKeywords, setSeoKeywords] = useState(`developer, portfolio, admin, ${activeWebsite?.slug || activeWebsite?.id || 'dev-mate'}, react, fullstack`);
@@ -12,7 +12,7 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [registrationOpen, setRegistrationOpen] = useState(true);
   const [smtpNotifications, setSmtpNotifications] = useState(true);
-  const [savedToast, setSavedToast] = useState(false);
+  const [savedSettings, setSavedSettings] = useState(false);
   const [activeTab, setActiveTab] = useState('general'); // 'general' | 'seo' | 'security' | 'database'
 
   // Fetch website settings from backend
@@ -29,11 +29,21 @@ export default function SettingsView({ onNavigate, activeWebsite }) {
     return () => { isMounted = false; };
   }, [activeWebsite]);
 
-  const [users, setUsers] = useState([
-    { id: 1, name: 'Roshan Kumar (You)', email: 'roshan.dev@example.com', role: 'Super User', status: 'Active' },
-    { id: 2, name: 'Jane Doe', email: 'jane.doe@example.com', role: 'Normal User', status: 'Active' },
-    { id: 3, name: 'Mark Smith', email: 'mark.smith@example.com', role: 'Normal User', status: 'Inactive' }
-  ]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      setUsers([
+        {
+          id: user.id || 1,
+          name: user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user.username || 'Superadmin'),
+          email: user.email || 'admin@example.com',
+          role: user.is_superuser ? 'Super Administrator' : 'Staff Admin',
+          status: 'Active'
+        }
+      ]);
+    }
+  }, [user]);
 
   const [showAddUserModal, setShowAddUserModal] = useState(false);
   const [newUser, setNewUser] = useState({ name: '', email: '', role: 'Normal User' });
