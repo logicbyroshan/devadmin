@@ -326,14 +326,37 @@ class DevAdminApiTestSuite(TestCase):
 
     def test_dashboard_analytics_service(self):
         """Test analytics metrics and dynamic contribution heatmap."""
+        # Initial state before activity
+        initial_heatmap = AnalyticsService.generate_contribution_heatmap()
+        self.assertIn('months', initial_heatmap)
+        self.assertEqual(len(initial_heatmap['months']), 12)
+        self.assertEqual(initial_heatmap['total_annual_contributions'], 0)
+
+        # Create real activity
+        Project.objects.create(
+            website=self.site_meet,
+            title='Test Realtime Project',
+            slug='test-realtime-project',
+            description='Testing activity aggregation',
+            category='Backend'
+        )
+        Skill.objects.create(
+            website=self.site_meet,
+            name='Python Test',
+            level=85,
+            category='Language'
+        )
+
         metrics = AnalyticsService.get_dashboard_metrics(website_slug='dev-meet')
         self.assertIn('projects', metrics)
         self.assertIn('messages', metrics)
 
-        heatmap = AnalyticsService.generate_contribution_heatmap()
-        self.assertIn('months', heatmap)
-        self.assertEqual(len(heatmap['months']), 12)
-        self.assertGreater(heatmap['total_annual_contributions'], 0)
+        # Re-fetch heatmap to verify real activity was tracked
+        updated_heatmap = AnalyticsService.generate_contribution_heatmap(website_slug='dev-meet')
+        self.assertIn('months', updated_heatmap)
+        self.assertEqual(len(updated_heatmap['months']), 12)
+        self.assertGreaterEqual(updated_heatmap['total_annual_contributions'], 2)
+
 
     def test_dashboard_endpoints_unauthenticated_forbidden(self):
         """Test unauthenticated GET requests to all dashboard analytics endpoints return 401 Unauthorized."""

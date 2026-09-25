@@ -28,6 +28,8 @@ class DashboardActivitiesView(APIView):
         return Response(activities, status=status.HTTP_200_OK)
 
 
+from django.utils import timezone
+
 class DashboardHeatmapView(APIView):
     """
     Returns full 12-month annual contribution activity matrix.
@@ -35,5 +37,16 @@ class DashboardHeatmapView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        heatmap = AnalyticsService.generate_contribution_heatmap(year=2025)
+        website_slug = request.query_params.get('website', None)
+        year_param = request.query_params.get('year', None)
+        year = None
+        if year_param:
+            try:
+                year = int(year_param)
+            except ValueError:
+                year = None
+        if year is None:
+            year = timezone.now().year
+
+        heatmap = AnalyticsService.generate_contribution_heatmap(year=year, website_slug=website_slug)
         return Response(heatmap, status=status.HTTP_200_OK)

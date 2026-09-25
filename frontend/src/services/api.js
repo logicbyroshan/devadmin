@@ -270,7 +270,13 @@ export const dashboardApi = {
   getAnalytics: () => request('/v1/admin/analytics/dashboard/'),
   getStats: (websiteSlug) => request(`/dashboard/stats/${websiteSlug ? `?website=${websiteSlug}` : ''}`),
   getActivities: (websiteSlug) => request(`/dashboard/activities/${websiteSlug ? `?website=${websiteSlug}` : ''}`),
-  getHeatmap: () => request('/dashboard/heatmap/'),
+  getHeatmap: (websiteSlug, year) => {
+    const params = new URLSearchParams();
+    if (websiteSlug) params.append('website', websiteSlug);
+    if (year) params.append('year', year);
+    const qs = params.toString();
+    return request(`/dashboard/heatmap/${qs ? `?${qs}` : ''}`);
+  },
 };
 
 // 11. Public Serving API (/api/*)
