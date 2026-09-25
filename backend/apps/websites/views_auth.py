@@ -5,14 +5,57 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
+
+
+class IsSuperUser(permissions.BasePermission):
+    """
+    Allows access only to authenticated superusers.
+    """
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_superuser)
+
+
+class SuperAdminTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Custom JWT Token Obtain Serializer enforcing Superadmin access.
+    Rejects any user who is not a superuser.
+    """
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        if not self.user.is_superuser:
+            raise AuthenticationFailed(
+                'Access denied. Only superadministrators are permitted to sign in to DevAdmin.'
+            )
+
+        data['user'] = {
+            'id': self.user.id,
+            'username': self.user.username,
+            'email': self.user.email,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'is_staff': self.user.is_staff,
+            'is_superuser': self.user.is_superuser,
+        }
+        return data
+
+
+class SuperAdminTokenObtainPairView(TokenObtainPairView):
+    """
+    Strict Superadmin-only JWT Login endpoint.
+    """
+    serializer_class = SuperAdminTokenObtainPairSerializer
 
 
 class RegisterView(APIView):
     """
-    Public User Registration Endpoint.
+    User Registration Endpoint (Superadmin-only).
     Creates a new user account with validated credentials and returns a JWT token pair.
     """
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
 
     def post(self, request):
         username = request.data.get('username', '').strip()
@@ -20,6 +63,7 @@ class RegisterView(APIView):
         password = request.data.get('password', '').strip()
         first_name = request.data.get('first_name', '').strip() or 'Admin'
         last_name = request.data.get('last_name', '').strip() or 'User'
+        is_superuser = request.data.get('is_superuser', False)
 
         if not username or not password:
             return Response(
@@ -48,14 +92,14 @@ class RegisterView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        is_first_user = not User.objects.exists()
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password,
             first_name=first_name,
             last_name=last_name,
-            is_staff=is_first_user
+            is_staff=True,
+            is_superuser=is_superuser
         )
 
         refresh = RefreshToken.for_user(user)
@@ -79,9 +123,9 @@ class RegisterView(APIView):
 
 class CurrentUserView(APIView):
     """
-    Returns the currently authenticated user profile based on the JWT Bearer token.
+    Returns the currently authenticated superuser profile based on the JWT Bearer token.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
 
     def get(self, request):
         user = request.user
@@ -98,9 +142,9 @@ class CurrentUserView(APIView):
 
 class ChangePasswordView(APIView):
     """
-    Authenticated endpoint to change user password with verification.
+    Authenticated endpoint for superadmin to change password with verification.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsSuperUser]
 
     def post(self, request):
         user = request.user
@@ -139,3 +183,4 @@ class ChangePasswordView(APIView):
             'access': str(refresh.access_token),
             'refresh': str(refresh)
         }, status=status.HTTP_200_OK)
+

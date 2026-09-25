@@ -51,26 +51,22 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
   const [saved, setSaved] = useState(false);
   const [profileId, setProfileId] = useState(null);
   const [details, setDetails] = useState({
-    name: 'Roshan Damor',
-    title: 'Software Engineer · Full Stack AI (DevMate)',
-    bio: 'Software Engineer specializing in scalable full-stack web applications, distributed backend systems, and LLM AI workflows for DevMate.',
-    location: 'Bhopal, Madhya Pradesh, India',
-    email: 'mail@logicbyroshan.in',
-    phone: '+91 90000 00000',
-    experienceYears: '3+ Years',
-    github: 'https://github.com/logicbyroshan',
-    linkedin: 'https://linkedin.com/in/logicbyroshan',
-    twitter: 'https://twitter.com/logicbyroshan',
-    website: 'https://logicbyroshan.in',
-    resumeUrl: '/media/documents/Roshan_Damor_Resume.pdf',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+    name: '',
+    title: '',
+    bio: '',
+    location: '',
+    email: '',
+    phone: '',
+    experienceYears: '',
+    github: '',
+    linkedin: '',
+    twitter: '',
+    website: '',
+    resumeUrl: '',
+    avatar: '',
     heroHighlightsTitle: 'Quick Portfolio Highlights',
     heroHighlightsVisible: true,
-    heroStats: [
-      { value: '1,000+', label: 'Production Users', icon: 'fas fa-users' },
-      { value: '136K+', label: 'ID Cards Processed', icon: 'fas fa-id-card' },
-      { value: '86K+', label: 'Cards Downloaded', icon: 'fas fa-cloud-download-alt' }
-    ]
+    heroStats: []
   });
 
   // Load profile from Django REST Framework API
@@ -94,45 +90,37 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
             }));
           } else {
             if (p.hero_stat_1_value || p.hero_stat_1_label) {
-              parsedStats.push({ value: p.hero_stat_1_value || '1,000+', label: p.hero_stat_1_label || 'Production Users', icon: p.hero_stat_1_icon || 'fas fa-users' });
+              parsedStats.push({ value: p.hero_stat_1_value || '', label: p.hero_stat_1_label || '', icon: p.hero_stat_1_icon || 'fas fa-users' });
             }
             if (p.hero_stat_2_value || p.hero_stat_2_label) {
-              parsedStats.push({ value: p.hero_stat_2_value || '136K+', label: p.hero_stat_2_label || 'ID Cards Processed', icon: p.hero_stat_2_icon || 'fas fa-id-card' });
+              parsedStats.push({ value: p.hero_stat_2_value || '', label: p.hero_stat_2_label || '', icon: p.hero_stat_2_icon || 'fas fa-id-card' });
             }
             if (p.hero_stat_3_value || p.hero_stat_3_label) {
-              parsedStats.push({ value: p.hero_stat_3_value || '86K+', label: p.hero_stat_3_label || 'Cards Downloaded', icon: p.hero_stat_3_icon || 'fas fa-cloud-download-alt' });
+              parsedStats.push({ value: p.hero_stat_3_value || '', label: p.hero_stat_3_label || '', icon: p.hero_stat_3_icon || 'fas fa-cloud-download-alt' });
             }
-          }
-
-          if (parsedStats.length === 0) {
-            parsedStats = [
-              { value: '1,000+', label: 'Production Users', icon: 'fas fa-users' },
-              { value: '136K+', label: 'ID Cards Processed', icon: 'fas fa-id-card' },
-              { value: '86K+', label: 'Cards Downloaded', icon: 'fas fa-cloud-download-alt' }
-            ];
           }
 
           setDetails({
-            name: p.name || p.full_name || 'Roshan Damor',
+            name: p.name || p.full_name || '',
             title: p.title || '',
             bio: p.bio || '',
             location: p.location || '',
             email: p.email || '',
             phone: p.phone || '',
-            experienceYears: p.experience_years || '3+ Years',
+            experienceYears: p.experience_years || '',
             github: p.github || '',
             linkedin: p.linkedin || '',
             twitter: p.twitter || '',
             website: p.website_url || '',
             resumeUrl: p.resume_url || p.resume || '',
-            avatar: p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+            avatar: p.avatar || '',
             heroHighlightsTitle: p.hero_highlights_title || 'Quick Portfolio Highlights',
             heroHighlightsVisible: p.hero_highlights_visible !== false,
             heroStats: parsedStats.slice(0, 3)
           });
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to load profile details:', err);
       }
     };
     fetchProfile();
@@ -264,15 +252,19 @@ export default function DetailsView({ onNavigate, activeWebsite }) {
       <form onSubmit={handleSave} className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left Column: Avatar & Quick Info Card */}
         <div className="p-5 sm:p-6 rounded-xl bg-[#07080d] border border-neutral-800 text-center space-y-4 h-fit shadow-xl">
-          <div className="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden ring-2 ring-blue-500/40 bg-[#030406] shadow-xl">
-            <img
-              src={details.avatar}
-              alt="Avatar"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80';
-              }}
-            />
+          <div className="relative w-28 h-28 mx-auto rounded-2xl overflow-hidden ring-2 ring-blue-500/40 bg-[#030406] shadow-xl flex items-center justify-center">
+            {details.avatar ? (
+              <img
+                src={details.avatar}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <User className="w-12 h-12 text-neutral-600" />
+            )}
           </div>
 
           <div>

@@ -51,17 +51,25 @@ class DevAdminApiTestSuite(TestCase):
             primary_color='violet'
         )
 
-        # Create admin user
-        self.admin_user = User.objects.create_user(
+        # Create superadmin user
+        self.admin_user = User.objects.create_superuser(
             username='adminuser',
             email='admin@devadmin.io',
             password='ComplexPassword123!',
             first_name='Admin',
-            last_name='User',
-            is_staff=True
+            last_name='User'
         )
 
-        # Obtain JWT Token
+        # Create regular non-superuser
+        self.normal_user = User.objects.create_user(
+            username='normaluser',
+            email='normal@devadmin.io',
+            password='ComplexPassword123!',
+            first_name='Normal',
+            last_name='User'
+        )
+
+        # Obtain JWT Token for superadmin
         res = self.client.post('/api/auth/token/', {
             'username': 'adminuser',
             'password': 'ComplexPassword123!'
@@ -69,7 +77,7 @@ class DevAdminApiTestSuite(TestCase):
         self.access_token = res.data['access']
         self.refresh_token = res.data['refresh']
 
-        # Authenticated client
+        # Authenticated superadmin client
         self.auth_client = APIClient()
         self.auth_client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
@@ -106,22 +114,31 @@ class DevAdminApiTestSuite(TestCase):
         self.assertEqual(res_docs.status_code, status.HTTP_200_OK)
 
     def test_jwt_authentication_lifecycle(self):
-        """Test complete token obtain, refresh, invalid token rejection, and user info."""
-        # 1. Refresh token
+        """Test complete token obtain, refresh, invalid credentials rejection, and superadmin validation."""
+        # 1. Non-superuser login is strictly forbidden
+        res_non_super = self.client.post('/api/auth/token/', {
+            'username': 'normaluser',
+            'password': 'ComplexPassword123!'
+        })
+        self.assertEqual(res_non_super.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('Access denied', str(res_non_super.data))
+
+        # 2. Refresh token
         res_refresh = self.client.post('/api/auth/token/refresh/', {
             'refresh': self.refresh_token
         })
         self.assertEqual(res_refresh.status_code, status.HTTP_200_OK)
         new_access = res_refresh.data['access']
 
-        # 2. Access with new token
+        # 3. Access with new token
         new_client = APIClient()
         new_client.credentials(HTTP_AUTHORIZATION=f'Bearer {new_access}')
         res_me = new_client.get('/api/auth/me/')
         self.assertEqual(res_me.status_code, status.HTTP_200_OK)
         self.assertEqual(res_me.data['username'], 'adminuser')
+        self.assertTrue(res_me.data['is_superuser'])
 
-        # 3. Invalid credentials rejection
+        # 4. Invalid credentials rejection
         res_invalid = self.client.post('/api/auth/token/', {
             'username': 'adminuser',
             'password': 'WrongPassword123'
@@ -129,15 +146,25 @@ class DevAdminApiTestSuite(TestCase):
         self.assertEqual(res_invalid.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_user_registration_and_validation(self):
-        """Test public registration creates user and validates password length."""
-        res_weak = self.client.post('/api/auth/register/', {
+        """Test registration is protected by superadmin authentication and validates password."""
+        # Unauthenticated registration is rejected with 401
+        res_unauth = self.client.post('/api/auth/register/', {
+            'username': 'newuser1',
+            'email': 'new1@example.com',
+            'password': 'ValidSecretPassword123!'
+        })
+        self.assertEqual(res_unauth.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        # Authenticated superadmin weak password validation
+        res_weak = self.auth_client.post('/api/auth/register/', {
             'username': 'newuser1',
             'email': 'new1@example.com',
             'password': '123'
         })
         self.assertEqual(res_weak.status_code, status.HTTP_400_BAD_REQUEST)
 
-        res_success = self.client.post('/api/auth/register/', {
+        # Authenticated superadmin registration success
+        res_success = self.auth_client.post('/api/auth/register/', {
             'username': 'newuser1',
             'email': 'new1@example.com',
             'password': 'ValidSecretPassword123!',

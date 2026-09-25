@@ -12,9 +12,7 @@ import FaqsView from './components/FaqsView';
 import SettingsView from './components/SettingsView';
 import LogoutModal from './components/LogoutModal';
 import LoginView from './components/LoginView';
-import SignupView from './components/SignupView';
 import { useAuth } from './context/AuthContext';
-import AuthModal from './components/AuthModal';
 
 export const DEVMATE_SITE = { 
   id: 'dev-mate', 
@@ -41,10 +39,9 @@ export const DEVMATE_SITE = {
 // Single-site admin � DevMate portfolio only
 
 export default function App() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isLoading, logout } = useAuth();
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [authView, setAuthView] = useState(null); // null | 'LOGIN' | 'SIGNUP'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const handleNavigate = (page) => {
@@ -59,29 +56,27 @@ export default function App() {
   const handleConfirmLogout = () => {
     logout();
     setShowLogoutModal(false);
-    setAuthView('LOGIN');
   };
 
-  if (authView === 'LOGIN') {
+  // Initial session verification loader
+  if (isLoading) {
     return (
-      <LoginView
-        onLoginSuccess={() => {
-          setAuthView(null);
-          setCurrentPage('dashboard');
-        }}
-        onSwitchToSignup={() => setAuthView('SIGNUP')}
-      />
+      <div className="min-h-screen bg-black text-slate-100 flex items-center justify-center p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 rounded-full border-2 border-violet-500 border-t-transparent animate-spin" />
+          <p className="text-xs font-bold text-neutral-400 tracking-wider uppercase">Verifying Superadmin Session...</p>
+        </div>
+      </div>
     );
   }
 
-  if (authView === 'SIGNUP') {
+  // Strict Authentication Gate: Non-superadmin / unauthenticated users cannot access console
+  if (!isAuthenticated) {
     return (
-      <SignupView
-        onSignupSuccess={() => {
-          setAuthView(null);
+      <LoginView
+        onLoginSuccess={() => {
           setCurrentPage('dashboard');
         }}
-        onSwitchToLogin={() => setAuthView('LOGIN')}
       />
     );
   }
@@ -171,9 +166,6 @@ export default function App() {
           </main>
         </div>
       </div>
-
-      {/* Global Authentication Modal */}
-      <AuthModal />
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (

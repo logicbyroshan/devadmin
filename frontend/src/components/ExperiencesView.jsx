@@ -18,42 +18,8 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
   const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'EDITOR'
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [editingId, setEditingId] = useState(null);
-
-  const [experiences, setExperiences] = useState([
-    {
-      id: 1,
-      role: 'Lead Platform Architect',
-      company: 'DevAdmin Cloud Labs',
-      status: 'CURRENT',
-      description: 'Architecting multi-tenant React applications and unified REST APIs across developer collaboration platforms.',
-      category: 'Full-Stack Engineering',
-      joined: '2023-01-15',
-      left: 'Present',
-      visible: true
-    },
-    {
-      id: 2,
-      role: 'Senior Frontend Developer',
-      company: 'Tech Mitras Global',
-      status: 'PAST',
-      description: 'Engineered reusable UI component systems with TailwindCSS, WebSocket live chat integrations, and high-performance state stores.',
-      category: 'Frontend Architecture',
-      joined: '2021-06-01',
-      left: '2022-12-31',
-      visible: true
-    },
-    {
-      id: 3,
-      role: 'Full Stack Engineer Intern',
-      company: 'Open Matrix Solutions',
-      status: 'PAST',
-      description: 'Assisted senior developers with Python/Django REST API endpoints, PostgreSQL database migrations, and CI/CD pipelines.',
-      category: 'Backend & DevOps',
-      joined: '2020-08-01',
-      left: '2021-05-31',
-      visible: false
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [experiences, setExperiences] = useState([]);
 
   // Unified separate Add/Edit form state
   const [formData, setFormData] = useState({
@@ -68,7 +34,7 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
   });
 
   // Extract unique categories for the dropdown
-  const categories = ['ALL', ...Array.from(new Set(experiences.map(e => e.category)))];
+  const categories = ['ALL', ...Array.from(new Set(experiences.map(e => e.category).filter(Boolean)))];
 
   const filteredExperiences = experiences.filter(exp => {
     if (selectedCategory === 'ALL') return true;
@@ -80,24 +46,30 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
     let isMounted = true;
     const fetchExperiences = async () => {
       try {
+        setIsLoading(true);
         const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
         const data = await experiencesApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           setExperiences(list.map(e => ({
             id: e.id,
             role: e.role,
             company: e.company,
             status: e.status || (e.is_current ? 'CURRENT' : 'PAST'),
             category: e.category || 'Engineering',
+            joined: e.start_date || '2023-01-01',
+            left: e.end_date || (e.is_current ? 'Present' : ''),
             period: e.period || (e.start_date ? `${e.start_date} - ${e.end_date || 'Present'}` : '2023 - Present'),
             location: e.location || 'Remote',
             description: e.description || '',
             visible: e.visible !== false
           })));
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to load experiences:', err);
+        if (isMounted) setExperiences([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
     fetchExperiences();
@@ -443,81 +415,93 @@ export default function ExperiencesView({ onNavigate, activeWebsite }) {
         </div>
       </div>
 
-      {/* 3-Card Format Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredExperiences.map(exp => (
-          <div key={exp.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
-            <div className="space-y-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-1 font-accent">
-                    {exp.role}
-                  </h3>
-                  <div className="text-xs font-bold text-blue-400 truncate mt-0.5 font-accent">
-                    @ {exp.company}
+      {/* Experiences Grid or Empty State */}
+      {filteredExperiences.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl bg-[#07080d] border border-neutral-800/80 space-y-3">
+          <Briefcase className="w-10 h-10 mx-auto text-neutral-600" />
+          <h3 className="text-base font-bold text-white">No Experiences Found</h3>
+          <p className="text-xs text-neutral-400 max-w-sm mx-auto">
+            {selectedCategory === 'ALL' 
+              ? 'There are no experience records added yet. Click "+ Add New Experience" to create your career history.' 
+              : `No experiences found in category "${selectedCategory}".`}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredExperiences.map(exp => (
+            <div key={exp.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-extrabold text-white line-clamp-1 font-accent">
+                      {exp.role}
+                    </h3>
+                    <div className="text-xs font-bold text-blue-400 truncate mt-0.5 font-accent">
+                      @ {exp.company}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 mt-1.5">
+                      <Tag className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                      <span className="truncate">{exp.category}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 mt-1.5">
-                    <Tag className="w-3 h-3 text-blue-400 flex-shrink-0" />
-                    <span className="truncate">{exp.category}</span>
-                  </div>
+
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-black uppercase tracking-wide flex-shrink-0 ${
+                    exp.status === 'CURRENT'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
+                  }`}>
+                    {exp.status}
+                  </span>
                 </div>
 
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-black uppercase tracking-wide flex-shrink-0 ${
-                  exp.status === 'CURRENT'
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                    : 'bg-neutral-800 text-neutral-400 border border-neutral-700'
-                }`}>
-                  {exp.status}
-                </span>
+                <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed font-normal">
+                  {exp.description}
+                </p>
+
+                <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 pt-3 border-t border-neutral-800">
+                  <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                  <span className="truncate">Tenure: {exp.joined} — {exp.left}</span>
+                </div>
               </div>
 
-              <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed font-normal">
-                {exp.description}
-              </p>
-
-              <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 pt-3 border-t border-neutral-800">
-                <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
-                <span className="truncate">Tenure: {exp.joined} — {exp.left}</span>
-              </div>
-            </div>
-
-            {/* Action Buttons — consistent h-9 (36px) */}
-            <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
-              <button
-                type="button"
-                onClick={() => handleToggleVisible(exp.id)}
-                className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
-                  exp.visible
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                    : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
-                }`}
-                title="Toggle Live Visibility"
-              >
-                {exp.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
-                <span>{exp.visible ? 'Visible' : 'Hidden'}</span>
-              </button>
-
-              <div className="flex items-center gap-1.5 flex-shrink-0">
+              {/* Action Buttons — consistent h-9 (36px) */}
+              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
                 <button
                   type="button"
-                  onClick={() => handleOpenEditPage(exp)}
-                  className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                  onClick={() => handleToggleVisible(exp.id)}
+                  className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
+                    exp.visible
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                      : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
+                  }`}
+                  title="Toggle Live Visibility"
                 >
-                  <Edit2 className="w-4 h-4" /> Edit
+                  {exp.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
+                  <span>{exp.visible ? 'Visible' : 'Hidden'}</span>
                 </button>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(exp.id)}
-                  className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
-                  title="Delete Experience"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleOpenEditPage(exp)}
+                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                  >
+                    <Edit2 className="w-4 h-4" /> Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(exp.id)}
+                    className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
+                    title="Delete Experience"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
