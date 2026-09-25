@@ -24,61 +24,12 @@ import { contactsApi } from '../services/api';
 export default function MessagesView({ onNavigate, activeWebsite }) {
   const [filter, setFilter] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedId, setSelectedId] = useState(1);
+  const [selectedId, setSelectedId] = useState(null);
   const [replySubject, setReplySubject] = useState('');
   const [replyText, setReplyText] = useState('');
   const [isSentToast, setIsSentToast] = useState(false);
 
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'John Doe',
-      email: 'john.doe@example.com',
-      tag: 'Inquiry',
-      subject: 'Inquiry regarding DevMeet Platform Features & Architecture',
-      body: 'Hi Roshan,\n\nI came across your impressive developer portal DevMeet and wanted to ask if you are available for a contract full-stack build next month? We are building a high-performance developer workspace and would love your expertise on the frontend architecture and real-time backend synchronization.\n\nLooking forward to hearing from you!',
-      time: '2m ago',
-      date: 'June 20, 2025 • 02:45 PM',
-      read: false,
-      starred: true
-    },
-    {
-      id: 2,
-      sender: 'Renuka Dashbanda',
-      email: 'renuka.d@company.io',
-      tag: 'Feedback',
-      subject: 'Feedback on Modern Pitch-Black Glassmorphic Dashboard UI',
-      body: 'Hello Roshan,\n\nGreat work on the multi-site platform management architecture! The pitch-black glass styling and responsive typography look extremely slick and polished. Let us know when the open source repository is ready for public review.\n\nBest regards,\nRenuka',
-      time: '15m ago',
-      date: 'June 20, 2025 • 02:30 PM',
-      read: true,
-      starred: false
-    },
-    {
-      id: 3,
-      sender: 'Riya Sayam',
-      email: 'riya@techcorp.com',
-      tag: 'Hire',
-      subject: 'Senior Full Stack Engineer Contract Role Inquiry',
-      body: 'Hello Roshan!\n\nWe would love to discuss an open Senior Engineer position at our engineering team. We were particularly impressed by your microservices and React performance optimization work. Please let me know your availability for a 15-minute discovery call this week.\n\nCheers,\nRiya',
-      time: '1h ago',
-      date: 'June 20, 2025 • 01:45 PM',
-      read: false,
-      starred: true
-    },
-    {
-      id: 4,
-      sender: 'Jane Smith',
-      email: 'jane@freelance.org',
-      tag: 'Consultation',
-      subject: 'Full-Stack Architecture Consultation for Fintech App',
-      body: 'Hi Roshan,\n\nI am reaching out regarding technical architecture consultation for an upcoming fintech application with PostgreSQL and Django REST backends. Are you open to hourly advisory sessions?',
-      time: '2d ago',
-      date: 'June 18, 2025 • 11:15 AM',
-      read: true,
-      starred: false
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
 
   // Fetch contact inquiries from Django REST Framework API with multi-tenant filtering
   useEffect(() => {
@@ -88,7 +39,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
         const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
         const data = await contactsApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           const mapped = list.map(c => ({
             id: c.id,
             sender: c.name,
@@ -98,16 +49,22 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
             tag: c.tag || 'Inquiry',
             read: c.is_read,
             starred: c.starred,
-            date: c.created_at ? c.created_at.split('T')[0] : '2025-06-20',
+            date: c.created_at ? c.created_at.split('T')[0] : '',
             time: 'Recently'
           }));
           setMessages(mapped);
           if (mapped.length > 0) {
             setSelectedId(mapped[0].id);
+          } else {
+            setSelectedId(null);
           }
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to fetch contact inquiries:', err);
+        if (isMounted) {
+          setMessages([]);
+          setSelectedId(null);
+        }
       }
     };
     fetchContacts();
@@ -259,7 +216,7 @@ export default function MessagesView({ onNavigate, activeWebsite }) {
           <div className="p-3 space-y-2 flex-1 overflow-y-auto min-h-0">
             {filteredMessages.length === 0 ? (
               <div className="p-8 text-center text-neutral-500 text-xs">
-                No messages match the current filter.
+                {messages.length === 0 ? 'No contact inquiries received yet.' : 'No messages match the current filter.'}
               </div>
             ) : (
               filteredMessages.map((msg) => {

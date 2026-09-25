@@ -21,79 +21,8 @@ export default function ProjectsView({ onNavigate, activeWebsite }) {
   const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'EDITOR'
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [editingId, setEditingId] = useState(null);
-
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      title: 'CardFlow Enterprise ID Automation Engine',
-      projectName: 'CardFlow',
-      status: 'active',
-      category: 'Enterprise SaaS',
-      technologies: 'Python, Django, Celery, Redis, React, PostgreSQL',
-      description: `## 🚀 CardFlow Enterprise ID Generation Pipeline
-
-High-throughput asynchronous ID card generation platform processing 136K+ cards with Celery and Redis.
-
-### 🏛️ Distributed Print & Rendering Pipeline
-
-\`\`\`architecture:microservices
-title: CardFlow Distributed Print & Rendering Pipeline
-nodes:
-  - [Client Dashboard (React)] -> [Nginx Reverse Proxy]
-  - [Nginx Reverse Proxy] -> [Django REST Framework Gateway]
-  - [DRF Gateway] -> [Redis Celery Task Broker]
-  - [Redis Broker] -> [Celery Worker Cluster (SVG/PDF Renderer)]
-  - [Celery Workers] -> [PostgreSQL Transaction Ledger]
-\`\`\`
-
-### ⚡ Performance Benchmarks
-
-\`\`\`chart:barchart
-title: Card Generation Throughput (Cards/sec - Higher is Better)
-unit: cards/sec
-data:
-  - CardFlow Celery Cluster: 145
-  - Legacy Node Pipeline: 12
-\`\`\`
-`,
-      completed: '2025-06-15',
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80',
-      demoUrl: 'https://cardflow.logicbyroshan.in',
-      liveUrl: 'https://cardflow.logicbyroshan.in',
-      githubUrl: 'https://github.com/logicbyroshan/cardflow',
-      visible: true,
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'DevMate In-Browser Sandbox IDE',
-      projectName: 'DevMate IDE',
-      status: 'active',
-      category: 'AI & Developer Tools',
-      technologies: 'React, TypeScript, WebAssembly, Python, Docker',
-      description: `## ⚡ In-Browser Cloud Compilation & Code Sandbox
-
-In-browser real-time cloud compilation sandbox supporting Node.js, Python, and Go micro-services with instantaneous live preview and container execution.
-
-### 🏛️ Sandboxed Container Lifecycle
-
-\`\`\`architecture:microservices
-title: Isolated Cloud Code Execution Sandbox
-nodes:
-  - [Monaco Code Editor] -> [WebSocket Language Server (LSP)]
-  - [LSP Server] -> [Pyodide / WebAssembly Engine]
-  - [Pyodide Engine] -> [Interactive Live Terminal]
-\`\`\`
-`,
-      completed: '2025-07-20',
-      image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop&q=80',
-      demoUrl: 'https://devmate.logicbyroshan.in',
-      liveUrl: 'https://devmate.logicbyroshan.in',
-      githubUrl: 'https://github.com/logicbyroshan/devmate',
-      visible: true,
-      featured: true
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [projects, setProjects] = useState([]);
 
   // Form state for unified separate Add/Edit page
   const [formData, setFormData] = useState({
@@ -105,7 +34,7 @@ nodes:
     description: '',
     documentation: '',
     completed: new Date().toISOString().split('T')[0],
-    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+    image: '',
     demoUrl: '',
     liveUrl: '',
     githubUrl: '',
@@ -113,7 +42,7 @@ nodes:
     featured: false
   });
 
-  const categories = ['ALL', ...Array.from(new Set(projects.map(p => p.category)))];
+  const categories = ['ALL', ...Array.from(new Set(projects.map(p => p.category).filter(Boolean)))];
 
   const filteredProjects = projects.filter(p => {
     if (selectedCategory === 'ALL') return true;
@@ -125,20 +54,22 @@ nodes:
     let isMounted = true;
     const fetchProjects = async () => {
       try {
-        const data = await projectsApi.getAll({ website: 'dev-mate' });
+        setIsLoading(true);
+        const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
+        const data = await projectsApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           setProjects(list.map(p => ({
             id: p.id,
             title: p.title,
             projectName: p.project_name || p.title,
-            status: p.status,
+            status: p.status || 'LIVE',
             category: p.category || 'Web Application',
             description: p.description || '',
             documentation: p.documentation || p.description || '',
-            technologies: p.technologies || '',
+            technologies: Array.isArray(p.technologies) ? p.technologies.join(', ') : (p.technologies || ''),
             completed: p.completed_date || p.completed || '',
-            image: p.image || p.thumbnail || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+            image: p.image || p.thumbnail || '',
             demoUrl: p.demo_url || p.demoUrl || '',
             liveUrl: p.live_url || p.liveUrl || '',
             githubUrl: p.github_url || p.githubUrl || '',
@@ -148,8 +79,11 @@ nodes:
             likes: p.likes || 0
           })));
         }
-      } catch {
-        // Graceful fallback to client state if offline
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+        if (isMounted) setProjects([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
     fetchProjects();
@@ -191,7 +125,7 @@ data:
 \`\`\`
 `,
       completed: new Date().toISOString().split('T')[0],
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+      image: '',
       demoUrl: '',
       liveUrl: '',
       githubUrl: '',
@@ -558,24 +492,42 @@ data:
         </div>
       </div>
 
-      {/* Projects 3-Card Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredProjects.map((proj) => (
+      {/* Projects Grid or Empty State */}
+      {filteredProjects.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl bg-[#07080d] border border-neutral-800/80 space-y-3">
+          <FolderKanban className="w-10 h-10 mx-auto text-neutral-600" />
+          <h3 className="text-base font-bold text-white">No Projects Found</h3>
+          <p className="text-xs text-neutral-400 max-w-sm mx-auto">
+            {selectedCategory === 'ALL' 
+              ? 'There are no projects created yet. Click "+ Add New Project" to publish your first showcase project.' 
+              : `No projects found in category "${selectedCategory}".`}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredProjects.map((proj) => (
           <div 
             key={proj.id} 
             className="rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-lg group hover:-translate-y-1"
           >
             <div>
               {/* Card Image Banner */}
-              <div className="relative h-44 w-full bg-[#030406] overflow-hidden border-b border-neutral-800">
-                <img
-                  src={proj.image}
-                  alt={proj.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80';
-                  }}
-                />
+              <div className="relative h-44 w-full bg-[#030406] overflow-hidden border-b border-neutral-800 flex items-center justify-center">
+                {proj.image ? (
+                  <img
+                    src={proj.image}
+                    alt={proj.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-neutral-600 space-y-1">
+                    <Layers className="w-8 h-8 text-neutral-600" />
+                    <span className="text-[11px] font-medium text-neutral-500">No Image Uploaded</span>
+                  </div>
+                )}
                 <div className="absolute top-3 right-3 flex items-center gap-2">
                   <span className={`px-2.5 py-1 rounded-md text-xs font-extrabold uppercase tracking-wide ${
                     proj.status === 'LIVE'
@@ -654,6 +606,7 @@ data:
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

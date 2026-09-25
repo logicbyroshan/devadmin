@@ -31,36 +31,23 @@ import {
 import { dashboardApi, contactsApi } from '../services/api';
 
 export default function DashboardView({ onNavigate, activeWebsite }) {
-  const [messages, setMessages] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', preview: 'Inquiry regarding DevMeet platform features and scheduling...', tag: 'Inquiry', time: '2m ago', unread: true },
-    { id: 2, name: 'Renuka Dashbanda', email: 'renuka@design.co', preview: 'Great work on the UI update! Loved the dark glassmorphic design...', tag: 'Feedback', time: '15m ago', unread: false },
-    { id: 3, name: 'Riya Sayam', email: 'riya@techcorp.io', preview: 'Can we schedule a discovery call tomorrow for contract build work?', tag: 'Hire', time: '1h ago', unread: true },
-    { id: 4, name: 'Jane Smith', email: 'jane@freelance.org', preview: 'Sent you an inquiry regarding full-stack architecture consultation.', tag: 'Consultation', time: '2d ago', unread: false },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const [stats, setStats] = useState({
-    blogs: { total: 4, live: 2, scheduled: 1, draft: 1 },
-    projects: { total: 3, live: 2, offline: 1 },
-    experiences: { total: 3, current: 1 },
-    skills: { total: 12 },
-    messages: { total: 4, unread: 2, starred: 1 },
-    faqs: { total: 3 }
+    blogs: { total: 0, live: 0, scheduled: 0, draft: 0 },
+    projects: { total: 0, live: 0, offline: 0 },
+    experiences: { total: 0, current: 0 },
+    skills: { total: 0 },
+    messages: { total: 0, unread: 0, starred: 0 },
+    faqs: { total: 0 }
   });
 
-  const [selectedMessageId, setSelectedMessageId] = useState(1);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [replySubject, setReplySubject] = useState('');
   const [replyText, setReplyText] = useState('');
   const [sentToast, setSentToast] = useState(false);
-  const [blogsActivities, setBlogsActivities] = useState([
-    { id: 1, title: 'Published article: "Optimizing Node.js APIs for High Scale"', time: 'Recently', icon: FileText, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { id: 2, title: 'Scheduled draft "State Management in 2025"', time: 'Upcoming', icon: CalendarDays, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-    { id: 3, title: 'Saved draft "Understanding React Server Components"', time: 'Draft', icon: FileEdit, color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-  ]);
-  const [projectActivities, setProjectActivities] = useState([
-    { id: 1, title: 'Updated live preview production URL and API endpoints', time: 'Recently', icon: Globe, color: 'text-blue-400', bg: 'bg-blue-500/10' },
-    { id: 2, title: 'Deployed WebRTC selective forwarding unit relay service', time: 'Recently', icon: Sparkles, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
-    { id: 3, title: 'Completed benchmark test suite for REST & WebSocket gateways', time: 'Recently', icon: CheckCircle, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-  ]);
+  const [blogsActivities, setBlogsActivities] = useState([]);
+  const [projectActivities, setProjectActivities] = useState([]);
 
   // Fetch live stats, activities & messages from backend API
   useEffect(() => {
@@ -75,7 +62,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
 
         const activitiesData = await dashboardApi.getActivities(siteSlug).catch(() => null);
         if (isMounted && activitiesData) {
-          if (activitiesData.blogs && activitiesData.blogs.length > 0) {
+          if (activitiesData.blogs && Array.isArray(activitiesData.blogs)) {
             setBlogsActivities(activitiesData.blogs.map(b => ({
               id: b.id,
               title: b.title,
@@ -85,7 +72,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               bg: b.status === 'PUBLISHED' ? 'bg-blue-500/10' : (b.status === 'SCHEDULED' ? 'bg-indigo-500/10' : 'bg-cyan-500/10')
             })));
           }
-          if (activitiesData.projects && activitiesData.projects.length > 0) {
+          if (activitiesData.projects && Array.isArray(activitiesData.projects)) {
             setProjectActivities(activitiesData.projects.map(p => ({
               id: p.id,
               title: p.title,
@@ -99,20 +86,25 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
 
         const contactsData = await contactsApi.getAll({ website: siteSlug });
         const contactList = Array.isArray(contactsData) ? contactsData : (contactsData.results || []);
-        if (isMounted && contactList.length > 0) {
-          setMessages(contactList.map(c => ({
+        if (isMounted) {
+          const mapped = contactList.map(c => ({
             id: c.id,
             name: c.name,
             email: c.email,
-            preview: c.message.length > 60 ? `${c.message.slice(0, 60)}...` : c.message,
+            preview: c.message ? (c.message.length > 60 ? `${c.message.slice(0, 60)}...` : c.message) : '',
             tag: c.tag || 'Inquiry',
             time: 'Recently',
             unread: !c.is_read
-          })));
-          setSelectedMessageId(contactList[0].id);
+          }));
+          setMessages(mapped);
+          if (mapped.length > 0) {
+            setSelectedMessageId(mapped[0].id);
+          } else {
+            setSelectedMessageId(null);
+          }
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
       }
     };
     fetchDashboardData();
@@ -188,7 +180,9 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-blue-950/50 via-[#070b16] to-[#04060c] border border-blue-500/30 hover:border-blue-400/80 shadow-lg shadow-blue-950/40 hover:shadow-blue-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-blue-200 transition-colors font-accent">15</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-blue-200 transition-colors font-accent">
+              {stats.blogs?.live ?? stats.blogs?.total ?? 0}
+            </div>
             <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Live Blogs</div>
             <div className="text-xs font-semibold text-blue-400 mt-1 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
@@ -206,7 +200,9 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-amber-950/50 via-[#120e06] to-[#04060c] border border-amber-500/30 hover:border-amber-400/80 shadow-lg shadow-amber-950/40 hover:shadow-amber-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-amber-200 transition-colors font-accent">6</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-amber-200 transition-colors font-accent">
+              {stats.experiences?.total ?? 0}
+            </div>
             <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Experiences</div>
             <div className="text-xs font-semibold text-amber-400 mt-1 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
@@ -224,11 +220,13 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-purple-950/50 via-[#10071c] to-[#04060c] border border-purple-500/30 hover:border-purple-400/80 shadow-lg shadow-purple-950/40 hover:shadow-purple-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-purple-200 transition-colors font-accent">27</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-purple-200 transition-colors font-accent">
+              {stats.projects?.total ?? 0}
+            </div>
             <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Projects</div>
             <div className="text-xs font-semibold text-purple-400 mt-1 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-              <span>15 Live Online</span>
+              <span>{stats.projects?.live ?? 0} Live Online</span>
             </div>
           </div>
           <div className="p-3 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-500/25 group-hover:border-purple-400 transition-all duration-200">
@@ -242,7 +240,9 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-emerald-950/50 via-[#05140e] to-[#04060c] border border-emerald-500/30 hover:border-emerald-400/80 shadow-lg shadow-emerald-950/40 hover:shadow-emerald-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-emerald-200 transition-colors font-accent">32</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-emerald-200 transition-colors font-accent">
+              {stats.skills?.total ?? 0}
+            </div>
             <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Total Skills</div>
             <div className="text-xs font-semibold text-emerald-400 mt-1 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
@@ -260,11 +260,13 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-sky-950/50 via-[#07131e] to-[#04060c] border border-sky-500/30 hover:border-sky-400/80 shadow-lg shadow-sky-950/40 hover:shadow-sky-500/20 transition-all duration-200 flex items-center justify-between gap-3 col-span-2 sm:col-span-1 lg:col-span-2 xl:col-span-1 group hover:-translate-y-0.5"
         >
           <div className="text-left min-w-0">
-            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-sky-200 transition-colors font-accent">48</div>
+            <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-sky-200 transition-colors font-accent">
+              {stats.messages?.total ?? 0}
+            </div>
             <div className="text-sm font-medium text-neutral-300 mt-1.5 truncate">Received Messages</div>
             <div className="text-xs font-semibold text-sky-400 mt-1 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse"></span>
-              <span>2 Unread Inquiries</span>
+              <span>{stats.messages?.unread ?? 0} Unread Inquiries</span>
             </div>
           </div>
           <div className="p-3 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-md shadow-sky-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-sky-500/25 group-hover:border-sky-400 transition-all duration-200">
@@ -292,55 +294,55 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               onClick={() => onNavigate('manage-projects')}
               className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 transition-colors"
             >
-              <span>Manage All (27)</span>
+              <span>Manage All ({stats.projects?.total ?? 0})</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* 3 Pipeline Items (Matched h-[68px] & Vibrant Multi-Color Progress Bars) */}
+          {/* 3 Pipeline Items */}
           <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-            {/* Completed: Cyan-Blue */}
+            {/* Live / Completed: Cyan-Blue */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <FolderCheck className="w-4 h-4 text-cyan-400" /> Done Projects
+                  <FolderCheck className="w-4 h-4 text-cyan-400" /> Live Projects
                 </span>
-                <span className="font-bold text-neutral-100"><span className="text-cyan-400">15</span> / 27</span>
+                <span className="font-bold text-neutral-100"><span className="text-cyan-400">{stats.projects?.live ?? 0}</span> / {stats.projects?.total ?? 0}</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 rounded-sm shadow-sm shadow-cyan-500/30" style={{ width: '55%' }}></div>
+                <div className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 rounded-sm shadow-sm shadow-cyan-500/30" style={{ width: `${stats.projects?.total ? Math.round(((stats.projects?.live || 0) / stats.projects.total) * 100) : 0}%` }}></div>
               </div>
             </div>
 
-            {/* In Progress: Amber-Orange */}
+            {/* Offline / In Progress */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <Hourglass className="w-4 h-4 text-amber-400" /> In Progress (Active Sprint)
+                  <Hourglass className="w-4 h-4 text-amber-400" /> Offline / In Progress
                 </span>
-                <span className="font-bold text-neutral-100"><span className="text-amber-400">4</span> / 27</span>
+                <span className="font-bold text-neutral-100"><span className="text-amber-400">{stats.projects?.offline ?? Math.max(0, (stats.projects?.total || 0) - (stats.projects?.live || 0))}</span> / {stats.projects?.total ?? 0}</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-400 rounded-sm shadow-sm shadow-amber-500/30" style={{ width: '15%' }}></div>
+                <div className="h-full bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-400 rounded-sm shadow-sm shadow-amber-500/30" style={{ width: `${stats.projects?.total ? Math.round(((stats.projects?.offline || 0) / stats.projects.total) * 100) : 0}%` }}></div>
               </div>
             </div>
 
-            {/* Planned: Purple-Violet-Fuchsia */}
+            {/* Total Managed */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-purple-400" /> Planned (Upcoming Roadmap)
+                  <CalendarDays className="w-4 h-4 text-purple-400" /> Total Portfolio Projects
                 </span>
-                <span className="font-bold text-neutral-100"><span className="text-purple-400">8</span> / 27</span>
+                <span className="font-bold text-purple-400">{stats.projects?.total ?? 0} Projects</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-400 rounded-sm shadow-sm shadow-purple-500/30" style={{ width: '30%' }}></div>
+                <div className="h-full bg-gradient-to-r from-purple-500 via-violet-500 to-fuchsia-400 rounded-sm shadow-sm shadow-purple-500/30" style={{ width: `${stats.projects?.total ? 100 : 0}%` }}></div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Project Activity Card (Matched h-[68px] per item) */}
+        {/* Project Activity Card */}
         <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
           {/* Edge-to-Edge Special Header Bar */}
           <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-b border-neutral-800 flex items-center justify-between flex-shrink-0">
@@ -362,27 +364,33 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
             </button>
           </div>
 
-          {/* Exactly 3 Activity Items (Matched h-[68px]) */}
-          <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-            {projectActivities.slice(0, 3).map((act) => {
-              const Icon = act.icon;
-              return (
-                <div key={act.id} className="h-[68px] p-3 rounded-lg bg-[#050609] hover:bg-neutral-900/80 border border-neutral-800/80 flex items-center gap-3 transition-colors">
-                  <div className={`p-2 rounded-md ${act.bg} ${act.color} flex-shrink-0`}>
-                    <Icon className="w-4 h-4" />
+          {/* Activity Items or Empty State */}
+          <div className="p-4 space-y-3 flex-1 flex flex-col justify-center">
+            {projectActivities.length === 0 ? (
+              <div className="text-center py-6 text-neutral-500 text-xs">
+                No recent project activity records found.
+              </div>
+            ) : (
+              projectActivities.slice(0, 3).map((act) => {
+                const Icon = act.icon || Globe;
+                return (
+                  <div key={act.id} className="h-[68px] p-3 rounded-lg bg-[#050609] hover:bg-neutral-900/80 border border-neutral-800/80 flex items-center gap-3 transition-colors">
+                    <div className={`p-2 rounded-md ${act.bg || 'bg-blue-500/10'} ${act.color || 'text-blue-400'} flex-shrink-0`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs sm:text-sm flex-1 min-w-0">
+                      <p className="font-medium text-neutral-200 line-clamp-1 leading-snug">{act.title}</p>
+                      <span className="text-[11px] text-neutral-500 mt-0.5 block font-normal">{act.time}</span>
+                    </div>
                   </div>
-                  <div className="text-xs sm:text-sm flex-1 min-w-0">
-                    <p className="font-medium text-neutral-200 line-clamp-1 leading-snug">{act.title}</p>
-                    <span className="text-[11px] text-neutral-500 mt-0.5 block font-normal">{act.time}</span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       </div>
 
-      {/* 3. BLOGS SECTION: Matched Heights (h-[68px]), Colorful Vibrant Progress Bars */}
+      {/* 3. BLOGS SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-stretch">
         {/* Blogs Pipeline Card */}
         <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
@@ -401,55 +409,55 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               onClick={() => onNavigate('manage-blogs')}
               className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 transition-colors"
             >
-              <span>Manage All (22)</span>
+              <span>Manage All ({stats.blogs?.total ?? 0})</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* 3 Pipeline Items (Matched h-[68px] & Colorful Progress Bars) */}
+          {/* 3 Pipeline Items */}
           <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-            {/* Drafts: Indigo-Purple */}
+            {/* Drafts */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
                   <FileEdit className="w-4 h-4 text-indigo-400" /> Draft Articles
                 </span>
-                <span className="font-bold text-indigo-400">7 Drafts</span>
+                <span className="font-bold text-indigo-400">{stats.blogs?.draft ?? 0} Drafts</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-400 rounded-sm shadow-sm shadow-indigo-500/30" style={{ width: '32%' }}></div>
+                <div className="h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-purple-400 rounded-sm shadow-sm shadow-indigo-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.draft || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
               </div>
             </div>
 
-            {/* Scheduled: Sky-Cyan */}
+            {/* Scheduled */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
                   <CalendarDays className="w-4 h-4 text-sky-400" /> Scheduled Publications
                 </span>
-                <span className="font-bold text-sky-400">3 Scheduled</span>
+                <span className="font-bold text-sky-400">{stats.blogs?.scheduled ?? 0} Scheduled</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500 rounded-sm shadow-sm shadow-sky-500/30" style={{ width: '14%' }}></div>
+                <div className="h-full bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-500 rounded-sm shadow-sm shadow-sky-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.scheduled || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
               </div>
             </div>
 
-            {/* Planned Topics: Emerald-Teal-Green */}
+            {/* Published Articles */}
             <div className="h-[68px] p-3 rounded-lg bg-[#050609] border border-neutral-800/80 flex flex-col justify-center">
               <div className="flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-neutral-200 font-medium flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" /> Planned Topics
+                  <TrendingUp className="w-4 h-4 text-emerald-400" /> Published Articles
                 </span>
-                <span className="font-bold text-emerald-400">12 Planned</span>
+                <span className="font-bold text-emerald-400">{stats.blogs?.live ?? 0} Published</span>
               </div>
               <div className="w-full h-2.5 rounded-sm bg-neutral-900 overflow-hidden mt-2.5 shrink-0 border border-neutral-800/80">
-                <div className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-green-400 rounded-sm shadow-sm shadow-emerald-500/30" style={{ width: '54%' }}></div>
+                <div className="h-full bg-gradient-to-r from-emerald-400 via-teal-400 to-green-400 rounded-sm shadow-sm shadow-emerald-500/30" style={{ width: `${stats.blogs?.total ? Math.round(((stats.blogs?.live || 0) / stats.blogs.total) * 100) : 0}%` }}></div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Blogs Activity Card (Matched h-[68px] per item) */}
+        {/* Blogs Activity Card */}
         <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col justify-between h-full">
           {/* Edge-to-Edge Special Header Bar */}
           <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-b border-neutral-800 flex items-center justify-between flex-shrink-0">
@@ -471,22 +479,28 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
             </button>
           </div>
 
-          {/* Exactly 3 Activity Items (Matched h-[68px]) */}
-          <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-            {blogsActivities.slice(0, 3).map((act) => {
-              const Icon = act.icon;
-              return (
-                <div key={act.id} className="h-[68px] p-3 rounded-lg bg-[#050609] hover:bg-neutral-900/80 border border-neutral-800/80 flex items-center gap-3 transition-colors">
-                  <div className={`p-2 rounded-md ${act.bg} ${act.color} flex-shrink-0`}>
-                    <Icon className="w-4 h-4" />
+          {/* Activity Items or Empty State */}
+          <div className="p-4 space-y-3 flex-1 flex flex-col justify-center">
+            {blogsActivities.length === 0 ? (
+              <div className="text-center py-6 text-neutral-500 text-xs">
+                No recent blog activity records found.
+              </div>
+            ) : (
+              blogsActivities.slice(0, 3).map((act) => {
+                const Icon = act.icon || FileText;
+                return (
+                  <div key={act.id} className="h-[68px] p-3 rounded-lg bg-[#050609] hover:bg-neutral-900/80 border border-neutral-800/80 flex items-center gap-3 transition-colors">
+                    <div className={`p-2 rounded-md ${act.bg || 'bg-blue-500/10'} ${act.color || 'text-blue-400'} flex-shrink-0`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs sm:text-sm flex-1 min-w-0">
+                      <p className="font-medium text-neutral-200 line-clamp-1 leading-snug">{act.title}</p>
+                      <span className="text-[11px] text-neutral-500 mt-0.5 block font-normal">{act.time}</span>
+                    </div>
                   </div>
-                  <div className="text-xs sm:text-sm flex-1 min-w-0">
-                    <p className="font-medium text-neutral-200 line-clamp-1 leading-snug">{act.title}</p>
-                    <span className="text-[11px] text-neutral-500 mt-0.5 block font-normal">{act.time}</span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -607,7 +621,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
             onClick={() => onNavigate('manage-contacts')}
             className="text-xs font-semibold text-blue-400 hover:underline flex items-center gap-1 transition-colors"
           >
-            <span>View Full Inbox (48)</span>
+            <span>View Full Inbox ({stats.messages?.total ?? 0})</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -622,126 +636,141 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
             </div>
 
             <div className="space-y-2">
-              {messages.map((msg) => {
-                const isSelected = msg.id === selectedMessageId;
-                return (
-                  <div 
-                    key={msg.id}
-                    onClick={() => {
-                      setSelectedMessageId(msg.id);
-                      setReplySubject(`Re: ${msg.tag} inquiry from ${msg.name}`);
-                    }}
-                    className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-200 space-y-2 ${
-                      isSelected 
-                        ? 'bg-[#0d1222] border-blue-500/60 shadow-md shadow-blue-500/10' 
-                        : 'bg-[#050609] hover:bg-neutral-900/80 border-neutral-800/80'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div className={`w-8 h-8 rounded-lg ${isSelected ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white' : 'bg-neutral-800 text-neutral-300'} font-bold text-xs flex items-center justify-center flex-shrink-0 font-accent`}>
-                          {msg.name.charAt(0)}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-1.5">
-                            <h4 className="text-sm font-bold text-neutral-100 truncate font-accent">{msg.name}</h4>
-                            {msg.unread && (
-                              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse flex-shrink-0"></span>
-                            )}
+              {messages.length === 0 ? (
+                <div className="p-8 text-center text-neutral-500 text-xs rounded-lg bg-[#050609] border border-neutral-800/80">
+                  No incoming inquiries received yet.
+                </div>
+              ) : (
+                messages.map((msg) => {
+                  const isSelected = msg.id === selectedMessageId;
+                  return (
+                    <div 
+                      key={msg.id}
+                      onClick={() => {
+                        setSelectedMessageId(msg.id);
+                        setReplySubject(`Re: ${msg.tag} inquiry from ${msg.name}`);
+                      }}
+                      className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-200 space-y-2 ${
+                        isSelected 
+                          ? 'bg-[#0d1222] border-blue-500/60 shadow-md shadow-blue-500/10' 
+                          : 'bg-[#050609] hover:bg-neutral-900/80 border-neutral-800/80'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className={`w-8 h-8 rounded-lg ${isSelected ? 'bg-gradient-to-br from-blue-600 to-indigo-600 text-white' : 'bg-neutral-800 text-neutral-300'} font-bold text-xs flex items-center justify-center flex-shrink-0 font-accent`}>
+                            {msg.name?.charAt(0) || 'U'}
                           </div>
-                          <p className="text-xs text-neutral-400 truncate">{msg.email}</p>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <h4 className="text-sm font-bold text-neutral-100 truncate font-accent">{msg.name}</h4>
+                              {msg.unread && (
+                                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse flex-shrink-0"></span>
+                              )}
+                            </div>
+                            <p className="text-xs text-neutral-400 truncate">{msg.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                            {msg.tag}
+                          </span>
+                          <span className="text-xs text-neutral-500">{msg.time}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
-                          {msg.tag}
-                        </span>
-                        <span className="text-xs text-neutral-500">{msg.time}</span>
-                      </div>
+                      {/* Left Aligned Clean Message Content */}
+                      <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed font-normal">
+                        {msg.preview}
+                      </p>
                     </div>
-
-                    {/* Left Aligned Clean Message Content */}
-                    <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed font-normal">
-                      {msg.preview}
-                    </p>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </div>
 
-          {/* Right Side: Quick Email Reply Composer (Taller Height & Polished Typography) */}
+          {/* Right Side: Quick Email Reply Composer */}
           <div className="lg:col-span-7 rounded-lg bg-[#050609] border border-neutral-800/90 p-4 flex flex-col justify-between space-y-3.5">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-neutral-800/80">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="p-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                    <Mail className="w-3.5 h-3.5" />
+            {currentMsg ? (
+              <>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between pb-2 border-b border-neutral-800/80">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="p-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                        <Mail className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="text-xs sm:text-sm min-w-0">
+                        <span className="text-neutral-400 font-medium">Replying via Email to: </span>
+                        <span className="font-bold text-white font-accent">{currentMsg?.name}</span>
+                        <span className="text-neutral-400 text-xs ml-1">({currentMsg?.email})</span>
+                      </div>
+                    </div>
+
+                    <span className="text-xs text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20 font-semibold flex items-center gap-1.5">
+                      <CheckCircle className="w-3.5 h-3.5" /> Direct SMTP Relay
+                    </span>
                   </div>
-                  <div className="text-xs sm:text-sm min-w-0">
-                    <span className="text-neutral-400 font-medium">Replying via Email to: </span>
-                    <span className="font-bold text-white font-accent">{currentMsg?.name}</span>
-                    <span className="text-neutral-400 text-xs ml-1">({currentMsg?.email})</span>
+
+                  {/* Subject line input */}
+                  <div className="space-y-2.5">
+                    <div className="flex items-center gap-2 bg-black/60 border border-neutral-800/80 rounded-md px-3 py-2 text-xs">
+                      <span className="text-neutral-400 font-bold text-[11px] uppercase tracking-wider">Subject:</span>
+                      <input 
+                        type="text"
+                        value={replySubject || `Re: ${currentMsg?.tag || 'Inquiry'} response`}
+                        onChange={(e) => setReplySubject(e.target.value)}
+                        className="bg-transparent border-none outline-none text-neutral-100 text-xs w-full font-medium"
+                      />
+                    </div>
+
+                    {/* Reply message body */}
+                    <textarea
+                      rows={5}
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      placeholder={`Hi ${currentMsg?.name || 'there'},\n\nThank you for reaching out! I'd be happy to discuss your inquiry...`}
+                      className="w-full min-h-[140px] p-3 rounded-md bg-black/60 border border-neutral-800/80 text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-blue-500/60 transition-colors resize-none leading-relaxed font-normal"
+                    />
                   </div>
                 </div>
 
-                <span className="text-xs text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md border border-blue-500/20 font-semibold flex items-center gap-1.5">
-                  <CheckCircle className="w-3.5 h-3.5" /> Direct SMTP Relay
-                </span>
-              </div>
+                {/* Quick Canned Suggestions & Send Button */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2.5 border-t border-neutral-800/80">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button 
+                      type="button"
+                      onClick={() => setReplyText(`Hi ${currentMsg?.name}, thanks for reaching out! I am currently available for new contracts and projects.`)}
+                      className="text-[11px] font-medium px-2.5 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
+                    >
+                      Available for work
+                    </button>
+                    <button 
+                      type="button"
+                      onClick={() => setReplyText(`Hi ${currentMsg?.name}, let's schedule a 15-minute discovery call this week to discuss your requirements.`)}
+                      className="text-[11px] font-medium px-2.5 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
+                    >
+                      Schedule Call
+                    </button>
+                  </div>
 
-              {/* Subject line input */}
-              <div className="space-y-2.5">
-                <div className="flex items-center gap-2 bg-black/60 border border-neutral-800/80 rounded-md px-3 py-2 text-xs">
-                  <span className="text-neutral-400 font-bold text-[11px] uppercase tracking-wider">Subject:</span>
-                  <input 
-                    type="text"
-                    value={replySubject || `Re: ${currentMsg?.tag || 'Inquiry'} response from Roshan Kumar`}
-                    onChange={(e) => setReplySubject(e.target.value)}
-                    className="bg-transparent border-none outline-none text-neutral-100 text-xs w-full font-medium"
-                  />
+                  <button
+                    type="button"
+                    onClick={handleSendReply}
+                    className="px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all flex-shrink-0"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Send Email Reply</span>
+                  </button>
                 </div>
-
-                {/* Reply message body (Taller min-h-[140px]) */}
-                <textarea
-                  rows={5}
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Hi ${currentMsg?.name || 'there'},\n\nThank you for reaching out! I'd be happy to discuss your inquiry...`}
-                  className="w-full min-h-[140px] p-3 rounded-md bg-black/60 border border-neutral-800/80 text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:border-blue-500/60 transition-colors resize-none leading-relaxed font-normal"
-                />
+              </>
+            ) : (
+              <div className="p-8 text-center text-neutral-500 text-xs flex flex-col items-center justify-center space-y-2 h-full min-h-[180px]">
+                <Mail className="w-8 h-8 text-neutral-600" />
+                <p>No message selected. Incoming inquiries will appear on the left.</p>
               </div>
-            </div>
-
-            {/* Quick Canned Suggestions & Send Button */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2.5 border-t border-neutral-800/80">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <button 
-                  type="button"
-                  onClick={() => setReplyText(`Hi ${currentMsg?.name}, thanks for reaching out! I am currently available for new contracts and projects.`)}
-                  className="text-[11px] font-medium px-2.5 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
-                >
-                  Available for work
-                </button>
-                <button 
-                  type="button"
-                  onClick={() => setReplyText(`Hi ${currentMsg?.name}, let's schedule a 15-minute discovery call this week to discuss your requirements.`)}
-                  className="text-[11px] font-medium px-2.5 py-1 rounded bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-800 transition-colors"
-                >
-                  Schedule Call
-                </button>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleSendReply}
-                className="px-4 py-2 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 transition-all flex-shrink-0"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>Send Email Reply</span>
-              </button>
-            </div>
+            )}
           </div>
         </div>
       </div>

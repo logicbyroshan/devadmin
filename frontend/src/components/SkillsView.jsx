@@ -21,15 +21,8 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
   const [viewMode, setViewMode] = useState('LIST'); // 'LIST' | 'EDITOR'
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [editingId, setEditingId] = useState(null);
-
-  const [skills, setSkills] = useState([
-    { id: 1, name: 'React 18 & Next.js 14', category: 'Frontend', level: 95, icon: 'code', years: '4+ Years', visible: true },
-    { id: 2, name: 'Tailwind CSS & Glassmorphism', category: 'Frontend', level: 92, icon: 'layers', years: '3+ Years', visible: true },
-    { id: 3, name: 'Node.js & Express REST APIs', category: 'Backend', level: 88, icon: 'server', years: '4+ Years', visible: true },
-    { id: 4, name: 'Python & Django 5.x REST', category: 'Backend', level: 85, icon: 'server', years: '3+ Years', visible: true },
-    { id: 5, name: 'Docker & Microservices', category: 'DevOps & Tools', level: 80, icon: 'terminal', years: '2+ Years', visible: true },
-    { id: 6, name: 'MySQL & PostgreSQL Schemas', category: 'Database', level: 86, icon: 'database', years: '3+ Years', visible: false },
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [skills, setSkills] = useState([]);
 
   // Unified separate Add/Edit form state
   const [formData, setFormData] = useState({
@@ -41,7 +34,7 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
     visible: true
   });
 
-  const categories = ['ALL', ...Array.from(new Set(skills.map(s => s.category)))];
+  const categories = ['ALL', ...Array.from(new Set(skills.map(s => s.category).filter(Boolean)))];
 
   const filteredSkills = skills.filter(s => {
     if (selectedCategory === 'ALL') return true;
@@ -53,22 +46,26 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
     let isMounted = true;
     const fetchSkills = async () => {
       try {
+        setIsLoading(true);
         const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
         const data = await skillsApi.getAll({ website: siteSlug });
         const list = Array.isArray(data) ? data : (data.results || []);
-        if (isMounted && list.length > 0) {
+        if (isMounted) {
           setSkills(list.map(s => ({
             id: s.id,
             name: s.name,
             category: s.category || 'Frontend',
             level: s.level || 85,
-            icon: s.icon_name || 'code',
-            years: '3+ Years',
+            icon: s.icon_name || s.icon || 'code',
+            years: s.years_experience || '3+ Years',
             visible: s.visible !== false
           })));
         }
-      } catch {
-        // Fallback maintained
+      } catch (err) {
+        console.error('Failed to load skills:', err);
+        if (isMounted) setSkills([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     };
     fetchSkills();
@@ -384,81 +381,102 @@ export default function SkillsView({ onNavigate, activeWebsite }) {
         </div>
       </div>
 
-      {/* 3-Card Format Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredSkills.map((skill) => {
-          const Icon = getSkillIcon(skill.icon);
-          return (
-            <div key={skill.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2.5 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 flex-shrink-0">
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="text-sm sm:text-base font-extrabold text-white truncate font-accent">{skill.name}</h3>
-                      <div className="flex items-center gap-2 text-[11px] text-neutral-400 mt-0.5">
-                        <Tag className="w-3 h-3 text-blue-400" />
-                        <span>{skill.category}</span>
-                        <span>•</span>
-                        <span className="text-neutral-300 font-semibold">{skill.years}</span>
+      {/* 3-Card Format Grid or Empty State */}
+      {filteredSkills.length === 0 ? (
+        <div className="p-12 text-center rounded-xl bg-[#07080d] border border-neutral-800 text-neutral-400 space-y-4 shadow-xl">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center mx-auto">
+            <Cpu className="w-6 h-6" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">No Skills Configured</h3>
+            <p className="text-xs text-neutral-400 mt-1 max-w-sm mx-auto">
+              You haven't added any tech stack skills or proficiencies yet. Click below to add your first skill.
+            </p>
+          </div>
+          <button
+            onClick={handleOpenAddPage}
+            className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs inline-flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:brightness-110 transition-all"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add First Skill</span>
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredSkills.map((skill) => {
+            const Icon = getSkillIcon(skill.icon);
+            return (
+              <div key={skill.id} className="p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col justify-between shadow-lg space-y-4 group">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="p-2.5 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/30 flex-shrink-0">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-sm sm:text-base font-extrabold text-white truncate font-accent">{skill.name}</h3>
+                        <div className="flex items-center gap-2 text-[11px] text-neutral-400 mt-0.5">
+                          <Tag className="w-3 h-3 text-blue-400" />
+                          <span>{skill.category}</span>
+                          <span>•</span>
+                          <span className="text-neutral-300 font-semibold">{skill.years}</span>
+                        </div>
                       </div>
                     </div>
+
+                    <div className="text-sm font-bold text-blue-400 font-accent flex-shrink-0">
+                      {skill.level}%
+                    </div>
                   </div>
 
-                  <div className="text-sm font-bold text-blue-400 font-accent flex-shrink-0">
-                    {skill.level}%
+                  {/* Progress Bar Track */}
+                  <div className="w-full bg-neutral-900 rounded-sm h-2.5 overflow-hidden border border-neutral-800/80 mt-2">
+                    <div 
+                      className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-sm shadow-sm shadow-blue-500/30"
+                      style={{ width: `${skill.level}%` }}
+                    ></div>
                   </div>
                 </div>
 
-                {/* Progress Bar Track */}
-                <div className="w-full bg-neutral-900 rounded-sm h-2.5 overflow-hidden border border-neutral-800/80 mt-2">
-                  <div 
-                    className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-sm shadow-sm shadow-blue-500/30"
-                    style={{ width: `${skill.level}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Action Buttons — consistent h-9 (36px) */}
-              <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleToggleVisible(skill.id)}
-                  className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
-                    skill.visible
-                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
-                      : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
-                  }`}
-                  title="Toggle Live Visibility"
-                >
-                  {skill.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
-                  <span>{skill.visible ? 'Visible' : 'Hidden'}</span>
-                </button>
-
-                <div className="flex items-center gap-1.5 flex-shrink-0">
+                {/* Action Buttons — consistent h-9 (36px) */}
+                <div className="flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2">
                   <button
                     type="button"
-                    onClick={() => handleOpenEditPage(skill)}
-                    className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                    onClick={() => handleToggleVisible(skill.id)}
+                    className={`h-9 px-3 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all flex-shrink-0 ${
+                      skill.visible
+                        ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25'
+                        : 'bg-neutral-800/60 text-neutral-400 border border-neutral-700 hover:bg-neutral-800'
+                    }`}
+                    title="Toggle Live Visibility"
                   >
-                    <Edit2 className="w-4 h-4" /> Edit
+                    {skill.visible ? <Eye className="w-4 h-4 flex-shrink-0" /> : <EyeOff className="w-4 h-4 flex-shrink-0" />}
+                    <span>{skill.visible ? 'Visible' : 'Hidden'}</span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(skill.id)}
-                    className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
-                    title="Delete Skill"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenEditPage(skill)}
+                      className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                    >
+                      <Edit2 className="w-4 h-4" /> Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(skill.id)}
+                      className="h-9 w-9 rounded-lg bg-rose-950/20 hover:bg-rose-950/50 text-rose-400 border border-rose-900/40 hover:border-rose-700/60 transition-all flex items-center justify-center"
+                      title="Delete Skill"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
