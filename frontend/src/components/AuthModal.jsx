@@ -83,18 +83,18 @@ export default function AuthModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-[#07080d] border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-70 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-[#12151f] border border-[#222738] rounded-2xl shadow-2xl overflow-hidden">
         {/* Top Gradient Banner */}
-        <div className="relative bg-gradient-to-r from-blue-950/80 via-indigo-950/60 to-purple-950/40 p-6 border-b border-neutral-800 text-center">
+        <div className="relative bg-gradient-to-r from-blue-950/80 via-indigo-950/60 to-purple-950/40 p-6 border-b border-[#222738] text-center">
           <button
             onClick={closeAuthModal}
-            className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800/80 transition-colors"
+            className="absolute top-4 right-4 p-1.5 rounded-lg text-neutral-400 hover:text-white hover:bg-[#161a28] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
 
-          <div className="inline-flex p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/20 mb-3">
+          <div className="inline-flex p-3 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 shadow-lg shadow-blue-500/20 mb-3">
             <ShieldCheck className="w-6 h-6" />
           </div>
 
@@ -106,7 +106,7 @@ export default function AuthModal() {
           </p>
 
           {/* Mode Switcher Tabs */}
-          <div className="grid grid-cols-2 gap-1.5 p-1 bg-black/60 border border-neutral-800/80 rounded-xl mt-4 text-xs font-bold">
+          <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#0d1018] border border-[#222738] rounded-xl mt-4 text-xs font-bold">
             <button
               type="button"
               onClick={() => { setTab('LOGIN'); setError(''); setSuccessMsg(''); }}
@@ -158,7 +158,7 @@ export default function AuthModal() {
               value={formData.username}
               onChange={e => setFormData({ ...formData, username: e.target.value })}
               placeholder="e.g. admin or roshan"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
             />
           </div>
 
@@ -174,7 +174,7 @@ export default function AuthModal() {
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                   placeholder="admin@devadmin.io"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
                 />
               </div>
 
@@ -186,7 +186,7 @@ export default function AuthModal() {
                     value={formData.first_name}
                     onChange={e => setFormData({ ...formData, first_name: e.target.value })}
                     placeholder="Roshan"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
                   />
                 </div>
                 <div>
@@ -196,7 +196,7 @@ export default function AuthModal() {
                     value={formData.last_name}
                     onChange={e => setFormData({ ...formData, last_name: e.target.value })}
                     placeholder="Kumar"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
                   />
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function AuthModal() {
                 value={formData.password}
                 onChange={e => setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••••••"
-                className="w-full pl-3.5 pr-10 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+                className="w-full pl-3.5 pr-10 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
               />
               <button
                 type="button"
@@ -237,7 +237,7 @@ export default function AuthModal() {
                 value={formData.confirm_password}
                 onChange={e => setFormData({ ...formData, confirm_password: e.target.value })}
                 placeholder="••••••••••••"
-                className="w-full px-3.5 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-white text-xs placeholder-neutral-500 focus:outline-none focus:border-blue-500 focus:bg-[#161a28] transition-all"
               />
             </div>
           )}
@@ -258,11 +258,11 @@ export default function AuthModal() {
           </button>
 
           {/* Demo Admin 1-Click Login Button */}
-          <div className="pt-2 border-t border-neutral-800/80">
+          <div className="pt-2 border-t border-[#222738]">
             <button
               type="button"
               onClick={handleDemoLogin}
-              className="w-full h-9 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white text-xs font-bold border border-neutral-800 flex items-center justify-center gap-2 transition-colors"
+              className="w-full h-9 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white text-xs font-bold border border-[#222738] flex items-center justify-center gap-2 transition-colors"
             >
               <Zap className="w-3.5 h-3.5 text-amber-400" />
               <span>Quick 1-Click Demo Login (Admin)</span>

@@ -239,10 +239,10 @@ data:
     const isEditing = editingId !== null;
     return (
       <div className="space-y-6 w-full max-w-full overflow-x-hidden font-sans animate-in fade-in duration-150">
-        {/* Top Header (Left-side Back button removed, Cancel on right) */}
-        <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+        {/* Top Header */}
+        <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
           <div className="flex items-center gap-3.5">
-            <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
               <FolderKanban className="w-5 h-5" />
             </div>
             <div>
@@ -259,7 +259,7 @@ data:
             <button
               type="button"
               onClick={handleBackToList}
-              className="px-4 py-2 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs font-semibold border border-neutral-800 transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs font-semibold border border-[#222738] transition-colors"
             >
               Cancel
             </button>
@@ -267,7 +267,7 @@ data:
             <button
               type="button"
               onClick={handleSaveForm}
-              className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+              className="px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>{isEditing ? 'Save Changes' : 'Save & Publish Project'}</span>
@@ -276,13 +276,13 @@ data:
         </div>
 
         {/* Dedicated Separate Form Container with Rich Content Builder */}
-        <div className="p-6 sm:p-8 rounded-xl bg-[#07080d] border border-neutral-800 shadow-2xl space-y-6">
+        <div className="p-6 sm:p-8 rounded-xl bg-[#12151f] border border-[#222738] shadow-2xl space-y-6">
           <form onSubmit={handleSaveForm} className="space-y-6">
             {/* Title & Category */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2">
-                  Project Title <span className={activeWebsite?.accentText || "text-blue-400"}>*</span>
+                  Project Title <span className={activeWebsite?.accentText || "text-violet-400"}>*</span>
                 </label>
                 <input
                   type="text"
@@ -291,7 +291,7 @@ data:
                   value={formData.title}
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g. Real-Time Distributed Collaboration Suite"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-accent font-bold"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all font-accent font-bold"
                 />
               </div>
 
@@ -304,7 +304,7 @@ data:
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
                   placeholder="e.g. Web Application, Cloud Architecture"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
             </div>
@@ -318,7 +318,7 @@ data:
                 <select
                   value={formData.status}
                   onChange={e => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 >
                   <option value="LIVE">LIVE (Public Online)</option>
                   <option value="OFFLINE">OFFLINE (In Development / Archival)</option>
@@ -347,7 +347,7 @@ data:
                   value={formData.demoUrl}
                   onChange={e => setFormData({ ...formData, demoUrl: e.target.value })}
                   placeholder="https://example.com"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
 
@@ -360,7 +360,7 @@ data:
                   value={formData.githubUrl}
                   onChange={e => setFormData({ ...formData, githubUrl: e.target.value })}
                   placeholder="https://github.com/username/project-repo"
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all"
+                  className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
               </div>
             </div>
@@ -375,7 +375,7 @@ data:
                 value={formData.image}
                 onChange={e => setFormData({ ...formData, image: e.target.value })}
                 placeholder="https://images.unsplash.com/photo-..."
-                className="w-full px-4 py-2.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono text-xs"
+                className="w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 transition-all font-mono text-xs"
               />
             </div>
 
@@ -389,7 +389,7 @@ data:
                 value={formData.description}
                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Short summary pitch for portfolio card preview..."
-                className="w-full p-3.5 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/30 resize-none leading-relaxed transition-all"
+                className="w-full p-3.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500/80 focus:ring-1 focus:ring-violet-500/30 resize-none leading-relaxed transition-all"
               />
             </div>
 
@@ -404,7 +404,7 @@ data:
             </div>
 
             {/* Visibility Toggle */}
-            <div className="p-4 rounded-lg bg-black/50 border border-neutral-800/80 flex items-center justify-between">
+            <div className="p-4 rounded-lg bg-[#0d1018] border border-[#1f2436] flex items-center justify-between">
               <div>
                 <div className="text-sm font-bold text-white">Live Portfolio Visibility</div>
                 <p className="text-xs text-neutral-400 mt-0.5">Show or hide this project from your public portfolio gallery.</p>
@@ -425,18 +425,18 @@ data:
             </div>
 
             {/* Form Actions Footer */}
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-neutral-800">
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#222738]">
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="px-5 py-2.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 text-xs sm:text-sm font-semibold border border-neutral-800 transition-colors"
+                className="px-5 py-2.5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 text-xs sm:text-sm font-semibold border border-[#222738] transition-colors"
               >
                 Cancel
               </button>
 
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-extrabold text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all"
               >
                 <Save className="w-4 h-4" />
                 <span>{isEditing ? 'Save Changes' : 'Save & Publish Project'}</span>
@@ -454,9 +454,9 @@ data:
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden font-sans">
       {/* Header Banner with Category Dropdown & Add Button */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30">
+          <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
             <FolderKanban className="w-5 h-5" />
           </div>
           <div>
@@ -472,7 +472,7 @@ data:
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="h-9 pl-3.5 pr-8 rounded-lg bg-neutral-900/60 border border-neutral-800 text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"
+              className="h-9 pl-3.5 pr-8 rounded-lg bg-[#0d1018] border border-[#222738] text-sm font-semibold text-neutral-200 focus:outline-none focus:border-violet-500 transition-colors cursor-pointer appearance-none"
             >
               <option value="ALL">All Categories ({projects.length})</option>
               {categories.filter(c => c !== 'ALL').map(cat => (
@@ -484,7 +484,7 @@ data:
 
           <button
             onClick={handleOpenAddPage}
-            className="h-9 px-4 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all flex-shrink-0"
+            className="h-9 px-4 rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:brightness-110 text-white font-bold text-sm flex items-center gap-2 shadow-lg shadow-violet-500/20 transition-all flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Add New Project</span>
@@ -494,7 +494,7 @@ data:
 
       {/* Projects Grid or Empty State */}
       {filteredProjects.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-[#07080d] border border-neutral-800/80 space-y-3">
+        <div className="p-12 text-center rounded-2xl bg-[#12151f] border border-[#222738] space-y-3 shadow-xl">
           <FolderKanban className="w-10 h-10 mx-auto text-neutral-600" />
           <h3 className="text-base font-bold text-white">No Projects Found</h3>
           <p className="text-xs text-neutral-400 max-w-sm mx-auto">
@@ -508,11 +508,11 @@ data:
           {filteredProjects.map((proj) => (
           <div 
             key={proj.id} 
-            className="rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-lg group hover:-translate-y-1"
+            className="rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-xl group hover:-translate-y-1"
           >
             <div>
               {/* Card Image Banner */}
-              <div className="relative h-44 w-full bg-[#030406] overflow-hidden border-b border-neutral-800 flex items-center justify-center">
+              <div className="relative h-44 w-full bg-[#080a10] overflow-hidden border-b border-[#222738] flex items-center justify-center">
                 {proj.image ? (
                   <img
                     src={proj.image}
@@ -538,7 +538,7 @@ data:
                   </span>
                 </div>
                 <div className="absolute bottom-3 left-3">
-                  <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-black/80 backdrop-blur-md text-blue-400 border border-blue-500/30">
+                  <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-[#080a10]/90 backdrop-blur-md text-violet-400 border border-violet-500/30">
                     {proj.category}
                   </span>
                 </div>
@@ -546,22 +546,22 @@ data:
 
               {/* Content Details */}
               <div className="p-5 space-y-3">
-                <h3 className="text-base font-extrabold text-white group-hover:text-blue-400 transition-colors line-clamp-1 font-accent">
+                <h3 className="text-base font-extrabold text-white group-hover:text-violet-400 transition-colors line-clamp-1 font-accent">
                   {proj.title}
                 </h3>
                 <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed font-normal">
                   {proj.description.replace(/#|\*|`|\[|\]/g, '').substring(0, 120)}...
                 </p>
 
-                <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-2 border-t border-neutral-800">
-                  <Calendar className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                <div className="flex items-center gap-2 text-[11px] text-neutral-400 pt-2 border-t border-[#222738]">
+                  <Calendar className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
                   <span>Completed: {proj.completed}</span>
                 </div>
               </div>
             </div>
 
-            {/* Card Action Buttons — consistent h-9 (36px) */}
-            <div className="px-4 py-3 flex items-center justify-between gap-2 border-t border-neutral-800/80">
+            {/* Card Action Buttons */}
+            <div className="px-4 py-3 flex items-center justify-between gap-2 border-t border-[#222738]">
               <button
                 type="button"
                 onClick={() => handleToggleVisible(proj.id)}
@@ -582,7 +582,7 @@ data:
                     href={proj.demoUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="h-9 w-9 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-800 transition-colors flex items-center justify-center"
+                    className="h-9 w-9 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white border border-[#222738] transition-colors flex items-center justify-center"
                     title="Live Demo"
                   >
                     <Globe className="w-4 h-4" />
@@ -590,7 +590,7 @@ data:
                 )}
                 <button
                   onClick={() => handleOpenEditPage(proj)}
-                  className="h-9 px-3 rounded-lg bg-neutral-900/60 hover:bg-neutral-800 text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-neutral-800 transition-all"
+                  className="h-9 px-3 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-200 hover:text-white text-sm font-semibold flex items-center gap-1.5 border border-[#222738] transition-all"
                 >
                   <Edit2 className="w-4 h-4" /> Edit
                 </button>

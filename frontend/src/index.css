@@ -139,7 +139,7 @@
    Same height as buttons (h-9 = 36px)
    ============================================ */
 .select-filter {
-  @apply px-3.5 py-2 rounded-lg bg-neutral-900/60 border border-neutral-800 text-sm font-semibold text-neutral-200 focus:outline-none focus:border-blue-500 transition-all duration-200 appearance-none cursor-pointer;
+  @apply px-3.5 py-2 rounded-lg bg-[#0d1018] border border-[#222738] text-sm font-semibold text-neutral-200 focus:outline-none focus:border-violet-500 transition-all duration-200 appearance-none cursor-pointer;
   height: 36px;
 }
 
@@ -147,12 +147,12 @@
    DESIGN SYSTEM — FORM INPUTS (Consistent)
    ============================================ */
 .form-input {
-  @apply w-full px-4 py-2.5 rounded-lg bg-black/80 border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-colors;
+  @apply w-full px-4 py-2.5 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500 transition-colors;
   height: 42px;
 }
 
 .form-input-sm {
-  @apply w-full px-3.5 py-2 rounded-lg bg-[#050609] border border-neutral-800 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-blue-500 transition-colors;
+  @apply w-full px-3.5 py-2 rounded-lg bg-[#0d1018] border border-[#222738] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-violet-500 transition-colors;
   height: 38px;
 }
 
@@ -160,7 +160,7 @@
    CARD ACTION ROW — Consistent alignment
    ============================================ */
 .card-actions {
-  @apply flex items-center justify-between pt-3 border-t border-neutral-800/80 gap-2;
+  @apply flex items-center justify-between pt-3 border-t border-[#222738] gap-2;
   min-height: 52px;
 }
 
@@ -172,11 +172,11 @@
    SECTION HEADER — Consistent page headers
    ============================================ */
 .page-header {
-  @apply p-5 rounded-xl bg-[#07080d] border border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl;
+  @apply p-5 rounded-xl bg-[#12151f] border border-[#222738] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl;
 }
 
 .page-header-icon {
-  @apply p-3 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/30 flex-shrink-0;
+  @apply p-3 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30 flex-shrink-0;
 }
 
 .page-header-title {
@@ -188,10 +188,22 @@
 }
 
 /* ============================================
-   CARD BASE
+   CARD BASE (90% Black / Rich Obsidian Charcoal)
    ============================================ */
 .data-card {
-  @apply p-5 rounded-xl bg-[#07080d] border border-neutral-800 hover:border-neutral-700 transition-all duration-200 flex flex-col shadow-lg;
+  @apply p-5 rounded-xl bg-[#12151f] border border-[#222738] hover:border-neutral-600 transition-all duration-200 flex flex-col shadow-xl;
+}
+
+.card-surface {
+  @apply rounded-xl bg-[#12151f] border border-[#222738] shadow-xl overflow-hidden;
+}
+
+.card-header-bar {
+  @apply bg-gradient-to-r from-[#171c2b] via-[#141825] to-[#10131f] px-4 py-3 border-b border-[#222738] flex items-center justify-between flex-shrink-0;
+}
+
+.card-well {
+  @apply rounded-lg bg-[#0d1018] border border-[#1f2436];
 }
 
 /* ============================================

@@ -13,7 +13,7 @@ export default function LogoutModal({ onCancel, onConfirmLogout }) {
 
   return (
     <div className="fixed inset-0 z-70 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-[#07080d] border border-neutral-800 rounded-xl p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
+      <div className="w-full max-w-sm bg-[#12151f] border border-[#222738] rounded-xl p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
         {!loggingOut ? (
           <>
             <div className="w-12 h-12 rounded-xl bg-rose-950/30 border border-rose-900/40 text-rose-400 mx-auto flex items-center justify-center shadow-lg shadow-rose-950/40">
@@ -28,13 +28,13 @@ export default function LogoutModal({ onCancel, onConfirmLogout }) {
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
                 onClick={onCancel}
-                className="w-1/2 py-2.5 rounded-lg bg-[#050609] hover:bg-neutral-800 text-neutral-300 hover:text-white text-xs font-semibold border border-neutral-800 transition-all"
+                className="w-1/2 h-9 px-4 rounded-lg bg-[#0d1018] hover:bg-[#161a28] text-neutral-300 hover:text-white text-xs font-semibold border border-[#222738] transition-all flex items-center justify-center"
               >
                 Cancel
               </button>
               <button
                 onClick={handleLogout}
-                className="w-1/2 py-2.5 rounded-lg bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-extrabold transition-all shadow-lg shadow-rose-600/30"
+                className="w-1/2 h-9 px-4 rounded-lg bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white text-xs font-extrabold transition-all shadow-lg shadow-rose-600/30 flex items-center justify-center"
               >
                 Sign Out
               </button>

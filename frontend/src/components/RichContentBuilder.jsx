@@ -831,63 +831,63 @@ caption: Complete technical walkthrough of the platform management interface, re
 
       {/* Quick Formatting Toolbar */}
       {(activeTab === 'write' || activeTab === 'split') && (
-        <div className="p-2 rounded-lg bg-[#050609] border border-neutral-800/90 flex flex-wrap items-center gap-1 text-neutral-400 text-xs">
+        <div className="p-2 rounded-lg bg-[#0d1018] border border-[#222738] flex flex-wrap items-center gap-1 text-neutral-400 text-xs">
           {/* Headings */}
-          <button type="button" onClick={() => insertSnippet('## ')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Heading 2">
+          <button type="button" onClick={() => insertSnippet('## ')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Heading 2">
             <Heading2 className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={() => insertSnippet('### ')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Heading 3">
+          <button type="button" onClick={() => insertSnippet('### ')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Heading 3">
             <Heading3 className="w-3.5 h-3.5" />
           </button>
 
-          <span className="w-[1px] h-4 bg-neutral-800 mx-1"></span>
+          <span className="w-[1px] h-4 bg-[#222738] mx-1"></span>
 
           {/* Formats */}
-          <button type="button" onClick={() => insertSnippet('**bold text**')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Bold">
+          <button type="button" onClick={() => insertSnippet('**bold text**')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Bold">
             <Bold className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={() => insertSnippet('*italic text*')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Italic">
+          <button type="button" onClick={() => insertSnippet('*italic text*')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Italic">
             <Italic className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={() => insertSnippet('> ')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Quote">
+          <button type="button" onClick={() => insertSnippet('> ')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Quote">
             <Quote className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={() => insertSnippet('- ')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-white" title="Bullet List">
+          <button type="button" onClick={() => insertSnippet('- ')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-white" title="Bullet List">
             <List className="w-3.5 h-3.5" />
           </button>
 
-          <span className="w-[1px] h-4 bg-neutral-800 mx-1"></span>
+          <span className="w-[1px] h-4 bg-[#222738] mx-1"></span>
 
           {/* Dynamic Blocks */}
-          <button type="button" onClick={() => insertSnippet('```typescript:src/app.ts\n// Enter TypeScript code here\nconsole.log("System Ready");\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-blue-400 flex items-center gap-1 font-mono text-[11px]" title="Code Snippet">
+          <button type="button" onClick={() => insertSnippet('```typescript:src/app.ts\n// Enter TypeScript code here\nconsole.log("System Ready");\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-blue-400 flex items-center gap-1 font-mono text-[11px]" title="Code Snippet">
             <Code className="w-3.5 h-3.5 text-blue-400" />
             <span>Code</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('```architecture:microservices\ntitle: Architecture Pipeline\nnodes:\n  - [Client WebApp] -> [API Gateway]\n  - [API Gateway] -> [Microservice]\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-purple-400 flex items-center gap-1 text-[11px]" title="Architecture Diagram">
+          <button type="button" onClick={() => insertSnippet('```architecture:microservices\ntitle: Architecture Pipeline\nnodes:\n  - [Client WebApp] -> [API Gateway]\n  - [API Gateway] -> [Microservice]\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-purple-400 flex items-center gap-1 text-[11px]" title="Architecture Diagram">
             <GitFork className="w-3.5 h-3.5 text-purple-400" />
             <span>Diagram</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('```mermaid\nflowchart TD\n  A[Client Request] --> B[API Gateway]\n  B --> C[Microservice Hub]\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-purple-300 flex items-center gap-1 text-[11px]" title="Mermaid Flowchart">
+          <button type="button" onClick={() => insertSnippet('```mermaid\nflowchart TD\n  A[Client Request] --> B[API Gateway]\n  B --> C[Microservice Hub]\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-purple-300 flex items-center gap-1 text-[11px]" title="Mermaid Flowchart">
             <Box className="w-3.5 h-3.5 text-purple-300" />
             <span>Mermaid</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('```katex\n\\Phi = \\frac{N \\times W}{T_{\\text{render}} + T_{\\text{io}}} \\ge 120 \\text{ req/sec}\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-cyan-300 flex items-center gap-1 text-[11px]" title="KaTeX Math Formula">
+          <button type="button" onClick={() => insertSnippet('```katex\n\\Phi = \\frac{N \\times W}{T_{\\text{render}} + T_{\\text{io}}} \\ge 120 \\text{ req/sec}\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-cyan-300 flex items-center gap-1 text-[11px]" title="KaTeX Math Formula">
             <Sigma className="w-3.5 h-3.5 text-cyan-300" />
             <span>Math</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('```chart:barchart\ntitle: Benchmark Comparison\nunit: req/s\ndata:\n  - Optimized Engine: 120000\n  - Legacy Engine: 45000\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-cyan-400 flex items-center gap-1 text-[11px]" title="Benchmark Chart">
+          <button type="button" onClick={() => insertSnippet('```chart:barchart\ntitle: Benchmark Comparison\nunit: req/s\ndata:\n  - Optimized Engine: 120000\n  - Legacy Engine: 45000\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-cyan-400 flex items-center gap-1 text-[11px]" title="Benchmark Chart">
             <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
             <span>Chart</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('| Feature | Support | Performance |\n| :--- | :--- | :--- |\n| WebSockets | Yes | Low Latency |\n| GraphQL | Yes | High Throughput |\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-emerald-400 flex items-center gap-1 text-[11px]" title="Table">
+          <button type="button" onClick={() => insertSnippet('| Feature | Support | Performance |\n| :--- | :--- | :--- |\n| WebSockets | Yes | Low Latency |\n| GraphQL | Yes | High Throughput |\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-emerald-400 flex items-center gap-1 text-[11px]" title="Table">
             <TableIcon className="w-3.5 h-3.5 text-emerald-400" />
             <span>Table</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('```video:embed\nurl: https://www.youtube.com/embed/dQw4w9WgXcQ\ntitle: Product Demo Walkthrough\ncaption: Overview of the real-time collaboration workflow.\n```\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-rose-400 flex items-center gap-1 text-[11px]" title="Video Embed">
+          <button type="button" onClick={() => insertSnippet('```video:embed\nurl: https://www.youtube.com/embed/dQw4w9WgXcQ\ntitle: Product Demo Walkthrough\ncaption: Overview of the real-time collaboration workflow.\n```\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-rose-400 flex items-center gap-1 text-[11px]" title="Video Embed">
             <Video className="w-3.5 h-3.5 text-rose-400" />
             <span>Video</span>
           </button>
-          <button type="button" onClick={() => insertSnippet('> [!NOTE]\n> Enter critical architecture or operational note here.\n')} className="p-1.5 rounded hover:bg-neutral-800 hover:text-amber-400 flex items-center gap-1 text-[11px]" title="Callout Alert">
+          <button type="button" onClick={() => insertSnippet('> [!NOTE]\n> Enter critical architecture or operational note here.\n')} className="p-1.5 rounded hover:bg-[#161a28] hover:text-amber-400 flex items-center gap-1 text-[11px]" title="Callout Alert">
             <AlertCircle className="w-3.5 h-3.5 text-amber-400" />
             <span>Alert</span>
           </button>
@@ -895,7 +895,7 @@ caption: Complete technical walkthrough of the platform management interface, re
       )}
 
       {/* Editor Content Area */}
-      <div className="rounded-xl overflow-hidden border border-neutral-800 bg-[#07080d] shadow-2xl">
+      <div className="rounded-xl overflow-hidden border border-[#222738] bg-[#12151f] shadow-2xl">
         {/* WRITE ONLY MODE */}
         {activeTab === 'write' && (
           <textarea
@@ -904,14 +904,14 @@ caption: Complete technical walkthrough of the platform management interface, re
             value={value}
             onChange={e => onChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full p-4 bg-black/80 text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 font-mono focus:outline-none focus:ring-1 focus:ring-blue-500 resize-y leading-relaxed"
+            className="w-full p-4 bg-[#0d1018] text-xs sm:text-sm text-neutral-100 placeholder-neutral-500 font-mono focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-[#161a28] resize-y leading-relaxed"
           />
         )}
 
         {/* SPLIT VIEW MODE (Side-by-Side Live Builder) */}
         {activeTab === 'split' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-neutral-800 min-h-[480px]">
-            <div className="p-3 bg-black/80 flex flex-col justify-between">
+          <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-[#222738] min-h-[480px]">
+            <div className="p-3 bg-[#0d1018] flex flex-col justify-between">
               <div className="text-xs uppercase font-bold text-neutral-400 mb-1.5 flex items-center gap-1.5">
                 <Edit3 className="w-3.5 h-3.5 text-blue-400" />
                 <span>Markdown & Widget Source</span>
@@ -922,12 +922,12 @@ caption: Complete technical walkthrough of the platform management interface, re
                 value={value}
                 onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full flex-1 p-2 bg-transparent text-xs sm:text-sm text-neutral-200 placeholder-neutral-600 font-mono focus:outline-none resize-none leading-relaxed"
+                className="w-full flex-1 p-2 bg-transparent text-xs sm:text-sm text-neutral-200 placeholder-neutral-500 font-mono focus:outline-none resize-none leading-relaxed"
               />
             </div>
 
-            <div className="p-5 bg-[#07080d]/80 overflow-y-auto max-h-[550px]">
-              <div className="text-xs uppercase font-bold text-neutral-400 mb-3 flex items-center gap-1.5 pb-1.5 border-b border-neutral-800/80">
+            <div className="p-5 bg-[#12151f] overflow-y-auto max-h-[550px]">
+              <div className="text-xs uppercase font-bold text-neutral-400 mb-3 flex items-center gap-1.5 pb-1.5 border-b border-[#222738]">
                 <Eye className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Live Interactive Preview</span>
               </div>
@@ -940,7 +940,7 @@ caption: Complete technical walkthrough of the platform management interface, re
 
         {/* PREVIEW ONLY MODE */}
         {activeTab === 'preview' && (
-          <div className="p-6 sm:p-8 bg-[#07080d] min-h-[400px]">
+          <div className="p-6 sm:p-8 bg-[#12151f] min-h-[400px]">
             <div className="prose prose-invert max-w-none">
               {renderFormattedPreview(value)}
             </div>
@@ -951,8 +951,8 @@ caption: Complete technical walkthrough of the platform management interface, re
       {/* Preset Modal Drawer (1-Click Interactive Block Inserter) */}
       {showPresetModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-[#07080d] border border-neutral-800 rounded-xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+          <div className="w-full max-w-2xl bg-[#12151f] border border-[#222738] rounded-xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-[#222738]">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-blue-400 animate-pulse" />
                 <h3 className="text-base font-extrabold text-white font-accent">Insert Interactive Documentation Block</h3>
@@ -980,10 +980,10 @@ caption: Complete technical walkthrough of the platform management interface, re
                       insertSnippet(preset.snippet);
                       setShowPresetModal(false);
                     }}
-                    className="p-3.5 rounded-lg bg-[#050609] border border-neutral-800 hover:border-blue-500/80 hover:bg-neutral-900/80 transition-all cursor-pointer space-y-1.5 group shadow-md"
+                    className="p-3.5 rounded-lg bg-[#0d1018] border border-[#222738] hover:border-blue-500/80 hover:bg-[#161a28] transition-all cursor-pointer space-y-1.5 group shadow-md"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="p-2 rounded bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                      <div className="p-2 rounded bg-blue-500/15 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                         <Icon className="w-4 h-4" />
                       </div>
                       <h4 className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">{preset.title}</h4>
