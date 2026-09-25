@@ -5,7 +5,7 @@ from apps.common.services.stats_service import AnalyticsService
 
 class DashboardStatsView(APIView):
     """
-    Returns single-pass aggregated counts and status metrics for projects, blogs,
+    Returns single-pass aggregated counts and status metrics for projects,
     experiences, skills, messages, and FAQs.
     """
     permission_classes = [permissions.IsAuthenticated]
@@ -18,7 +18,7 @@ class DashboardStatsView(APIView):
 
 class DashboardActivitiesView(APIView):
     """
-    Returns live recent activity feeds for deployed projects and published articles.
+    Returns live recent activity feeds for deployed projects and updates.
     """
     permission_classes = [permissions.IsAuthenticated]
 

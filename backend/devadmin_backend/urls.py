@@ -24,7 +24,6 @@ from apps.common.views_health import HealthCheckView, ApiRootView
 # ViewSets
 from apps.websites.views import WebsiteViewSet
 from apps.projects.views import ProjectViewSet
-from apps.blogs.views import BlogPostViewSet
 from apps.experiences.views import ExperienceViewSet
 from apps.skills.views import SkillViewSet
 from apps.categories.views import CategoryViewSet
@@ -52,14 +51,13 @@ from apps.public_api.views import (
     RexiChatView,
     AdminAnalyticsDashboardView,
     PublicProjectBySlugView,
-    PublicBlogBySlugView,
 )
 
 # Routers for standard endpoints
 admin_router = DefaultRouter()
 admin_router.register(r'projects', ProjectViewSet, basename='admin-projects')
-admin_router.register(r'blogs', BlogPostViewSet, basename='admin-blogs')
 admin_router.register(r'experiences', ExperienceViewSet, basename='admin-experiences')
+admin_router.register(r'experience', ExperienceViewSet, basename='admin-experience')
 admin_router.register(r'skills', SkillViewSet, basename='admin-skills')
 admin_router.register(r'categories', CategoryViewSet, basename='admin-categories')
 admin_router.register(r'achievements', AchievementViewSet, basename='admin-achievements')
@@ -70,7 +68,6 @@ admin_router.register(r'websites', WebsiteViewSet, basename='admin-websites')
 
 public_router = DefaultRouter()
 public_router.register(r'projects', ProjectViewSet, basename='public-projects')
-public_router.register(r'blogs', BlogPostViewSet, basename='public-blogs')
 public_router.register(r'experiences', ExperienceViewSet, basename='public-experiences')
 public_router.register(r'experience', ExperienceViewSet, basename='public-experience')
 public_router.register(r'skills', SkillViewSet, basename='public-skills')
@@ -141,11 +138,9 @@ urlpatterns = [
     path('api/rexi/chat/', RexiChatView.as_view(), name='rexi_chat'),
     path('api/v1/rexi/chat/', RexiChatView.as_view(), name='rexi_chat_v1'),
 
-    # Public Slug Lookups for Projects and Blogs
+    # Public Slug Lookups for Projects
     path('api/projects/<str:slug>/', PublicProjectBySlugView.as_view(), name='public_project_slug'),
     path('api/v1/projects/<str:slug>/', PublicProjectBySlugView.as_view(), name='public_project_slug_v1'),
-    path('api/blogs/<str:slug>/', PublicBlogBySlugView.as_view(), name='public_blog_slug'),
-    path('api/v1/blogs/<str:slug>/', PublicBlogBySlugView.as_view(), name='public_blog_slug_v1'),
 
     # Standard Auth Endpoints for backwards compatibility
     path('api/auth/token/', SuperAdminTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -155,7 +150,7 @@ urlpatterns = [
     path('api/auth/change-password/', ChangePasswordView.as_view(), name='auth_change_password'),
     path('api/dashboard/', include('apps.dashboard.urls')),
 
-    # Public / Default API router (projects, blogs, skills, experiences, categories, achievements, contacts, faqs, profiles)
+    # Public / Default API router (projects, skills, experiences, categories, achievements, contacts, faqs, profiles)
     path('api/', include(public_router.urls)),
     path('api/v1/', include(public_router.urls)),
 ]

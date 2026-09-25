@@ -5,7 +5,7 @@ from .serializers import CategorySerializer
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     Categories Taxonomy API.
-    Supports filtering by ?type=project|skill|experience|achievement|blog
+    Supports filtering by ?type=project|skill|experience|achievement
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

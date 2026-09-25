@@ -71,19 +71,7 @@ if projects.get('results') or (isinstance(projects, list) and projects):
 else:
     print(" [SKIP] Admin Projects — no data (run seed_devmate.py first)")
 
-# 6. Admin Blogs CRUD & Toggle
-blog_res = client.get('/api/v1/admin/blogs/', HTTP_AUTHORIZATION=auth_header)
-assert blog_res.status_code == 200, f"Blogs list failed: {blog_res.status_code}"
-blogs = blog_res.json()
 
-if blogs.get('results') or (isinstance(blogs, list) and blogs):
-    first_blog_id = blogs['results'][0]['id'] if 'results' in blogs else blogs[0]['id']
-    blog_toggle = client.post(f'/api/v1/admin/blogs/{first_blog_id}/toggle-active/', HTTP_AUTHORIZATION=auth_header)
-    assert blog_toggle.status_code == 200, f"Blog toggle failed: {blog_toggle.status_code}"
-    client.post(f'/api/v1/admin/blogs/{first_blog_id}/toggle-active/', HTTP_AUTHORIZATION=auth_header)
-    print(" [PASS] Admin Blogs CRUD & Toggle (/api/v1/admin/blogs/)")
-else:
-    print(" [SKIP] Admin Blogs — no data (run seed_devmate.py first)")
 
 # 7. Admin Experience & Skills & Categories & Achievements
 exp_res = client.get('/api/v1/admin/experience/', HTTP_AUTHORIZATION=auth_header)
@@ -116,7 +104,7 @@ else:
 boot_res = client.get('/api/bootstrap/')
 assert boot_res.status_code == 200, f"Bootstrap failed: {boot_res.status_code}"
 boot_data = boot_res.json()
-assert 'profile' in boot_data and 'projects' in boot_data and 'blogs' in boot_data, "Bootstrap structure mismatch"
+assert 'profile' in boot_data and 'projects' in boot_data, "Bootstrap structure mismatch"
 print(" [PASS] Public Bootstrap (/api/bootstrap/)")
 
 sum_res = client.get('/api/summary/')
@@ -145,13 +133,6 @@ if cardflow_res.status_code == 200:
 else:
     print(" [SKIP] Public Project By Slug — 'cardflow' not found (run seed_devmate.py first)")
 
-blog_slug_res = client.get('/api/blogs/understanding-microservices-architecture/')
-if blog_slug_res.status_code == 200:
-    blog_data = blog_slug_res.json().get('data', {})
-    assert 'sections' in blog_data and 'toc' in blog_data, "Blog structure contract mismatch"
-    print(" [PASS] Public Blog Article Detail By Slug (/api/blogs/understanding-microservices-architecture/)")
-else:
-    print(" [SKIP] Public Blog By Slug — article not found (run seed_devmate.py first)")
 
 # 11. Public Contact submission
 contact_res = client.post('/api/contact/', data=json.dumps({'name': 'Tester', 'email': 'test@example.com', 'message': 'Great portfolio!'}), content_type='application/json')
