@@ -46,13 +46,20 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
   const [replyText, setReplyText] = useState('');
   const [sentToast, setSentToast] = useState(false);
   const [projectActivities, setProjectActivities] = useState([]);
+  const [heatmapData, setHeatmapData] = useState({
+    year: new Date().getFullYear(),
+    total_annual_contributions: 0,
+    months: []
+  });
 
-  // Fetch live stats, activities & messages from backend API
+  // Fetch live stats, activities, heatmap & messages from backend API
   useEffect(() => {
     let isMounted = true;
     const fetchDashboardData = async () => {
       try {
         const siteSlug = activeWebsite?.slug || activeWebsite?.id || 'dev-mate';
+        const currentYear = new Date().getFullYear();
+
         const liveStats = await dashboardApi.getStats(siteSlug);
         if (isMounted && liveStats) {
           setStats(liveStats);
@@ -70,6 +77,11 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               bg: p.status === 'LIVE' ? 'bg-blue-500/10' : 'bg-indigo-500/10'
             })));
           }
+        }
+
+        const realHeatmap = await dashboardApi.getHeatmap(siteSlug, currentYear).catch(() => null);
+        if (isMounted && realHeatmap && realHeatmap.months) {
+          setHeatmapData(realHeatmap);
         }
 
         const contactsData = await contactsApi.getAll({ website: siteSlug });
@@ -138,23 +150,13 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
   ];
   const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-  const getDaysForMonth = (monthIndex) => {
-    const daysCount = (monthIndex === 1) ? 28 : (monthIndex % 2 === 0 ? 31 : 30);
-    return Array.from({ length: daysCount }, (_, d) => {
-      const dayNum = d + 1;
-      const seed = (monthIndex * 31 + dayNum);
-      const level = (seed % 7 === 0) ? 0 : (seed % 5 === 0) ? 4 : (seed % 3 === 0) ? 3 : (seed % 2 === 0) ? 2 : 1;
-      return { day: dayNum, level, count: level * 2 + 1 };
-    });
-  };
-
   const getHeatmapColorClass = (level) => {
     switch (level) {
-      case 4: return 'bg-blue-400 shadow-sm shadow-blue-400/50';
-      case 3: return 'bg-blue-500/80';
-      case 2: return 'bg-blue-600/50';
-      case 1: return 'bg-blue-950/60 border border-blue-500/20';
-      default: return 'bg-[#030406] border border-neutral-900';
+      case 4: return 'bg-violet-400 shadow-sm shadow-violet-400/50 hover:bg-violet-300';
+      case 3: return 'bg-violet-500/85 hover:bg-violet-400';
+      case 2: return 'bg-violet-600/60 hover:bg-violet-500';
+      case 1: return 'bg-violet-950/70 border border-violet-500/30 hover:bg-violet-900';
+      default: return 'bg-[#030406] border border-neutral-900 hover:border-neutral-700';
     }
   };
 
@@ -628,22 +630,25 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         </div>
       </div>
 
-      {/* 6. 12-MONTH ACTIVITY HEATMAP (With Edge-to-Edge Gradient Header & Footer) */}
+      {/* 6. 12-MONTH ACTIVITY HEATMAP (Tracking Real Database Activity) */}
       <div className="rounded-xl bg-[#07080d] border border-neutral-800 shadow-xl overflow-hidden flex flex-col">
         {/* Edge-to-Edge Header with Matched Title Size */}
         <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-b border-neutral-800 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="p-1.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/30">
+            <div className="p-1.5 rounded-md bg-violet-500/10 text-violet-400 border border-violet-500/30">
               <Activity className="w-4 h-4" />
             </div>
-            <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide">
-              Monthly Daily Activity
-            </h3>
+            <div>
+              <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide">
+                Monthly Daily Activity
+              </h3>
+              <p className="text-[11px] text-neutral-400 hidden sm:block">Real-time database activity tracking for projects, skills, experiences, and messages</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30 font-accent">
-              528 Total Activities in 2025
+            <span className="px-2.5 py-0.5 rounded text-xs font-bold bg-violet-500/15 text-violet-300 border border-violet-500/30 font-accent">
+              {heatmapData.total_annual_contributions ?? 0} Total Activities in {heatmapData.year ?? new Date().getFullYear()}
             </span>
           </div>
         </div>
@@ -651,24 +656,43 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* ALL 12 MONTHS GRID */}
         <div className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3.5">
-            {fullMonths.map((monthName, mIdx) => (
-              <div key={monthName} className="p-3 rounded-lg bg-[#050609] border border-neutral-800/80 space-y-2.5 hover:border-neutral-700 transition-colors">
-                {/* Full Name of Month with accent font */}
-                <div className="text-xs font-bold text-neutral-100 text-center tracking-wide font-accent">{monthName}</div>
+            {(heatmapData.months && heatmapData.months.length > 0 ? heatmapData.months : fullMonths.map((name, idx) => ({
+              month: name,
+              month_number: idx + 1,
+              start_day_offset: 0,
+              days: Array.from({ length: 30 }, (_, i) => ({ day: i + 1, level: 0, count: 0, summary: '0 activities' })),
+              total_commits: 0
+            }))).map((mObj) => (
+              <div key={mObj.month} className="p-3 rounded-lg bg-[#050609] border border-neutral-800/80 space-y-2.5 hover:border-neutral-700 transition-colors">
+                {/* Full Name of Month with count badge */}
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-bold text-neutral-100 tracking-wide font-accent">{mObj.month}</div>
+                  {mObj.total_commits > 0 && (
+                    <span className="text-[10px] font-bold text-violet-400 bg-violet-500/10 px-1.5 py-0.5 rounded border border-violet-500/20">
+                      {mObj.total_commits}
+                    </span>
+                  )}
+                </div>
                 
                 {/* 7 Days of the Week Column Headers */}
                 <div className="grid grid-cols-7 gap-1 text-center font-bold text-[9px] text-neutral-500">
                   {dayLabels.map((dayLabel, dIdx) => (
-                    <span key={`${monthName}-${dayLabel}-${dIdx}`}>{dayLabel}</span>
+                    <span key={`${mObj.month}-${dayLabel}-${dIdx}`}>{dayLabel}</span>
                   ))}
                 </div>
 
-                {/* 7-Column Days Grid */}
+                {/* 7-Column Days Grid with weekday alignment */}
                 <div className="grid grid-cols-7 gap-1">
-                  {getDaysForMonth(mIdx).map((d) => (
+                  {/* Leading Day of Week Padding */}
+                  {Array.from({ length: mObj.start_day_offset || 0 }).map((_, pIdx) => (
+                    <div key={`pad-${mObj.month}-${pIdx}`} className="aspect-square w-full rounded-sm opacity-0 pointer-events-none" />
+                  ))}
+
+                  {/* Real Days of Month */}
+                  {(mObj.days || []).map((d) => (
                     <div
-                      key={d.day}
-                      title={`${monthName} Day ${d.day}: ${d.count} activities`}
+                      key={`${mObj.month}-${d.day}`}
+                      title={`${mObj.month} ${d.day}, ${heatmapData.year ?? new Date().getFullYear()}: ${d.count} ${d.count === 1 ? 'activity' : 'activities'}${d.summary ? ` (${d.summary})` : ''}`}
                       className={`aspect-square w-full rounded-sm transition-all duration-200 hover:scale-125 cursor-pointer ${getHeatmapColorClass(d.level)}`}
                     ></div>
                   ))}
@@ -681,17 +705,17 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Edge-to-Edge Footer Bar (Same Styling as Header) */}
         <div className="bg-gradient-to-r from-[#0c0f1d] via-[#090b14] to-[#05060a] px-4 py-3 border-t border-neutral-800 flex items-center justify-between flex-shrink-0">
           <span className="text-xs font-semibold text-neutral-300 flex items-center gap-2">
-            <Activity className="w-3.5 h-3.5 text-blue-400" />
-            <span>Daily Contribution Legend</span>
+            <Activity className="w-3.5 h-3.5 text-violet-400" />
+            <span>Daily Activity Scale</span>
           </span>
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-neutral-400 font-medium">Less</span>
-            <div className="w-3.5 h-3.5 rounded-sm bg-[#030406] border border-neutral-900"></div>
-            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(1)}`}></div>
-            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(2)}`}></div>
-            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(3)}`}></div>
-            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(4)}`}></div>
-            <span className="text-blue-400 font-bold">More</span>
+            <span className="text-neutral-400 font-medium">0</span>
+            <div className="w-3.5 h-3.5 rounded-sm bg-[#030406] border border-neutral-900" title="0 activities"></div>
+            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(1)}`} title="1 activity"></div>
+            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(2)}`} title="2-3 activities"></div>
+            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(3)}`} title="4-6 activities"></div>
+            <div className={`w-3.5 h-3.5 rounded-sm ${getHeatmapColorClass(4)}`} title="7+ activities"></div>
+            <span className="text-violet-400 font-bold">7+</span>
           </div>
         </div>
       </div>
