@@ -167,7 +167,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Total Projects */}
         <div 
           onClick={() => onNavigate('manage-projects')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-purple-950/70 via-[#1c132d] to-[#121520] border border-purple-500/35 hover:border-purple-400/80 shadow-lg shadow-purple-950/40 hover:shadow-purple-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-purple-950/70 via-[#1c132d] to-[#121520] border border-purple-500/35 hover:border-purple-400/80 shadow-lg shadow-purple-950/40 hover:shadow-purple-500/20 transition-all duration-200 flex items-center justify-between gap-3 group"
         >
           <div className="text-left min-w-0">
             <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-purple-200 transition-colors font-accent">
@@ -179,7 +179,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               <span>{stats.projects?.live ?? 0} Live Online</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-purple-500/25 group-hover:border-purple-400 transition-all duration-200">
+          <div className="p-3 rounded-lg bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10 flex-shrink-0 group-hover:bg-purple-500/25 group-hover:border-purple-400 transition-all duration-200">
             <FolderKanban className="w-5 h-5" />
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Total Experiences */}
         <div 
           onClick={() => onNavigate('manage-experiences')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-amber-950/70 via-[#231b0e] to-[#121520] border border-amber-500/35 hover:border-amber-400/80 shadow-lg shadow-amber-950/40 hover:shadow-amber-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-amber-950/70 via-[#231b0e] to-[#121520] border border-amber-500/35 hover:border-amber-400/80 shadow-lg shadow-amber-950/40 hover:shadow-amber-500/20 transition-all duration-200 flex items-center justify-between gap-3 group"
         >
           <div className="text-left min-w-0">
             <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-amber-200 transition-colors font-accent">
@@ -199,7 +199,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               <span>Career Milestones</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-md shadow-amber-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-amber-500/25 group-hover:border-amber-400 transition-all duration-200">
+          <div className="p-3 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-md shadow-amber-500/10 flex-shrink-0 group-hover:bg-amber-500/25 group-hover:border-amber-400 transition-all duration-200">
             <Briefcase className="w-5 h-5" />
           </div>
         </div>
@@ -207,7 +207,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Total Skills */}
         <div 
           onClick={() => onNavigate('manage-skills')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-emerald-950/70 via-[#0d2318] to-[#121520] border border-emerald-500/35 hover:border-emerald-400/80 shadow-lg shadow-emerald-950/40 hover:shadow-emerald-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-emerald-950/70 via-[#0d2318] to-[#121520] border border-emerald-500/35 hover:border-emerald-400/80 shadow-lg shadow-emerald-950/40 hover:shadow-emerald-500/20 transition-all duration-200 flex items-center justify-between gap-3 group"
         >
           <div className="text-left min-w-0">
             <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-emerald-200 transition-colors font-accent">
@@ -219,7 +219,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               <span>Tech Stack Tags</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-md shadow-emerald-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-emerald-500/25 group-hover:border-emerald-400 transition-all duration-200">
+          <div className="p-3 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-md shadow-emerald-500/10 flex-shrink-0 group-hover:bg-emerald-500/25 group-hover:border-emerald-400 transition-all duration-200">
             <Cpu className="w-5 h-5" />
           </div>
         </div>
@@ -227,7 +227,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
         {/* Received Messages */}
         <div 
           onClick={() => onNavigate('manage-contacts')}
-          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-sky-950/70 via-[#0f2030] to-[#121520] border border-sky-500/35 hover:border-sky-400/80 shadow-lg shadow-sky-950/40 hover:shadow-sky-500/20 transition-all duration-200 flex items-center justify-between gap-3 group hover:-translate-y-0.5"
+          className="p-4 rounded-xl cursor-pointer bg-gradient-to-br from-sky-950/70 via-[#0f2030] to-[#121520] border border-sky-500/35 hover:border-sky-400/80 shadow-lg shadow-sky-950/40 hover:shadow-sky-500/20 transition-all duration-200 flex items-center justify-between gap-3 group"
         >
           <div className="text-left min-w-0">
             <div className="text-2xl sm:text-3xl font-bold text-white leading-none tracking-tight group-hover:text-sky-200 transition-colors font-accent">
@@ -239,7 +239,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
               <span>{stats.messages?.unread ?? 0} Unread Inquiries</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-md shadow-sky-500/10 flex-shrink-0 group-hover:scale-110 group-hover:bg-sky-500/25 group-hover:border-sky-400 transition-all duration-200">
+          <div className="p-3 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-md shadow-sky-500/10 flex-shrink-0 group-hover:bg-sky-500/25 group-hover:border-sky-400 transition-all duration-200">
             <Mail className="w-5 h-5" />
           </div>
         </div>
@@ -441,7 +441,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
           <div className="p-4 flex-1 flex flex-col justify-center">
             <label className="w-full h-full min-h-[140px] p-5 rounded-lg bg-[#0d1018] hover:bg-[#161a28] border border-dashed border-violet-500/40 text-neutral-200 cursor-pointer flex flex-col sm:flex-row items-center justify-between gap-4 transition-all group hover:border-solid hover:shadow-lg">
               <div className="flex items-center gap-3.5 min-w-0">
-                <div className="p-3 rounded-lg bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform flex-shrink-0">
+                <div className="p-3 rounded-lg bg-violet-500/15 text-violet-400 border border-violet-500/30 flex-shrink-0">
                   <Upload className="w-5 h-5" />
                 </div>
                 <div className="min-w-0 text-left">
@@ -693,7 +693,7 @@ export default function DashboardView({ onNavigate, activeWebsite }) {
                     <div
                       key={`${mObj.month}-${d.day}`}
                       title={`${mObj.month} ${d.day}, ${heatmapData.year ?? new Date().getFullYear()}: ${d.count} ${d.count === 1 ? 'activity' : 'activities'}${d.summary ? ` (${d.summary})` : ''}`}
-                      className={`aspect-square w-full rounded-sm transition-all duration-200 hover:scale-125 cursor-pointer ${getHeatmapColorClass(d.level)}`}
+                      className={`aspect-square w-full rounded-sm transition-all duration-150 hover:ring-1 hover:ring-white/80 hover:brightness-125 cursor-pointer ${getHeatmapColorClass(d.level)}`}
                     ></div>
                   ))}
                 </div>
