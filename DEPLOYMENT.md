@@ -178,11 +178,63 @@ sudo certbot --nginx -d devadmin.logicbyroshan.in -d devadmin-api.logicbyroshan.
 
 ---
 
-## 🚀 Step 5: Production Deployment Pipeline
+## 🚀 Step 5: Automated & Manual Production Deployment Pipeline
 
-Deploy the entire stack with a single command:
+### 🤖 A. Automated CI/CD Deployment (GitHub Actions)
+
+DevAdmin features zero-touch automated production deployment powered by GitHub Actions matching the VPS platform standards.
+
+#### Workflow Trigger
+- **Automatic**: Any `git push` directly to the `main` branch triggers `.github/workflows/deploy.yml`.
+- **Manual**: Via GitHub Actions `workflow_dispatch` button in the repository UI.
+
+#### Required GitHub Secrets
+Configure the following secrets in GitHub Repository Settings -> **Secrets and variables** -> **Actions**:
+
+| Secret Name | Description | Example / Value |
+|---|---|---|
+| `DEPLOYSSHKEY` | Private SSH Key for the `deploy` user | `-----BEGIN OPENSSH PRIVATE KEY----- ...` |
+| `DEPLOYHOST` | VPS Host IP or Domain | `144.79.166.17` |
+| `DEPLOYUSER` | SSH Username on the VPS | `deploy` |
+
+#### Automated Deployment Flow
+```
+Developer (feature/* -> dev -> main)
+               │
+               ▼ (Push to main)
+     GitHub Actions Runner (Ubuntu)
+               │
+               ├── 1. Set up Secure SSH & Verify Known Hosts
+               ├── 2. SSH into VPS (144.79.166.17:deploy)
+               ├── 3. Sync /projects/apps/devadmin to triggering commit
+               ├── 4. Execute scripts/deploy.sh
+               │      ├── Preflight checks (.env & SECRET_KEY audit)
+               │      ├── Image backup (:rollback-backup)
+               │      ├── Build optimized multi-stage containers
+               │      ├── Safe Django database migrations
+               │      ├── WhiteNoise static asset hashing
+               │      ├── Restart services (docker compose up -d)
+               │      └── Multi-attempt container health checks
+               │
+               └── 5. Verify Public Production Health:
+                      ├── https://devadmin-api.logicbyroshan.in/health/ (200 OK)
+                      └── https://devadmin.logicbyroshan.in (200 OK)
+```
+
+#### Concurrency & Safety
+- Deployments are protected by `concurrency: group: devadmin-production` (`cancel-in-progress: false`), preventing concurrent runs from colliding.
+- The pipeline aborts and alerts immediately if any step fails.
+
+---
+
+### 💻 B. Manual Deployment Procedure (VPS CLI Fallback)
+
+If manual execution is required from the VPS terminal:
 
 ```bash
+cd /projects/apps/devadmin
+git checkout main
+git pull --ff-only origin main
 bash scripts/deploy.sh
 ```
 
@@ -212,16 +264,19 @@ Enter your admin username, email, and password.
 
 ---
 
-## 🔄 Routine Update Procedure
+## 🔄 Routine Branch Promotion & Release Workflow
 
-Whenever new features or bug fixes are committed:
+Follow the standard promotion pipeline:
 
-```bash
-cd /var/www/devadmin
-bash scripts/deploy.sh
+```
+feature/* / bugfix/*  ──(PR / Merge)──>  dev  ──(PR / Merge)──>  main  ──(Automated CI/CD)──>  Production VPS
 ```
 
-Zero downtime update with automated migration, static asset hashing, and health verification.
+1. Develop and test on `feature/*` or `bugfix/*` branch.
+2. Merge into `dev` and verify against staging / local test suite.
+3. Merge `dev` into `main` using fast-forward or `--no-ff`.
+4. Push `main` to GitHub (`git push origin main`).
+5. GitHub Actions automatically executes `.github/workflows/deploy.yml` and deploys to production with zero downtime.
 
 ---
 

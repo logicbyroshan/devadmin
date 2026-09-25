@@ -1,0 +1,113 @@
+name: Deploy DevAdmin Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: devadmin-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Production VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure Secure SSH
+        env:
+          SSH_KEY: ${{ secrets.DEPLOYSSHKEY }}
+          DEPLOY_HOST: ${{ secrets.DEPLOYHOST }}
+          KNOWN_HOSTS_PINNED: |
+            |1|du07S3O4l1wvOVfbiF8U4vGeaTQ=|uy8RmXePVkwECh4fjSO6hcVJCFQ= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAU8tMuOfK9dX3rU8b1Damkx05swFr0vqdcbE8yCBz7O
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+          # Write private SSH key securely with Unix line endings
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/devadmin_deploy
+          sed -i 's/\r$//' ~/.ssh/devadmin_deploy
+          chmod 600 ~/.ssh/devadmin_deploy
+
+          # Pin host keys securely in known_hosts
+          printf '%s\n' "$KNOWN_HOSTS_PINNED" > ~/.ssh/known_hosts
+          if [ -n "$DEPLOY_HOST" ]; then
+            ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+          fi
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Execute Production Deployment
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOYHOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOYUSER }}
+          TRIGGER_SHA: ${{ github.sha }}
+        run: |
+          echo "================================================================"
+          echo "  Deploying DevAdmin to Production VPS (${DEPLOY_HOST})"
+          echo "  Triggering Commit: ${TRIGGER_SHA}"
+          echo "================================================================"
+
+          ssh \
+            -i ~/.ssh/devadmin_deploy \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "set -euo pipefail
+            cd /projects/apps/devadmin
+
+            echo '[Step 1] Synchronizing repository to latest origin/main...'
+            git fetch origin main
+            git checkout main
+            git pull --ff-only origin main
+
+            DEPLOYED_SHA=\$(git rev-parse HEAD)
+            echo \"[Step 2] Deployed repository commit: \${DEPLOYED_SHA}\"
+
+            if [ \"\${DEPLOYED_SHA}\" != \"${TRIGGER_SHA}\" ]; then
+              echo \"⚠️ Warning: Deployed commit (\${DEPLOYED_SHA}) differs from workflow trigger SHA (${TRIGGER_SHA})\"
+            else
+              echo \"✓ Server is synchronized with trigger commit: \${DEPLOYED_SHA}\"
+            fi
+
+            echo '[Step 3] Executing production deploy script...'
+            chmod +x scripts/deploy.sh
+            bash scripts/deploy.sh
+            "
+
+      - name: Verify Public Production Health
+        run: |
+          echo "================================================================"
+          echo "  Verifying Public Production Endpoints"
+          echo "================================================================"
+
+          API_HEALTH_URL="https://devadmin-api.logicbyroshan.in/health/"
+          FRONTEND_URL="https://devadmin.logicbyroshan.in"
+
+          echo "Probing Backend Health: ${API_HEALTH_URL}..."
+          API_STATUS=$(curl -s -o /tmp/api_health.json -w "%{http_code}" "${API_HEALTH_URL}" || echo "000")
+          if [ "$API_STATUS" -eq 200 ]; then
+            echo "✓ Backend API Health responded 200 OK"
+            cat /tmp/api_health.json
+            echo ""
+          else
+            echo "❌ Backend API Health check failed with HTTP ${API_STATUS}"
+            exit 1
+          fi
+
+          echo "Probing Frontend Web App: ${FRONTEND_URL}..."
+          FRONTEND_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "${FRONTEND_URL}" || echo "000")
+          if [ "$FRONTEND_STATUS" -eq 200 ]; then
+            echo "✓ Frontend Web Application responded 200 OK"
+          else
+            echo "❌ Frontend check failed with HTTP ${FRONTEND_STATUS}"
+            exit 1
+          fi
+
+          echo "================================================================"
+          echo "  ✨ Production Deployment Verified Successfully!"
+          echo "================================================================"
